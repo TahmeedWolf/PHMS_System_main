@@ -1,0 +1,50 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Advisors {% endblock title %}
+<!-- Specific script goes HERE -->
+{% block script %} 
+    {{ super() }}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+{% endblock script %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Insights</h5>
+              <!-- Vertical Pills Tabs -->
+              <div class="d-flex align-items-start">
+                <div class="nav flex-column nav-pills me-3 text-sm px-2" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="width:50px">
+                  <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">{{ user_notifications[0].created_time.strftime('%Y-%m-%d') }}</button>
+                  {% for notification in user_notifications %}
+                  <button class="nav-link" id="notification{{ notification.notification_id }}-tab" data-bs-toggle="pill" data-bs-target="#notification{{ notification.notification_id }}" 
+                  type="button" role="tab" aria-controls="notification{{ notification.notification_id }}" aria-selected="false">{{ notification.created_time.strftime('%Y-%m-%d') }}</button>
+                  {% endfor %}
+                </div>
+                <div class="tab-content px-2" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        {{ user_notifications[0].notification_content }}
+                    </div>
+                    {% for notification in user_notifications %}
+                    <div class="tab-pane fade" id="notification{{ notification.notification_id }}" role="tabpanel" aria-labelledby="notification{{ notification.notification_id }}-tab">
+                        <p>{{ notification.notification_content }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+              </div>
+              <!-- End Vertical Pills Tabs -->
+ 
+      </div>
+    </div>
+  </div>
+
+    {% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

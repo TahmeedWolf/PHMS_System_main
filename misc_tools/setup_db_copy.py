@@ -21,36 +21,37 @@ class Healthcare_Organisations(db.Model):
     organisation_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100))
     address = db.Column(db.String(200))
+    profile_img_url = db.Column(db.String(100))
     # Parent relationship with Healthcare_Providers
     # provider = db.relationship('Healthcare_Providers', back_populates="organisation")
     # TODO: add healthcare provider raw then link to this
 
-# class Users(db.Model):
-#     __tablename__ = 'users'
-#     user_id = db.Column(db.String(100), primary_key=True)
-#     name = db.Column(db.String(100))
-#     birthday = db.Column(db.String(100), default=datetime.now(timezone.utc))
-#     gender = db.Column(db.String(12))
-#     # medical_history = db.Column(db.String) # what is this # TODO: move this to visit / history / another table
-#     active = db.Column(db.Boolean, default=True)
-#     email = db.Column(db.String(100))
-#     password = db.Column(db.String(1000), default="default")
-#     created_time = db.Column(db.String(100), default=datetime.now(timezone.utc))
-#     modified_time = db.Column(db.String(100), default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
-#     profile_image = db.Column(BLOB)
-#     permission = db.Column(db.String(30), default="user")
-    # Parent relationship to Glucose Readings
-    # data_glucose = db.relationship('xx', back_populates="xx")
-    # Parent relationship to Care_Patient_Providers (Patient)
-    # care = db.relationship('Care_Patient_Providers', back_populates="care_patient")
-    # # Parent relationship to Care_Patient_Providers (Doctor)
-    # care_hp = db.relationship('Care_Patient_Providers', back_populates="care_provider")
-    # # Parent relationship to Care_Patient_Providers
-    # visit = db.relationship('Visits', back_populates="visit_patient")
-    # # Parent relationship to Care_Patient_Providers
-    # visit_hp = db.relationship('Visits', back_populates="visit_hp")
-    # # Parent relationship to Access_logs
-    # user_access = db.relationship('Access_logs', back_populates="access_logs")
+class Users(db.Model):
+    __tablename__ = 'users'
+    user_id = db.Column(db.String(100), primary_key=True)
+    name = db.Column(db.String(100))
+    birthday = db.Column(db.String(100), default=datetime.now(timezone.utc))
+    gender = db.Column(db.String(12))
+    # medical_history = db.Column(db.String) # what is this # TODO: move this to visit / history / another table
+    active = db.Column(db.Boolean, default=True)
+    email = db.Column(db.String(100))
+    password = db.Column(db.String(1000), default="default")
+    created_time = db.Column(db.String(100), default=datetime.now(timezone.utc))
+    modified_time = db.Column(db.String(100), default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+    profile_image = db.Column(BLOB)
+    permission = db.Column(db.String(30), default="user")
+    Parent relationship to Glucose Readings
+    data_glucose = db.relationship('xx', back_populates="xx")
+    Parent relationship to Care_Patient_Providers (Patient)
+    care = db.relationship('Care_Patient_Providers', back_populates="care_patient")
+    # Parent relationship to Care_Patient_Providers (Doctor)
+    care_hp = db.relationship('Care_Patient_Providers', back_populates="care_provider")
+    # Parent relationship to Care_Patient_Providers
+    visit = db.relationship('Visits', back_populates="visit_patient")
+    # Parent relationship to Care_Patient_Providers
+    visit_hp = db.relationship('Visits', back_populates="visit_hp")
+    # Parent relationship to Access_logs
+    user_access = db.relationship('Access_logs', back_populates="access_logs")
 
 
 # Done

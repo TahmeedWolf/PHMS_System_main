@@ -1,0 +1,86 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block title %} Login {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Page content -->
+    <div class="container mt--8 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+          <div class="card bg-secondary border-0 mb-0">
+
+            <div class="card-body px-lg-5 py-lg-5">
+
+              <div class="text-center text-muted mb-4">
+                <h2>Let's get started!</h2>
+                <p>Personalise your health profile and manage your medical data with a phms account.</p>
+              </div>
+              {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                      {% for message in messages %}
+                      <p class="text-red text-center">{{ message }}</p>  
+                      {% endfor %}
+                  {% endif %}
+              {% endwith %}
+
+              <!-- <div class="container">
+                 render_form(form) }}
+              </div> -->
+              <form role="form" action="/get_started" method="post">
+                <div class="form-group mb-3">
+                    <div class="row mb-3">
+                        <label class="col-sm-5 col-form-label">Gender</label>
+                        <div class="col-sm-7">
+                          <select class="form-control form-control-sm" aria-label="Default select example" name="gender" required>
+                            <option value="m">Male</option>
+                            <option value="f">Female</option>
+                          </select>
+                        </div>
+                      </div>
+                </div>
+                <div class="form-group">
+                    <div class="row mb-3">
+                        <label for="inputDate" class="col-sm-5 col-form-label">Birthday</label>
+                        <div class="col-sm-7">
+                          <input type="date" class="form-control" name="birthday" required>
+                        </div>
+                      </div>
+                </div>
+                <div class="form-group">
+                    <div class="row mb-3">
+                        <label for="weight" class="col-sm-5 col-form-label">Body Weight (kg)</label>
+                        <div class="col-sm-7">
+                          <input type="number" class="form-control" name="weight" placeholder="Weight" required>
+                        </div>
+                      </div>
+                </div>
+                <div class="form-group">
+                    <div class="row mb-3">
+                        <label for="inputNumber" class="col-sm-5 col-form-label">Body Height (cm)</label>
+                        <div class="col-sm-7">
+                          <input type="number" class="form-control" name="height" placeholder="Height" required>
+                        </div>
+                      </div>
+                </div>
+                <div class="text-center">
+                    <p><a href="{{ url_for('home')}}">Skip this for now</a></p>
+                  <button type="submit" class="btn btn-primary my-4">Let's Get Started!</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

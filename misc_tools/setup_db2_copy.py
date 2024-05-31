@@ -1,5 +1,6 @@
 from setup_db_copy import *
 from werkzeug.security import generate_password_hash
+from Models.Users import *
 from datetime import datetime, timedelta
 from uuid import uuid1
 from time import sleep

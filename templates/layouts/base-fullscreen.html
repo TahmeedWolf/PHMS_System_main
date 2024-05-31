@@ -21,7 +21,8 @@
     BioTective - {% block title %} Admin {% endblock %} | Swinburne
   </title>
 
-  <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
+  <!-- Favicon - loaded as static -->
+  <link rel="icon" href="/static/assets/images/brand/favicon.ico" type="image/png">
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
   <!-- Icons -->
@@ -29,7 +30,14 @@
   <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
   <!-- Argon CSS -->
   <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
-
+  <!-- Vendor CSS Files -->
+  <!-- <link href="/static/assets/css/bootstrap/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/static/assets/vendor/quill/dist/quill.snow.css" rel="stylesheet">
+  <!-- <link href="/static/assets/vendor/quill/dist/quill.bubble.css" rel="stylesheet"> -->
+  <link href="/static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <!-- <link href="/static/assets/vendor/simple-datatables/style.css" rel="stylesheet"> -->
   <!-- Specific CSS goes HERE -->
   {% block stylesheets %}{% endblock stylesheets %}
 
@@ -48,7 +56,6 @@
           <div class="row justify-content-center align-items-center">
             <div class="col-lg-5 col-md-6">
 
-                <!-- <img src="/static/assets/img/brand/swf_logo.png" alt="Still Water Logo." style="scale: 10%;"> -->
               <h1 class="text-white text-center">
                 <a target="_blank" class="text-white"
                    href="https://www.biotective.com/">BioTective</a>
