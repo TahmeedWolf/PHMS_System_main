@@ -26,6 +26,8 @@ class Users(db.Model):
     user_cholesterol = db.relationship('Records_Cholesterol', back_populates="data_cholesterol")
     # Parent relationship to records_hba1c
     user_hba1c = db.relationship('Records_Hba1c', back_populates="data_hba1c")
+    # Parent relationship to records_hba1c
+    user_bp = db.relationship('Records_Blood_Pressure', back_populates="data_bp")
     # Parent relationship to records_food_intake
     user_food_intake = db.relationship('Records_Food_Intake', back_populates="data_food_intake")
     # Parent relationship to records_insulin

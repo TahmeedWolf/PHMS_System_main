@@ -29,6 +29,12 @@ from Models.Records.Records_Hba1c import *
 from Models.Records.Records_Insulin_Intake import *
 from Models.Records.Records_Physical_Activity import *
 from Models.Records.Records_Weight_Tracking import *
+from Models.Records.Records_Blood_Pressure import *
+
+# Templates, Samples, attributes in each record type
+from data_integration.template_download import *
+# Handle all uploaded file
+from data_integration.uploaded_file_handling import *
 
 # Security
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -308,6 +314,103 @@ def home():
                            user_line_chart_cgm=user_line_chart_cgm
                            )
 
+@app.get("/data/template_download")
+@login_required
+@access_log
+def get_template_download():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    return render_template('data_integration/template_download.html', user_notifications=user_notifications, download=download)
+
+@app.route("/contact_us", methods=["GET", "POST"])
+@login_required
+@access_log
+def route_contact_us():
+    # TODO: finish this
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    return render_template('forms/contact_us.html', user_notifications=user_notifications)
+
+@app.get("/data/records_glucose_monitoring")
+@login_required
+@access_log
+def get_records_glucose_monitoring():
+    records = Record_Glucose_Monitoring.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_glucose_monitoring.html',
+                           records=records,
+                            user_notifications=user_notifications)
+
+@app.get("/data/records_food_intake")
+@login_required
+@access_log
+def get_records_food_intake():
+    records = Records_Food_Intake.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_food_intake.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+@app.get("/data/records_insulin_intake")
+@login_required
+@access_log
+def get_records_insulin_intake():
+    records = Records_Insulin_Intake.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_insulin_intake.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+@app.get("/data/records_physical_activity")
+@login_required
+@access_log
+def get_records_physical_activity():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Physical_Activity.query.filter_by(user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_physical_activity.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+@app.get("/data/records_weight_tracking")
+@login_required
+@access_log
+def get_records_weight_tracking():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Weight_Tracking.query.filter_by(user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_weight_tracking.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+@app.get("/data/records_cholesterol")
+@login_required
+@access_log
+def get_records_cholesterol():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Cholesterol.query.filter_by(user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_cholesterol.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+@app.get("/data/records_hba1c")
+@login_required
+@access_log
+def get_records_hba1c():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Hba1c.query.filter_by(user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_hba1c.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+@app.get("/data/records_blood_pressure")
+@login_required
+@access_log
+def get_records_blood_pressure():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Blood_Pressure.query.filter_by(user_id=current_user.user_id).all()
+    return render_template('data_integration/get_records_blood_pressure.html',
+                           records=records,
+                           user_notifications=user_notifications)
+
+
+
 @app.get("/notifications")
 @login_required
 @access_log
@@ -406,6 +509,12 @@ def user_settings():
         flash("Your Settings have been updated successfully!")
         return render_template("users/user_settings.html", user=updated_user)
 
+# def find(lst, key, value):
+#     for i, dic in enumerate(lst):
+#         if dic[key] == value:
+#             return i
+#     return None
+
 @app.route('/upload_files', methods=['GET','POST'])
 @login_required
 @access_log
@@ -417,51 +526,34 @@ def route_upload_files():
             user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
             try:
                 f = request.files["file"]
-                # Read the data
-                _, ext = os.path.splitext(f.filename)
-                if str(ext) == ".csv":
-                    df = pd.read_csv(f)
-                elif f.content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or f.content_type == "application/vnd.ms-excel":
-                    df = pd.read_excel(f)
-                
                 # Connect to KG
-                with GraphDatabase.driver(URI, auth=AUTH) as driver:
-                    driver.verify_connectivity()
-                    print("connected to KG-db")
+                # with GraphDatabase.driver(URI, auth=AUTH) as driver:
+                #     driver.verify_connectivity()
+                #     print("connected to KG-db")
                 
-                # Select case based on record type
-                if f.filename[:1] == "1": # CGM
-                    for row in range(len(df[:2])): # TODO: Currently limited for testing purpose
-                        glucose_id = uuid1()
-                        new_data_glucose = Record_Glucose_Monitoring(gm_entry_id=glucose_id, 
-                                                                     timestamp=df.iloc[row]['date and time'],
-                                                                       glucose_level=df.iloc[row]['glucose'],
-                                                                       device_id=df.iloc[row]['device_id'],
-                                                                       user_id=current_user.user_id)
-                        db.session.add(new_data_glucose)
-                        db.session.commit()
-                        sleep(0.01) # Prevent same uuid
+                filename, _ = os.path.splitext(f.filename)
+                filename = filename.lower()
+                filename = filename.replace("_sample", "")
+                filename = filename.replace("_template", "")
 
-                    # Status: Inserting of neo4j records
-                    create_glucose_data(driver, current_user.user_id, df[1:10]) # TODO: Currently limited for testing purpose
-                    flash(f"{len(df)} blood glucose records are added successfully!")
-
-                    # Reset the file
-                    # request.files["file"] = "" <- TODO: this doesnt work
-                    return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
-                
+                key = "records_" + filename[2:]
+                if key in records_list.keys():
+                    attributes = records_list[key]
+                    df = data_extract(f)
                 else:
-                    raise KeyError() # not recognized file
+                    flash("Error: Incorrect file uploaded. Please try again.")
+                    return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
+                print("before data_insert")
+                # inserting of record including selection of different class depend on key, insert into kg and db
+                message = data_insert(key=key, df=df,attributes=attributes, current_user=current_user) # , driver
+                print("after data insertion")
+                flash(message)
+                
+                # else:
+                #     raise KeyError() # not recognized file
+                return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
             except Exception as e:
                 return f"Error: {e.__context__}"
-
-@app.route('/records_glucose_monitoring')
-@login_required
-def get_records_glucose_monitoring():
-    # get all glucose data for recent 7 days
-    records_glucose_monitoring = Record_Glucose_Monitoring.filter_by(user_id=current_user.user_id).all()
-    # return all as SQLAlchemy object
-    return records_glucose_monitoring
 
 
 @app.route('/healthcare_providers')

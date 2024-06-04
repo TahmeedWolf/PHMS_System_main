@@ -1,0 +1,61 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} HbA1c Records {% endblock title %}
+<!-- Specific script goes HERE -->
+{% block script %} 
+    {{ super() }}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+{% endblock script %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container text-center pl-5">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+            <div class="card-body">
+                  <h5 class="card-title">HbA1c Records</h5>
+    
+                  <!-- Table with stripped rows -->
+                  <table class="display text-sm" id="myTable">
+                    <thead>
+                      <tr>
+                        <th><b>Timestamp</b></th>
+                        <th>HbA1c</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for record in records %}
+                      <tr>
+                        <td>{{ record.timestamp }}</td>
+                        <td>{{ record.hba1c }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  <!-- End Table with stripped rows -->
+ 
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+    {% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+
+<script>
+    $(document).ready( function () {
+    // $('#myTable').DataTable();
+    new DataTable('#myTable');
+} );
+</script>
+{% endblock javascripts %}

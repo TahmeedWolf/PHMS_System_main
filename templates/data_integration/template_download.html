@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Download Template {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<!-- Something hereeee -->
+<div class="container pb-5">
+    <div class="row">
+      <div class="col-lg-9 col-10">
+          <h1 class="pl-5 pt-3">Download Template Files</h1>
+      </div>
+      </div>
+          <div clss="card">
+            <div class="col text-left pl-5">
+                <div class="container text-center">
+                    <div class="row">
+                          {% for record_type, dict_sample_templates in download.items() %}
+                          <div class="card col-3 m-1">
+                              <div class="card-body">
+                                  <h6 class="card-title">{{ record_type | replace("_"," ") }}</h6>
+                                  {% for type, item in dict_sample_templates.items() %}
+                                        {% if type == 'sample' %}
+                                        <button type="button" class="btn btn-info py-1 m-1 px-2" onclick="location.href='{{ item }}'"><i class="bi bi-cloud-arrow-down-fill">Template</i></button>
+                                        {% else %}
+                                        <button type="button" class="btn btn-dark py-1 m-1 px-2" onclick="location.href='{{ item }}'"><i class="bi bi-file-earmark-bar-graph-fill">Sample</i></button>
+                                        {% endif %}
+                                  {% endfor %}
+                                </div>
+                          </div>
+                          {% endfor %}
+                            
+                        </div>
+                      </div>
+            </div>
+          </div>
+    {% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
+

@@ -10,6 +10,9 @@ function sidenavToggler() {
 function adminToolToggler() {
     document.getElementById("navbarDropdownMenuLink").classList.toggle("collapse");
 }
+function dataToggler() {
+    document.getElementById("navbarDataDropdownMenuLink").classList.toggle("collapse");
+}
 
 /**
  * used at all pages with pagination

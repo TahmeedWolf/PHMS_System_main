@@ -32,12 +32,29 @@
               <span class="nav-link-text show multi-collapse" id="multiCollapseExample3">Upload</span>
             </a>
           </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/my_data">
-              <i class="ni ni-chart-bar-32 text-orange"></i>
-              <span class="nav-link-text show multi-collapse" id="multiCollapseExample3">My Data</span>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" onclick="dataToggler()">
+              <i class="ni ni-circle-08 text-primary"></i>
+              <span class="nav-link-text show multi-collapse" id="multiCollapseExample6">My Data</span>
             </a>
+            <div class="dropdown collapse" aria-labelledby="navbarDropdownMenuLink" id="navbarDataDropdownMenuLink">
+              <a class="nav-link pl-5" href="{{ url_for('get_records_glucose_monitoring') }}"><span class="nav-link-text">CGM</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_food_intake') }}"><span class="nav-link-text">Meals</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_insulin_intake') }}"><span class="nav-link-text">Insulin</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_physical_activity') }}"><span class="nav-link-text">Activity</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_weight_tracking') }}"><span class="nav-link-text">Weight</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_cholesterol') }}"><span class="nav-link-text">Cholesterol</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_hba1c') }}"><span class="nav-link-text">HbA1c</span></a>
+              <a class="nav-link pl-5" href="{{ url_for('get_records_blood_pressure') }}"><span class="nav-link-text">Blood Pressure</span></a>
+            </div>
           </li>
+  
+            <li class="nav-item">
+              <a class="nav-link" href='/access_logs'>
+                <i class="ni ni-circle-08 text-pink"></i>
+                <span class="nav-link-text show multi-collapse" id="multiCollapseExample8">Access Log</span>
+              </a>
+            </li>
           <li class="nav-item">
             <a class="nav-link" href="/healthcare_providers">
               <i class="bi bi-person-square text-primary"></i>
@@ -78,7 +95,12 @@
             </a>
           </li>
           {% endif %}
-          
+          <li class="nav-item">
+            <a class="nav-link" href="/contact_us">
+              <i class="bi bi-lightbulb text-primary"></i>
+              <span class="nav-link-text show multi-collapse" id="multiCollapseExample5">Contact Us</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
