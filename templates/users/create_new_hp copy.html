@@ -16,7 +16,7 @@
     </div>
         <div clss="card">
             <div class="col-5 text-left">
-                <form action="{{url_for('user_settings', user_id=user.user_id)}}" method="post">
+                <form action="/user_settings" method="post">
                   <div>
                     {% with messages = get_flashed_messages() %}
                     {% if messages %}

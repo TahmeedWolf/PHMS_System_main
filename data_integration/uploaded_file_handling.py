@@ -58,7 +58,7 @@ def data_insert(key, df, attributes, current_user):
 def data_insert_internal(df, record_class, attributes, current_user):
     print("start of data_insert_internal")
     # start extracting the attributes
-    for row in range(len(df[:2])): # TODO: Currently limited to 1 rows for testing purpose
+    for row in range(len(df)):
         entry_id = uuid1()
         new_entry = record_class(entry_id= entry_id, user_id=current_user.user_id)
         for attribute in attributes:
@@ -70,10 +70,4 @@ def data_insert_internal(df, record_class, attributes, current_user):
         db.session.commit()
         sleep(0.02) # Prevent same uuid
 
-
-    # Status: Inserting of neo4j records
-    # create_glucose_data(driver, current_user.user_id, df[1:10]) # TODO: Currently limited for testing purpose
     return f"{len(df)} records are added successfully!"
-
-    # Reset the file
-    # request.files["file"] = "" <- TODO: this doesnt work

@@ -20,6 +20,7 @@
         <div class="card">
             <div class="card-body">
                   <h5 class="card-title">HbA1c Records</h5>
+                  {% include'includes/error_handler.html' %}
     
                   <!-- Table with stripped rows -->
                   <table class="display text-sm" id="myTable">
@@ -50,12 +51,5 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
-<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
-
-<script>
-    $(document).ready( function () {
-    // $('#myTable').DataTable();
-    new DataTable('#myTable');
-} );
-</script>
+{% include 'includes/datatable_script.html' %}
 {% endblock javascripts %}

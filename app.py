@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, flash, url_for, redirect, Res
 import os
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
-from sqlalchemy import text
+from sqlalchemy import text, desc
 from werkzeug.utils import secure_filename
 from time import sleep
 import json
@@ -318,7 +318,7 @@ def home():
 @login_required
 @access_log
 def get_template_download():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('data_integration/template_download.html', user_notifications=user_notifications, download=download)
 
 @app.route("/contact_us", methods=["GET", "POST"])
@@ -326,15 +326,15 @@ def get_template_download():
 @access_log
 def route_contact_us():
     # TODO: finish this
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('forms/contact_us.html', user_notifications=user_notifications)
 
 @app.get("/data/records_glucose_monitoring")
 @login_required
 @access_log
 def get_records_glucose_monitoring():
-    records = Record_Glucose_Monitoring.query.filter_by(user_id=current_user.user_id).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Record_Glucose_Monitoring.query.filter_by(user_id=current_user.user_id).order_by(desc(Record_Glucose_Monitoring.timestamp)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('data_integration/get_records_glucose_monitoring.html',
                            records=records,
                             user_notifications=user_notifications)
@@ -343,8 +343,8 @@ def get_records_glucose_monitoring():
 @login_required
 @access_log
 def get_records_food_intake():
-    records = Records_Food_Intake.query.filter_by(user_id=current_user.user_id).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Food_Intake.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Food_Intake.timestamp)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('data_integration/get_records_food_intake.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -353,8 +353,8 @@ def get_records_food_intake():
 @login_required
 @access_log
 def get_records_insulin_intake():
-    records = Records_Insulin_Intake.query.filter_by(user_id=current_user.user_id).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+    records = Records_Insulin_Intake.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Insulin_Intake.timestamp)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('data_integration/get_records_insulin_intake.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -363,8 +363,8 @@ def get_records_insulin_intake():
 @login_required
 @access_log
 def get_records_physical_activity():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-    records = Records_Physical_Activity.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    records = Records_Physical_Activity.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Physical_Activity.timestamp)).all()
     return render_template('data_integration/get_records_physical_activity.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -373,8 +373,8 @@ def get_records_physical_activity():
 @login_required
 @access_log
 def get_records_weight_tracking():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-    records = Records_Weight_Tracking.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    records = Records_Weight_Tracking.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Weight_Tracking.timestamp)).all()
     return render_template('data_integration/get_records_weight_tracking.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -383,8 +383,8 @@ def get_records_weight_tracking():
 @login_required
 @access_log
 def get_records_cholesterol():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-    records = Records_Cholesterol.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    records = Records_Cholesterol.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Cholesterol.timestamp)).all()
     return render_template('data_integration/get_records_cholesterol.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -393,8 +393,8 @@ def get_records_cholesterol():
 @login_required
 @access_log
 def get_records_hba1c():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-    records = Records_Hba1c.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    records = Records_Hba1c.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Hba1c.timestamp)).all()
     return render_template('data_integration/get_records_hba1c.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -403,8 +403,8 @@ def get_records_hba1c():
 @login_required
 @access_log
 def get_records_blood_pressure():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-    records = Records_Blood_Pressure.query.filter_by(user_id=current_user.user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    records = Records_Blood_Pressure.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Blood_Pressure.timestamp)).all()
     return render_template('data_integration/get_records_blood_pressure.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -415,8 +415,12 @@ def get_records_blood_pressure():
 @login_required
 @access_log
 def get_notifications():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-    return render_template('notifications/notifications.html', user_notifications=user_notifications)
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    if len(user_notifications) == 0:
+        error = "Error:no_record"
+    return render_template('notifications/notifications.html',
+                           user_notifications=user_notifications,
+                           error=error)
 
 @app.route('/test_neo4j')
 @login_required
@@ -471,7 +475,7 @@ def get_settings():
 @login_required
 @access_log
 def get_access_logs():
-    access_logs = Access_Log.query.join(Access_Log.user_access).all()
+    access_logs = Access_Log.query.all()
     return render_template("cybersecurity/access_logs.html", access_logs=access_logs)
 
 @app.route('/patients')
@@ -490,24 +494,42 @@ def get_all_doctors():
     doctors = Users.query.filter_by(permission="doctor").join(Users.user_raw).all() 
     return render_template("users/doctors.html", doctors=doctors)
 
+@app.route('/doctors/<string:user_id>')
+@login_required
+@access_log
+@admin_only
+def get_one_doctor(user_id):
+    """Update other user's setting (Admin-only)"""
+    doctor = Users.query.filter_by(user_id=user_id).all() 
+    return render_template("users/user_settings.html", user=doctor)
+
 @app.route('/user_settings', methods=['GET','POST'])
 @login_required
 @access_log
 def user_settings():
     if request.method== "GET":
-        # updated_user = Users.query.get(current_user.user_id)
         return render_template("users/user_settings.html", user=current_user)
     elif request.method == "POST":
-        print("aha")
-        updated_user = Users.query.get(current_user.user_id)
-        print(updated_user.name)
-        updated_user.email = request.form.get('email')
-        updated_user.password = request.form.get('password')
-        updated_user.name = request.form.get('name')
-
-        db.session.commit()
-        flash("Your Settings have been updated successfully!")
-        return render_template("users/user_settings.html", user=updated_user)
+        if request.args.get('user_id') == current_user.user_id:
+            updated_user = Users.query.get(current_user.user_id)
+            updated_user.email = request.form.get('email')
+            updated_user.password = request.form.get('password')
+            updated_user.name = request.form.get('name')
+            db.session.commit()
+            flash("Settings have been updated successfully!")
+            return render_template("users/user_settings.html", user=updated_user)
+        elif current_user.permission == 'admin':
+            user_id = request.args.get('user_id')
+            updated_user = Users.query.get(user_id)
+            updated_user.email = request.form.get('email')
+            updated_user.password = request.form.get('password')
+            updated_user.name = request.form.get('name')
+            db.session.commit()
+            flash("Settings have been updated successfully!")
+            return render_template("users/user_settings.html", user=updated_user)
+        else:
+            flash("Error")
+            return render_template("users/user_settings.html", user=current_user)
 
 # def find(lst, key, value):
 #     for i, dic in enumerate(lst):
@@ -551,7 +573,8 @@ def route_upload_files():
                 
                 # else:
                 #     raise KeyError() # not recognized file
-                return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
+                # return render_template(f"data_integration/get_{key}.html", user_notifications=user_notifications)
+                return redirect(url_for(f'get_{key}'))
             except Exception as e:
                 return f"Error: {e.__context__}"
 
