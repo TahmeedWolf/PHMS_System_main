@@ -14,3 +14,9 @@ class Records_Blood_Pressure(db.Model):
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
+    
+    def get_systolic(self):
+        return self.systolic
+    
+    def get_diastolic(self):
+        return self.diastolic

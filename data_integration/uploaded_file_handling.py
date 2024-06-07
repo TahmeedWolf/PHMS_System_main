@@ -5,6 +5,7 @@ from time import sleep
 import pandas as pd
 from sqlalchemy import text
 import os
+from tqdm import tqdm
 
 # Models.Records
 from Models.Records.Records_Glucose_Monitoring import *
@@ -64,16 +65,13 @@ def data_insert(key, df, attributes, current_user, driver):
     
 def data_insert_internal(df, record_class , attributes:list , current_user, key, kg_driver):
     # start extracting the attributes
-    for row in range(len(df)):
+    for row in tqdm(range(len(df))):
         entry_id = uuid1()
         new_entry = record_class(entry_id= entry_id, user_id=current_user.user_id)
         for attribute in attributes:
             # add all attributes in
-            # print(f"attribute: {attribute}")
-            # print(df.iloc[row][attribute])
             new_entry[attribute] = df.iloc[row][attribute]
         db.session.add(new_entry)
-        db.session.commit()
 
         # Knowledge Graph Data Insertion
         # Create a User node if it doesn't exist
@@ -93,14 +91,14 @@ def data_insert_internal(df, record_class , attributes:list , current_user, key,
                 else: #is number
                     node_attributes = node_attributes + "," +  attribute +  ":" + str(df.iloc[row][attribute])
 
-        # Batch create Data_Glucose nodes connected to Glucose Classes
-        for row in range(len(df)):
-            kg_driver.execute_query(
-                """MATCH (p:Patient) WHERE p.id = '{0}' CREATE (p)<-[:RECORDS_FOR]-(gm:{1} {{{2}}});""".format(current_user.user_id, 
-                                                                                                        kg_class,
-                                                                                                        node_attributes), 
-                                                                                                        database_="neo4j"
-            )
+        # Batch create Record nodes connected to Record Classes
+        kg_driver.execute_query(
+            """MATCH (p:Patient) WHERE p.id = '{0}' CREATE (p)<-[:RECORDS_FOR]-(gm:{1} {{{2}}});""".format(current_user.user_id, 
+                                                                                                    kg_class,
+                                                                                                    node_attributes), 
+                                                                                                    database_="neo4j")
         sleep(0.02) # Prevent same uuid
+    # Add in the records to mysql at one time
+    db.session.commit()
 
     return f"{len(df)} records are added successfully!"

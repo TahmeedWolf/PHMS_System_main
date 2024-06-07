@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, flash, url_for, redirect, Response
+from flask import Flask, request, render_template, flash, url_for, redirect, Response, jsonify
 import os
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
@@ -26,6 +26,9 @@ from Models.Records.Records_Blood_Pressure import *
 from data_integration.template_download import *
 # Handle all uploaded file
 from data_integration.uploaded_file_handling import *
+
+# Dashboard
+from data_integration.dashboard_data_query import *
 
 # Security
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -245,7 +248,7 @@ def logout():
 #                                   Homepage                                   #
 # ---------------------------------------------------------------------------- #
 
-@app.route('/')
+@app.route('/dashboard')
 @login_required
 @access_log
 def home():
@@ -321,6 +324,55 @@ def home():
                            user_line_chart_cgm=user_line_chart_cgm
                            )
 
+@app.get("/home")
+@login_required
+def get_home():
+    if request.args.get('user_id') is None:
+        user_id = current_user.user_id
+    elif current_user.permission == 'admin' or current_user.permission == 'doctor' and request.args.get('user_id') is not None:
+        user_id = request.args.get('user_id')
+    else:
+        user_id = current_user.user_id
+    user = Users.query.filter_by(user_id=user_id).first()
+
+    if user.birthday is not None:
+        year = user.birthday.strftime("%Y")
+        current_year = datetime.now().strftime("%Y")
+        age = int(current_year) - int(year)
+
+    # ------------------------ Retrieve data for dashboard ----------------------- #
+    records_glucose_monitoring = get_dashboard_data(Record_Glucose_Monitoring, user_id=user.user_id)
+    records_hba1c = get_dashboard_data(Records_Hba1c, user_id=user.user_id)
+    records_weight_tracking = get_dashboard_data(Records_Weight_Tracking, user_id=user.user_id)
+    records_cholesterol = get_dashboard_data(Records_Cholesterol, user_id=user.user_id)
+    records_blood_pressure = get_dashboard_data_bp(user_id=user.user_id)
+    records_food_intake = Records_Food_Intake.query.filter_by(user_id=user_id).order_by(desc(Records_Food_Intake.timestamp)).limit(10).all()
+
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+
+    if age is not None:
+        return render_template('home/index.html', user=user,
+                               age=age,
+                               records_glucose_monitoring=records_glucose_monitoring,
+                               records_hba1c=records_hba1c,
+                               records_weight_tracking=records_weight_tracking,
+                               records_blood_pressure=records_blood_pressure,
+                               records_cholesterol=records_cholesterol,
+                               user_notifications=user_notifications,
+                               records_food_intake=records_food_intake
+                               )
+    else:
+        return render_template('home/index.html', user=user,
+                               records_glucose_monitoring=records_glucose_monitoring,
+                               records_hba1c=records_hba1c,
+                               records_weight_tracking=records_weight_tracking,
+                               records_blood_pressure=records_blood_pressure,
+                               user_notifications=user_notifications
+                               )
+
+
+
+
 # ---------------------------------------------------------------------------- #
 #                           Upload of Healthcare Data                          #
 # ---------------------------------------------------------------------------- #
@@ -358,8 +410,9 @@ def route_upload_files():
                 key = key.replace(" ", "")
                 key = key.replace("(", "")
                 key = key.replace(")", "")
+                while key[-1].isdigit():
+                    key = key[:-1]
                 # Remove all numbers in filename
-                key = ''.join([c for c in key if not c.isdigit()])
 
                 print("before extract")
                 print(key)
@@ -372,7 +425,7 @@ def route_upload_files():
                     return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
                 print("before data_insert")
                 # inserting of record including selection of different class depend on key, insert into kg and db
-                df = df[:2]
+                # df = df[:25] # Uncomment this for testing purpose
                 print(df.info())
                 message = data_insert(key=key, df=df,attributes=attributes, current_user=current_user, driver=driver)
                 print("after data insertion")
@@ -605,7 +658,6 @@ def get_healthcare_providers():
 @login_required
 @access_log
 def get_one_healthcare_provider(user_id):
-    print(user_id)
     healthcare_provider = Users.query.filter_by(user_id=str(user_id)).join(Users.user_raw).first() 
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
     return render_template("home/healthcare_provider.html", healthcare_provider=healthcare_provider,

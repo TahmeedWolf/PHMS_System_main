@@ -15,3 +15,6 @@ class Records_Cholesterol(db.Model):
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
+
+    def get_value(self):
+        return self.total_cholesterol

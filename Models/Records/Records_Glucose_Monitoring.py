@@ -11,3 +11,6 @@ class Record_Glucose_Monitoring(db.Model):
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
+    
+    def get_value(self):
+        return self.glucose_level
