@@ -3,19 +3,10 @@ import os
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
 from sqlalchemy import text, desc
-from werkzeug.utils import secure_filename
-from time import sleep
-import json
 from uuid import uuid1
-import pandas as pd
 from integrations.kg_engine.neo4j_tools import *
 from integrations.nlg.MessageAnalyzer import MessangeAnalyzer
 from flask_bootstrap import Bootstrap5
-
-# User profile image
-from PIL import Image
-import io
-import base64
 
 # Models
 from Models.Users import *
@@ -41,6 +32,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from cybersecurity.authentication import *
 
+# ---------------------------------------------------------------------------- #
+#                               Main System Setup                              #
+# ---------------------------------------------------------------------------- #
+
 # Load environment variables from .env file
 load_dotenv()
 NEO4J_DB_URI = os.environ.get('NEO4J_DB_URI')
@@ -52,6 +47,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI'
 app.secret_key = os.environ.get('APP_SECRET_KEY')
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 30
 # app.config['UPLOAD_FOLDER'] = 'uploads/'
+
+# ---------------------------------------------------------------------------- #
+#                              Dual-Database Setup                             #
+# ---------------------------------------------------------------------------- #
 
 URI = f"neo4j+s://{NEO4J_DB_URI}"
 AUTH = (NEO4JDB_USER, NEO4JDB_PASSWORD)
@@ -82,6 +81,10 @@ def execute_query(driver, query, query_detail="", database="neo4j"):
         time=summary.result_available_after
     ))
   return 'Success'
+
+# ---------------------------------------------------------------------------- #
+#                                  Login Setup                                 #
+# ---------------------------------------------------------------------------- #
 
 # Configure Flask-Login's Login Manager
 login_manager = LoginManager()
@@ -238,6 +241,10 @@ def logout():
     flash(logout_message)
     return redirect(url_for("login"))
 
+# ---------------------------------------------------------------------------- #
+#                                   Homepage                                   #
+# ---------------------------------------------------------------------------- #
+
 @app.route('/')
 @login_required
 @access_log
@@ -314,6 +321,10 @@ def home():
                            user_line_chart_cgm=user_line_chart_cgm
                            )
 
+# ---------------------------------------------------------------------------- #
+#                           Upload of Healthcare Data                          #
+# ---------------------------------------------------------------------------- #
+
 @app.get("/data/template_download")
 @login_required
 @access_log
@@ -321,13 +332,62 @@ def get_template_download():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('data_integration/template_download.html', user_notifications=user_notifications, download=download)
 
-@app.route("/contact_us", methods=["GET", "POST"])
+@app.route('/upload_files', methods=['GET','POST'])
 @login_required
 @access_log
-def route_contact_us():
-    # TODO: finish this
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
-    return render_template('forms/contact_us.html', user_notifications=user_notifications)
+def route_upload_files():
+   if request.method == "GET":
+       user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+       return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
+   elif request.method == "POST" and request.files["file"] != "":
+            user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
+            try:
+                f = request.files["file"]
+                # Connect to KG
+                with GraphDatabase.driver(URI, auth=AUTH) as driver:
+                    driver.verify_connectivity()
+                    print("connected to KG-db")
+                
+                filename, _ = os.path.splitext(f.filename)
+                filename = filename.lower()
+                filename = filename.replace("_sample", "")
+                filename = filename.replace("_template", "")
+
+                key = "records_" + filename[2:]
+                # Sanitize the name
+                key = key.replace(" ", "")
+                key = key.replace("(", "")
+                key = key.replace(")", "")
+                # Remove all numbers in filename
+                key = ''.join([c for c in key if not c.isdigit()])
+
+                print("before extract")
+                print(key)
+                if key in records_list.keys():
+                    attributes = records_list[key]
+                    print(attributes)
+                    df = data_extract(f)
+                else:
+                    flash("Error: Incorrect file uploaded. Please try again.")
+                    return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
+                print("before data_insert")
+                # inserting of record including selection of different class depend on key, insert into kg and db
+                df = df[:2]
+                print(df.info())
+                message = data_insert(key=key, df=df,attributes=attributes, current_user=current_user, driver=driver)
+                print("after data insertion")
+                flash(message)
+                
+                # else:
+                #     raise KeyError() # not recognized file
+                # return render_template(f"data_integration/get_{key}.html", user_notifications=user_notifications)
+                return redirect(url_for(f'get_{key}'))
+            except Exception as e:
+                return f"Error: {e.__context__}"
+            
+# ---------------------------------------------------------------------------- #
+#                        Retrieve All User Uploaded Data                       #
+# ---------------------------------------------------------------------------- #
 
 @app.get("/data/records_glucose_monitoring")
 @login_required
@@ -409,7 +469,9 @@ def get_records_blood_pressure():
                            records=records,
                            user_notifications=user_notifications)
 
-
+# ---------------------------------------------------------------------------- #
+#                                 Notifications                                #
+# ---------------------------------------------------------------------------- #
 
 @app.get("/notifications")
 @login_required
@@ -421,6 +483,10 @@ def get_notifications():
     return render_template('notifications/notifications.html',
                            user_notifications=user_notifications,
                            error=error)
+
+# ---------------------------------------------------------------------------- #
+#                                 Testing Tools                                #
+# ---------------------------------------------------------------------------- #
 
 @app.route('/test_neo4j')
 @login_required
@@ -439,22 +505,6 @@ def get_neo4j():
             print(record.data())  # obtain record as dict
         return str(records[0].data())
 
-@app.route('/test_postgreql')
-@login_required
-@access_log
-def get_postgreql():
-   query = 'SELECT * FROM users limit 1;'
-   users = db.session.execute(text(query)).all()
-   print(users)
-   return str(users)
-
-@app.route('/test_mysql')
-@login_required
-@access_log
-def get_mysql():
-   query = 'SELECT * from users u;'
-   users = db.session.execute(text(query)).fetchall()
-   return str(users)
 
 @app.route('/test_openai')
 @login_required
@@ -464,20 +514,9 @@ def get_openai():
    analyzer_response = analyzer.evaluate("2024-05-11T00:38:21.439536 Dinner Salt, Tofu, Spices 2024-05-09T21:29:21.439536 Dinner Herbs, Salt, Lentils 2024-05-09T10:36:21.439536 Lunch Chicken breast, Cereal, Lentils, Soy sauce 2024-05-07T18:37:21.439536 Dinner Beans, Strawberries, Tofu 2024-05-06T20:21:21.439536 Dinner Mayonnaise, Tuna, Oats 2024-05-05T21:26:21.439536 Lunch Raspberries, Herbs, Maple syrup, Beans, Oats 2024-05-05T13:54:21.439536 Dinner Cucumber, Eggs, Carrot 2024-05-11T08:32:21.219779 104 2024-05-10T07:56:21.219779 96 2024-05-08T17:46:21.219779 98 2024-05-08T05:43:21.219779 158 2024-05-07T08:09:21.219779 161 2024-05-06T03:51:21.219779 171 2024-05-05T00:20:21.219779 193")
    return analyzer_response
 
-@app.route('/settings')
-@login_required
-@access_log
-def get_settings():
-    # user = current_user
-    return render_template("settings/settings.html")
-
-@app.route('/access_logs')
-@login_required
-@access_log
-def get_access_logs():
-    access_logs = Access_Log.query.all()
-    return render_template("cybersecurity/access_logs.html", access_logs=access_logs)
-
+# ---------------------------------------------------------------------------- #
+#                             Patients and Patient                             #
+# ---------------------------------------------------------------------------- #
 @app.route('/patients')
 @login_required
 @access_log
@@ -485,6 +524,11 @@ def get_access_logs():
 def get_all_patients():
     patients = Users.query.where(text(f"users.permission='user' and users.active=1")).all()
     return render_template("users/patients.html", patients=patients)
+
+
+# ---------------------------------------------------------------------------- #
+#                              Doctors and Doctor                              #
+# ---------------------------------------------------------------------------- #
 
 @app.route('/doctors')
 @login_required
@@ -502,6 +546,18 @@ def get_one_doctor(user_id):
     """Update other user's setting (Admin-only)"""
     doctor = Users.query.filter_by(user_id=user_id).all() 
     return render_template("users/user_settings.html", user=doctor)
+
+# ---------------------------------------------------------------------------- #
+#                                 User Settings                                #
+# ---------------------------------------------------------------------------- #
+
+@app.route('/settings')
+@login_required
+@access_log
+def get_settings():
+    # user = current_user
+    return render_template("settings/settings.html")
+
 
 @app.route('/user_settings', methods=['GET','POST'])
 @login_required
@@ -531,53 +587,10 @@ def user_settings():
             flash("Error")
             return render_template("users/user_settings.html", user=current_user)
 
-# def find(lst, key, value):
-#     for i, dic in enumerate(lst):
-#         if dic[key] == value:
-#             return i
-#     return None
-
-@app.route('/upload_files', methods=['GET','POST'])
-@login_required
-@access_log
-def route_upload_files():
-   if request.method == "GET":
-       user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-       return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
-   elif request.method == "POST" and request.files["file"] != "":
-            user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-            try:
-                f = request.files["file"]
-                # Connect to KG
-                # with GraphDatabase.driver(URI, auth=AUTH) as driver:
-                #     driver.verify_connectivity()
-                #     print("connected to KG-db")
-                
-                filename, _ = os.path.splitext(f.filename)
-                filename = filename.lower()
-                filename = filename.replace("_sample", "")
-                filename = filename.replace("_template", "")
-
-                key = "records_" + filename[2:]
-                if key in records_list.keys():
-                    attributes = records_list[key]
-                    df = data_extract(f)
-                else:
-                    flash("Error: Incorrect file uploaded. Please try again.")
-                    return render_template("data_integration/upload_file.html", user_notifications=user_notifications)
-                print("before data_insert")
-                # inserting of record including selection of different class depend on key, insert into kg and db
-                message = data_insert(key=key, df=df,attributes=attributes, current_user=current_user) # , driver
-                print("after data insertion")
-                flash(message)
-                
-                # else:
-                #     raise KeyError() # not recognized file
-                # return render_template(f"data_integration/get_{key}.html", user_notifications=user_notifications)
-                return redirect(url_for(f'get_{key}'))
-            except Exception as e:
-                return f"Error: {e.__context__}"
-
+# ---------------------------------------------------------------------------- #
+#                                  Admin Tools                                 #
+# ---------------------------------------------------------------------------- #
+# ---------------------------- Healthcare Provider --------------------------- #
 
 @app.route('/healthcare_providers')
 @login_required
@@ -587,7 +600,6 @@ def get_healthcare_providers():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
     return render_template("home/healthcare_providers.html", healthcare_providers=healthcare_providers,
                            user_notifications=user_notifications)
-
 
 @app.route('/healthcare_provider/<string:user_id>')
 @login_required
@@ -599,8 +611,24 @@ def get_one_healthcare_provider(user_id):
     return render_template("home/healthcare_provider.html", healthcare_provider=healthcare_provider,
                            user_notifications=user_notifications)
 
+@app.route('/access_logs')
+@login_required
+@access_log
+def get_access_logs():
+    access_logs = Access_Log.query.all()
+    return render_template("cybersecurity/access_logs.html", access_logs=access_logs)
 
+# ---------------------------------------------------------------------------- #
+#                                 Miscellaneous                                #
+# ---------------------------------------------------------------------------- #
 
+@app.route("/contact_us", methods=["GET", "POST"])
+@login_required
+@access_log
+def route_contact_us():
+    # TODO: finish this
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    return render_template('forms/contact_us.html', user_notifications=user_notifications)
 
 # 404-error handler    
 @app.errorhandler(404)
