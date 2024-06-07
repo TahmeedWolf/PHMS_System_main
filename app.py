@@ -248,85 +248,10 @@ def logout():
 #                                   Homepage                                   #
 # ---------------------------------------------------------------------------- #
 
-@app.route('/dashboard')
-@login_required
-@access_log
-def home():
-    """Below Shows the basic data format"""
-    user_info = {"birthday": "1996-10-11", "gender": "male", "name": "Peter"}
-    user_basic = {"height": 170, "weight":72}
-    user_notification = """To manage your body weight and blood glucose levels effectively, 
-                            focus on balanced meals with high-fiber foods, like beans and vegetables, and lean proteins, 
-                            such as tofu and chicken breast. Avoid high sugar and processed foods; instead, 
-                            opt for natural ingredients. Regularly monitoring your glucose levels is essential—aim 
-                            to keep it within the normal range (70-130 mg/dL before meals and less than 180 
-                            mg/dL after meals). Incorporate regular physical activity, such as daily walks or 
-                            exercise, to help maintain a healthy weight and improve insulin sensitivity. Stay 
-                            hydrated and consult your healthcare provider for personalized advice."""
-    user_summary_data = {"cgm": {"record_cgm_latest": 80, "status": "normal"},
-                           "hb" : {"record_hb_latest": 98, "status": "normal"},
-                           "bp" : {"record_bp_systolic": 102, "record_bp_diastolic": 72, "status": "normal"}
-                         }
-    user_meal_logs = [
-                        ["2024-05-20 18:06:07", "Chicken breast, Milk, Nuts, Cheese, Blueberries","Dinner", 378, 14],
-                      ["2024-05-20 12:06:07", "Eggs, Milk","Lunch", 707, 89],
-                      ["2024-05-20 08:06:07", "Cheese, Eggs, Mustard, Milk, Maple syrup","Breakfast", 970, 70],
-                        ["2024-05-19 18:06:07", "Grapes, Milk, Blueberries, Rice, Apple","Dinner", 378, 14],
-                      ["2024-05-19 12:06:07", "Beef, Cucumber","Lunch", 707, 89],
-                      ["2024-05-19 08:06:07", "Cheese, Eggs, Mustard, Milk, Maple syrup","Breakfast", 970, 70],
-                      ]
-    
-    user_line_chart_hba1c = [   ["2024-05-14T16:22:34.462354", 9.64],
-                                ["2024-05-13T19:13:34.462354", 6.99],
-                                ["2024-05-12T19:27:34.462354", 4.44],
-                                ["2024-05-11T03:54:34.462354", 5.59],
-                                ["2024-05-10T13:29:34.462354", 4.78],
-                                ["2024-05-09T19:50:34.462354", 8.13],
-                                ["2024-05-08T13:59:34.462354", 4.84]
-                            ]
-    user_line_chart_weight = [
-                                ["2024-05-14T12:29:34.525233", 75.1],
-                                ["2024-05-13T18:34:34.525233", 77.8],
-                                ["2024-05-13T08:02:34.525233", 76.4],
-                                ["2024-05-11T14:13:34.525233", 75.1],
-                                ["2024-05-11T04:22:34.525233", 75.7],
-                                ["2024-05-09T13:58:34.525233", 75.2],
-                                ["2024-05-08T11:47:34.525233", 76]
-    ]
-    user_line_chart_cgm = [
-                                ["2024-05-14T19:14",10.3],
-                                ["2024-05-14T19:19",9.9],
-                                ["2024-05-14T19:23",9.4],
-                                ["2024-05-14T19:24",9.8],
-                                ["2024-05-14T19:29",9.6],
-                                ["2024-05-14T19:34",9.4],
-                                ["2024-05-14T19:39",9.2],
-                                ["2024-05-14T19:44",8.9],
-                                ["2024-05-14T19:49",8.7],
-                                ["2024-05-14T19:54",8.4],
-                                ["2024-05-14T19:59",8.2],
-                                ["2024-05-14T20:04",8],
-                                ["2024-05-14T20:09",7.9],
-                                ["2024-05-14T20:14",7.9],
-                                ["2024-05-14T20:19",7.8]
-                        ]
-
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
-
-    return render_template('home/index.html',
-                           user_info=user_info,
-                           user_basic=user_basic,
-                           user_notifications=user_notifications,
-                           user_summary_data=user_summary_data,
-                           user_meal_logs=user_meal_logs,
-                           user_line_chart_hba1c=user_line_chart_hba1c,
-                           user_line_chart_weight=user_line_chart_weight,
-                           user_line_chart_cgm=user_line_chart_cgm
-                           )
 
 @app.get("/home")
 @login_required
-def get_home():
+def home():
     if request.args.get('user_id') is None:
         user_id = current_user.user_id
     elif current_user.permission == 'admin' or current_user.permission == 'doctor' and request.args.get('user_id') is not None:
