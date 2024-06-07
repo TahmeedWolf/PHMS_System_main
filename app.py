@@ -607,6 +607,10 @@ def route_contact_us():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     return render_template('forms/contact_us.html', user_notifications=user_notifications)
 
+@app.route("/terms_and_condition", methods=["GET"])
+def get_tnc():
+    return render_template('forms/terms_and_condition.html')
+
 # 404-error handler    
 @app.errorhandler(404)
 def page_not_found(error):
