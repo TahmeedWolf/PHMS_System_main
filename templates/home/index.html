@@ -1,368 +1,1136 @@
-{% extends 'layouts/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %} Dashboard {% endblock title %}
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}
-<script src="static/assets/vendor/apexcharts/apexcharts.min.js"></script>
-{% endblock stylesheets %}
+  <title>LUMI Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-{% block content %}
-<div class="container pb-5">
-    <div class="row">
-      <div class="col-lg-9 col-10">
-          <h1 class="pt-3 pl-4">Healthcare Providers</h1>
+  <!-- Favicons -->
+  <link rel="icon" href="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" type="image/svg+xml">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
+
+  {% block stylesheets %}
+  <script src="static/assets/vendor/apexcharts/apexcharts.min.js"></script>
+  {% endblock stylesheets %}
+
+
+  <style>
+    .pagetitle {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font */
+    }
+    
+    .pagetitle h1 {
+      font-weight: 500;
+      font-weight: bold;
+      padding-top: 10px;
+    }
+    
+    .pagetitle-time h6 {
+      font-size: 0.75rem;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    
+    .blood-sugar-card {
+      border-radius: 15px; /* Rounded corners */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+      height: 300px; /* Ensures the card takes full vertical space available */
+      transition: transform 0.2s, box-shadow 0.2s; /* Adding transition for hover effect */
+    }
+    
+    .blood-sugar-card:hover {
+      transform: translateY(-5px); /* Move the card up slightly */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    }
+    
+    .blood-sugar-card .card-body {
+      height: 400px; /* Adjust height as needed */
+      /*display: flex;
+      flex-direction: column;
+      justify-content: center;*/
+    }
+    
+    .blood-sugar-card .card-title {
+      margin-left: 5px;
+      margin-right: 20px;
+      margin-top: 40px;
+      font-size: 16px; /* Small title font size*/
+    }
+    
+    .blood-sugar-card .card-icon {
+     /* Adjust margin as needed for spacing */
+      margin-top: 40px;
+    }
+    
+    .blood-sugar-card .ps-3.mt-3 {
+      margin-top: 10px; /* Adjust margin as needed for spacing */
+      text-align: left;
+      
+    }
+    
+    .blood-sugar-card .ps-3.mt-3 h6 {
+      margin: 0; /* Adjust margin as needed */
+      
+    }
+    
+    .blood-sugar-card .ps-3.mt-3 span {
+      display: inline; /* Ensure "mg / dL" appears inline */
+      
+    }
+    
+    .blood-sugar-card .bs-bg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px;
+    }
+            
+    .heart-rate-card {
+      border-radius: 15px; /* Rounded corners */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+      height: 300px; /* Ensures the card takes full vertical space available */
+      position: relative; /* Required for absolute positioning of the wave */
+      transition: transform 0.2s, box-shadow 0.2s; /* Adding transition for hover effect */
+    }
+    
+    .heart-rate-card:hover {
+      transform: translateY(-5px); /* Move the card up slightly */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    }
+    
+    
+    .heart-rate-card .card-body {
+      padding-bottom: 60px; /* Make space for the wave at the bottom */
+    }
+    
+    .heart-rate-card .card-title {
+      margin-left: 5px;
+      margin-right: 20px;
+      margin-top: 40px;
+      font-size: 16px; /* Small title font size*/
+    }
+    
+    .heart-rate-card .card-icon {
+      margin-top: 40px; /* Adjust margin as needed for spacing */
+    }
+    
+    .heart-rate-card .ps-3.mt-3 {
+      margin-top: 10px; /* Adjust margin as needed for spacing */
+      text-align: left;
+    }
+    
+    .heart-rate-card .ps-3.mt-3 h6 {
+      margin: 0; /* Adjust margin as needed */
+    }
+    
+    .heart-rate-card .ps-3.mt-3 span {
+      display: inline; /* Ensure "bpm" appears inline */
+    }
+    
+    .heart-rate-card .bs-bg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px; /* Adjust the width as needed */
+    }
+    
+
+    .blood-pressure-card {
+      border-radius: 15px; /* Rounded corners */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+      height: 300px; /* Ensures the card takes full vertical space available */
+      position: relative; /* Required for absolute positioning of the wave */
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .blood-pressure-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }    
+    
+    .blood-pressure-card .card-body {
+      padding-bottom: 60px; /* Make space for the wave at the bottom */
+    }
+    
+    .blood-pressure-card .card-title {
+      margin-right: 40px;
+      margin-top: 40px;
+      font-size: 16px; /* Small title font size*/
+
+    }
+    
+    .blood-pressure-card .card-icon {
+      margin-top: 40px; /* Adjust margin as needed for spacing */
+    }
+    
+    .blood-pressure-card .ps-3.mt-3 {
+      margin-top: 10px; /* Adjust margin as needed for spacing */
+      text-align: left;
+    }
+    
+    .blood-pressure-card .ps-3.mt-3 h6 {
+      margin: 0; /* Adjust margin as needed */
+    }
+    
+    .blood-pressure-card .ps-3.mt-3 span {
+      display: inline; /* Ensure "mmHg" appears inline */
+    }
+    
+    .blood-pressure-card .bs-bg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px; /* Adjust the width as needed */
+    }
+    
+    .height-card {
+      background-color: rgb(244, 207, 166);
+      font-size: 14px;
+      margin-top: 40px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .height-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .height-card .card-title {
+      font-size: 14px;
+    }    
+    
+    .bmi-card {
+      background-color: rgb(91, 90, 90);
+      color: white;
+      padding-bottom: 55px;
+      position: relative; /* Ensure the card can contain the absolute positioned elements */
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .bmi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bmi-card .card-title {
+      color: white;
+      font-size: 14px;
+    }
+    
+    .bmi-container {
+      display: flex;
+      align-items: center;
+      gap: 30px; /* space between BMI value and status */
+    }
+    
+    .bmi-status {
+      font-size: 12px; /* smaller font size */
+      font-weight: bold;
+      color: black;
+      background-color: #d4ffbb; /* background color */
+      padding: 2px 5px; /* smaller padding */
+      border-radius: 10px;
+    }
+    
+    .bmi-scale {
+      position: relative;
+      width: 100%;
+      height: 11px; /* Adjust height to fit numbers */
+      background: linear-gradient(to right, #ff9999, #ffd480, #ffff99, #ccffcc, #99ccff, #d1b3ff, #ffb3e6);
+      border-radius: 5px; /* Optional: to make the ends of the scale rounded */
+      margin-top: 60px; /* Space between the BMI container and the scale */
+    }
+    
+    .bmi-indicator {
+      position: absolute;
+      top: -5px; /* Position above the scale */
+      width: 8px;
+      height: 8px;
+      background-color: red; /* Color of the indicator */
+      border-radius: 50%; /* Make it a circle */
+      border: 1.2px solid white; /* White border */
+      transform: translateX(-50%); /* Center the circle on the position */
+    }
+    
+    .bmi-numbers {
+      position: absolute;
+      top: 20px; /* Position below the scale */
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: white;
+    }
+    
+    .bmi-numbers span {
+      position: relative;
+      transform: translateX(-50%);
+    }
+    
+    .height-container, .weight-container {
+      display: flex;
+      align-items: center;
+      gap: 10px; /* Space between value and scale */
+    }
+    
+    .height-scale, .weight-scale {
+      position: relative;
+      flex-grow: 1;
+      height: 5px; /* Adjust height for a typical scale */
+      background: #363636; /* Gray background for height and weight scales */
+      border-radius: 2px; /* Optional: to make the ends of the scale rounded */
+    }
+    
+    .height-indicator, .weight-indicator {
+      position: absolute;
+      top: -5px; /* Position above the scale */
+      width: 8px;
+      height: 8px;
+      background-color: red; /* Color of the indicator */
+      border-radius: 50%; /* Make it a circle */
+      border: 1.2px solid white; /* White border */
+      transform: translateX(-50%); /* Center the circle on the position */
+    }
+    
+    .height-numbers, .weight-numbers {
+      position: absolute;
+      top: -20px; /* Position above the scale */
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px; /* Smaller font size */
+      color: black;
+    }
+    
+    .height-numbers span, .weight-numbers span {
+      position: relative;
+      transform: translateX(-50%);
+    }
+                        
+    .weight-card {
+      background-color: rgb(193, 230, 245);
+      margin-top: -155px;
+      font-size: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .weight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .weight-card .card-title {
+      font-size: 14px;
+    }
+
+    .diagnostic-chart-card .card {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .diagnostic-chart-card .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    
+    .general-info{
+      margin-top: -32px;
+      margin-bottom: 45px;
+      
+    }
+        
+    .card-title {
+      font-size: 1.25rem;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .latest-ai-card {
+      height: 150px; 
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: -50px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .latest-ai-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    
+    .meal-card-body {
+      padding-bottom: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .meal-card-body:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+      margin-bottom: 10px;
+    }
+    
+    .smaller-font {
+      font-size: 0.8em;
+    }
+    .card Patient-card{
+      max-height: 20px;
+      overflow-y: auto; 
+      margin-top: -50px;
+    }
+    .smaller-font {
+      font-size: 0.875rem; /* Adjust the size as needed */
+    }
+    
+    .patient-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .patient-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .patient-card .card-title {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font stack */
+    }
+    
+    .patient-card .card-text {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font stack */
+    }
+    
+    .patient-card hr {
+      border-top: 1px solid #dee2e6;
+    }
+
+    .card consultation-card{
+      overflow-y: auto; 
+      margin-top: -50px;
+      height: 20px; 
+      padding: 0px; 
+    }
+
+    .consultation-card {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .consultation-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+      
+  </style>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <a href="{{ url_for('home') }}" class="logo d-flex align-items-center">
+      <img src="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" alt="">
+      <span class="d-none d-lg-block">LUMI</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End LUMI Logo -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
+
+        <li class="nav-item dropdown">
+            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-bell"></i>
+              <span class="badge bg-primary badge-number">{{ user_notifications|length }}</span>
+            </a><!-- End Notification Icon -->
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+              <li class="dropdown-header">
+                You have {{ user_notifications|length }} new notifications
+                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% for notification in user_notifications %}
+              <li class="notification-item">
+                <i class="bi bi-info-circle text-primary"></i>
+                <div>
+                  <h4>{{ notification.title }}</h4>
+                  <p>{{ notification.notification_content }}</p>
+                  <p>{{ notification.created_time.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% endfor %}
+              <li class="dropdown-footer">
+                <a href="#">Show all notifications</a>
+              </li>
+            </ul><!-- End Notification Dropdown Items -->
+          </li><!-- End Notification Nav -->
+          
+        <li class="nav-item dropdown pe-3">
+
+          <li class="nav-item dropdown pe-3 align-items-center">
+
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+              <div class="text-end">
+                <span class="d-none d-md-block dropdown-toggle ps-2 fw-semibold text-sm">Hey, {{ current_user.name.title() }}
+                  {% if current_user.permission == 'doctor' or current_user.permission == 'admin' %}
+                </span>
+                <span class="text-sm pr-3 text-light">{{ current_user.permission }}</span>
+              </div>
+                {% endif %}
+              {% if current_user.profile_img_url %}
+              <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
+              {% else %}
+              <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
+              {% endif %}
+            </a><!-- End Profile Image Icon -->
+  
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+              <li class="dropdown-header">
+                <b>{{ current_user.name }}</b>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/user_settings">
+                  <i class="bi bi-person"></i>
+                  <span>My Profile</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/settings">
+                  <i class="bi bi-gear"></i>
+                  <span>Account Settings</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/logout">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </a>
+              </li>
+  
+            </ul><!-- End Profile Dropdown Items -->
+          </li><!-- End Profile Nav -->  
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar d-flex flex-column justify-content-between">
+
+<!-- Nav items -->
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('home') }}">
+                <i class="bi bi-grid" style="color: orange;"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/chat">
+                <i class="bi bi-chat-left-text" style="color: orange;"></i>
+                <span>Chat</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/upload_files">
+                <i class="bi bi-cloud-arrow-up" style="color: orange;"></i>
+                <span>Upload</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/my_data">
+              <i class="bi bi-file-earmark-bar-graph" style="color: orange;"></i>
+              <span>My Data</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/notifications">
+                <i class="bi bi-lightbulb"  style="color: orange;"></i>
+                <span>Insights</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="/healthcare_providers">
+              <i class="bi bi-person-square"  style="color: orange;;"></i>
+              <span>Doctors</span>
+            </a>
+        </li>
+        {% if current_user.permission == "admin" or current_user.permission == "doctor" %}
+        <li class="nav-item">
+            <a class="nav-link collapsed" href='/patients'>
+                <i class="bi bi-people" style="color: orange;"></i>
+                <span>Patients</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% if current_user.permission == "admin" %}
+        <li class="nav-item dropdown">
+            <a class="nav-link collapsed dropdown-toggle" onclick="adminToolToggler()">
+                <i class="bi bi-gear "style="color: orange;"></i>
+                <span>Admin Tools</span>
+            </a>
+            <div class="dropdown collapse" aria-labelledby="navbarDropdownMenuLink" id="navbarDropdownMenuLink">
+                <a class="nav-link pl-5" href="{{ url_for('get_all_doctors') }}"><span>Manage Doctors</span></a>
+                <a class="nav-link pl-5" href="/create_new_hp"><span>Create Account</span></a>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href='/access_logs'>
+                <i class="bi-journal-text" style="color: orange;"></i>
+                <span>Access Log</span>
+            </a>
+        </li>
+        {% endif %}
+      </ul>
+
+    </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle mt-4">
+      <h1 class="mb-0">Health Overview</h1>
+      <div class="pagetitle-time">
+        <h6 class="mb-0">May 25, 2024</h6>
       </div>
+    </div>
+      <nav>
+
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+<!-- Blood Sugar Card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card sales-card blood-sugar-card">
+        <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                </li>
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='public2/bloodsugardevice.png') }}" alt="" style="background-color: rgb(244, 207, 166); border-radius: 25%; width: 65px;">
+                </div>
+                <div class="ps-3">
+                    <h5 class="card-title">Blood&nbsp;Sugar</h5>
+                </div>
+            </div>
+            <div class="ps-3 mt-3">
+                <h6 class="mb-0">{{ records_glucose_monitoring["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">mg / dL</span></h6>
+                <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Normal</span>
+            </div>
+        </div>
+        <div class="bs-bg">
+            <img src="{{ url_for('static', filename='public2/bgsugarwave.png') }}" alt="Wave" style="width: 100%; display: block;">
+        </div>
+    </div>
+</div><!-- End Blood Sugar Card -->
+
+<!-- Heart Rate Card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card sales-card heart-rate-card">
+        <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                </li>
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='public2/heartrate.png') }}" alt="" style="background-color: rgb(249, 226, 234); border-radius: 25%; width: 65px;">
+                </div>
+                <div class="ps-3">
+                    <h5 class="card-title">Heart&nbsp;Rate</h5>
+                </div>
+            </div>
+            <div class="ps-3 mt-3">
+                <h6 class="mb-0">{{ records_hba1c["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">bpm</span></h6>
+                <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(249, 226, 234); padding: 5px 10px; margin-top: 10px;">Normal</span>
+            </div>
+        </div>
+        <div class="bs-bg">
+            <img src="{{ url_for('static', filename='public2/heartrate-wave.png') }}" alt="Wave" style="width: 210px; display: block;">
+        </div>
+    </div>
+</div><!-- End Heart Rate Card -->
+
+<!-- Blood Pressure Card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card sales-card blood-pressure-card">
+        <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                    <h6>Filter</h6>
+                </li>
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='public2/bloodpressure.png') }}" alt="" style="background-color: rgb(193, 230, 245); border-radius: 25%; width: 65px;">
+                </div>
+                <div class="ps-3">
+                    <h5 class="card-title">Blood&nbsp;Pressure</h5>
+                </div>
+            </div>
+            <div class="ps-3 mt-3">
+                <h6 class="mb-0">{{ records_blood_pressure["value_systolic"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">/ {{ records_blood_pressure["value_diastolic"][0] }} &nbsp;&nbsp;mmHg</span></h6>
+                <span class="text-danger small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(193, 230, 245); padding: 5px 10px; margin-top: 10px;">Critical</span>
+            </div>
+        </div>
+        <div class="bs-bg">
+            <img src="{{ url_for('static', filename='public2/bloodpressurewave.png') }}" alt="Wave" style="width: 210px; display: block;">
+        </div>
+    </div>
+</div><!-- End Blood Pressure Card -->
+
+        <!-- Diagnostic Analysis Chart-->
+        <div class="col-12 diagnostic-chart-card">
+          <div class="card">    
+              <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                      <li class="dropdown-header text-start">
+                          <h6>Filter</h6>
+                      </li>
+                      <li><a class="dropdown-item" href="#">Today</a></li>
+                      <li><a class="dropdown-item" href="#">This Month</a></li>
+                      <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+              </div>
+
+              <div class="card-body">
+                  <h5 class="card-title">Diagnostic Analysis</h5>
+
+                  <!-- Nav Tabs -->
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="cholesterol-tab" data-bs-toggle="tab" data-bs-target="#cholesterol" type="button" role="tab" aria-controls="cholesterol" aria-selected="true">Cholesterol</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="glucose-tab" data-bs-toggle="tab" data-bs-target="#glucose" type="button" role="tab" aria-controls="glucose" aria-selected="false">Glucose</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="hba1c-tab" data-bs-toggle="tab" data-bs-target="#hba1c" type="button" role="tab" aria-controls="hba1c" aria-selected="false">HbA1c</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="blood-pressure-tab" data-bs-toggle="tab" data-bs-target="#blood-pressure" type="button" role="tab" aria-controls="blood-pressure" aria-selected="false">Blood Pressure</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="weight-tab" data-bs-toggle="tab" data-bs-target="#weight" type="button" role="tab" aria-controls="weight" aria-selected="false">Weight</button>
+                      </li>
+                  </ul>
+
+                  <!-- Tab Content -->
+                  <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="cholesterol" role="tabpanel" aria-labelledby="cholesterol-tab">
+                          <div id="cholesterolChart"></div>
+                      </div>
+                      <div class="tab-pane fade" id="glucose" role="tabpanel" aria-labelledby="glucose-tab">
+                          <div id="glucoseChart"></div>
+                      </div>
+                      <div class="tab-pane fade" id="hba1c" role="tabpanel" aria-labelledby="hba1c-tab">
+                          <div id="hba1cChart"></div>
+                      </div>
+                      <div class="tab-pane fade" id="blood-pressure" role="tabpanel" aria-labelledby="blood-pressure-tab">
+                          <div id="bloodPressureChart"></div>
+                      </div>
+                      <div class="tab-pane fade" id="weight" role="tabpanel" aria-labelledby="weight-tab">
+                          <div id="lineChartWeightTracking"></div>
+                      </div>
+                  </div>
+
+                  <script>
+                      document.addEventListener("DOMContentLoaded", () => {
+                          const options = (name, data) => ({
+                              series: [{
+                                  name: name,
+                                  data: data
+                              }],
+                              chart: {
+                                  height: 350,
+                                  type: 'area',
+                                  toolbar: {
+                                      show: false
+                                  },
+                              },
+                              markers: {
+                                  size: 4
+                              },
+                              colors: ['#4154f1'],
+                              fill: {
+                                  type: "gradient",
+                                  gradient: {
+                                      shadeIntensity: 1,
+                                      opacityFrom: 0.3,
+                                      opacityTo: 0.4,
+                                      stops: [0, 90, 100]
+                                  }
+                              },
+                              dataLabels: {
+                                  enabled: false
+                              },
+                              stroke: {
+                                  curve: 'smooth',
+                                  width: 2
+                              },
+                              xaxis: {
+                                  categories: ["Mar 01", "Mar 05", "Mar 10", "Mar 15", "Mar 20", "Mar 25", "Mar 30"]
+                              },
+                              tooltip: {
+                                  x: {
+                                      format: 'dd/MM'
+                                  },
+                              }
+                          });
+
+                          const cholesterolData = [200, 195, 210, 205, 190, 215, 200];
+                          const glucoseData = [90, 85, 88, 92, 87, 89, 91];
+                          const hba1cData = [5.6, 5.5, 5.7, 5.6, 5.4, 5.8, 5.6];
+                          const bloodPressureData = [
+                              {
+                                  name: 'Systolic',
+                                  data: [120, 115, 125, 120, 115, 125, 120]
+                              },
+                              {
+                                  name: 'Diastolic',
+                                  data: [80, 75, 85, 80, 75, 85, 80]
+                              }
+                          ];
+
+                          new ApexCharts(document.querySelector("#cholesterolChart"), options('Cholesterol', cholesterolData)).render();
+                          new ApexCharts(document.querySelector("#glucoseChart"), options('Glucose', glucoseData)).render();
+                          new ApexCharts(document.querySelector("#hba1cChart"), options('HbA1c', hba1cData)).render();
+                          new ApexCharts(document.querySelector("#bloodPressureChart"), options('Blood Pressure', bloodPressureData)).render();
+
+                          const weightOptions = {
+                              series: [{
+                                  name: 'Body Weight (kg)',
+                                  data: {{records_weight_tracking["value"] | tojson}}
+                              }],
+                              chart: {
+                                  type: 'area',
+                                  stacked: false,
+                                  height: 350,
+                                  zoom: {
+                                      type: 'x',
+                                      enabled: true,
+                                      autoScaleYaxis: true
+                                  },
+                                  toolbar: {
+                                      autoSelected: 'zoom'
+                                  }
+                              },
+                              dataLabels: {
+                                  enabled: false
+                              },
+                              markers: {
+                                  size: 0,
+                              },
+                              title: {
+                                  text: 'Body Weight',
+                                  align: 'left'
+                              },
+                              fill: {
+                                  type: 'gradient',
+                                  gradient: {
+                                      shadeIntensity: 1,
+                                      inverseColors: false,
+                                      opacityFrom: 0.5,
+                                      opacityTo: 0,
+                                      stops: [0, 90, 100]
+                                  },
+                              },
+                              yaxis: {
+                                  title: {
+                                      text: 'Body Weight (kg)'
+                                  },
+                              },
+                              xaxis: {
+                                  type: 'datetime',
+                                  categories: {{records_weight_tracking["timestamp"] | tojson}}
+                              },
+                              tooltip: {
+                                  shared: false,
+                              }
+                          };
+
+                          new ApexCharts(document.querySelector("#lineChartWeightTracking"), weightOptions).render();
+                      });
+                  </script>
+              </div>
+          </div>
+        </div>
+        <!-- End Diagnostic Analysis Chart-->
+
+        <!-- Consultation Image Card -->
+        <div class="card consultation-card shadow-sm border-0">
+          <div class="card-body">
+            <img src="{{ url_for('static', filename='public2/consultation.png') }}" alt="">
+
+          </div>
+        </div><!-- Consultation Image Card -->
+      
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+        <!-- Patient Info Card -->
+        <div class="card patient-card shadow-sm border-0">
+          <div class="card-body pb-0">
+            <div class="pl-4 smaller-font">
+              <h3 class="card-title"><strong>Patient Information</strong></h3>
+              <hr>
+              <p class="card-text">Name: {{ user.name }}</p>
+              <p class="card-text">Birthday: {{ user.birthday }}</p>
+              <p class="card-text">Age: {{ age }}</p>
+              <p class="card-text">Gender: {{ user.gender }}</p>
+              <p class="card-text">Height: {{ user.height }}</p>
+              <p class="card-text">Weight: {{ records_weight_tracking["value"][0] }} kg</p>
+            </div>
+          </div>
+        </div><!-- End Patient Info Card -->
+
+        <!-- BMI Calculator Card -->
+        <div class="container">
+          <div class="row">
+              <h5><strong>BMI Calculator</strong></h5>
+              <div class="col-md-6 mb-4">
+                  <div class="card height-card">
+                      <div class="card-body">
+                          <h5 class="card-title">Height</h5>
+                          <div class="height-container">
+                              <div class="height-value" id="heightValue">{{ user.height }} cm</div>
+                              <div class="height-scale">
+                                  <div class="height-indicator" id="heightIndicator"></div>
+                                  <div class="height-numbers">
+                                      <span>150</span>
+                                      <span>175</span>
+                                      <span>195</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="col-md-6 mb-4">
+                  <h5 class="general-info"><strong>General Info</strong></h5>
+                  <div class="card bmi-card">
+                      <div class="card-body">
+                          <h5 class="card-title">Body&nbsp;Mass&nbsp;Index</h5>
+                          <div class="bmi-container">
+                              <div class="bmi-value" id="bmiValue"></div>
+                              <div class="bmi-status" id="bmiStatus"></div>
+                          </div>
+                          <div class="bmi-scale">
+                              <div class="bmi-indicator" id="bmiIndicator"></div>
+                              <div class="bmi-numbers">
+                                  <span>15</span>
+                                  <span>18</span>
+                                  <span>22.86</span>
+                                  <span>28</span>
+                                  <span>30</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6 mb-4">
+                  <div class="card weight-card">
+                      <div class="card-body">
+                          <h5 class="card-title">Weight</h5>
+                          <div class="weight-container">
+                              <div class="weight-value" id="weightValue">{{ records_weight_tracking["value"][0] }} kg</div>
+                              <div class="weight-scale">
+                                  <div class="weight-indicator" id="weightIndicator"></div>
+                                  <div class="weight-numbers">
+                                      <span>50</span>
+                                      <span>70</span>
+                                      <span>90</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <script>
+        function setIndicator(indicatorId, value, minValue, maxValue) {
+          const indicator = document.getElementById(indicatorId);
+          
+          // Calculate position as a percentage of the range
+          const positionPercentage = ((value - minValue) / (maxValue - minValue)) * 100;
+          
+          // Set the left position of the indicator
+          indicator.style.left = `${positionPercentage}%`;
+        }
+
+        function calculateBMI(height, weight) {
+          // Height in meters
+          const heightInMeters = height / 100;
+          return (weight / (heightInMeters * heightInMeters)).toFixed(2);
+        }
+
+        function getBMIStatus(bmi) {
+          if (bmi < 18.5) return 'Underweight';
+          if (bmi < 24.9) return 'Healthy';
+          if (bmi < 29.9) return 'Overweight';
+          if (bmi > 30) return 'Obese';
+          return 'No Data';
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+          // Get height and weight from the DOM
+          const height = parseFloat(document.getElementById('heightValue').textContent);
+          const weight = parseFloat(document.getElementById('weightValue').textContent);
+
+          // Set the height and weight indicators
+          setIndicator('heightIndicator', height, 150, 195);
+          setIndicator('weightIndicator', weight, 50, 90);
+
+          // Calculate BMI and update the DOM
+          const bmi = calculateBMI(height, weight);
+          document.getElementById('bmiValue').textContent = bmi;
+          document.getElementById('bmiStatus').textContent = getBMIStatus(bmi);
+          setIndicator('bmiIndicator', parseFloat(bmi), 15, 30);
+        });
+        </script>
+        <!-- End BMI Calculator Card -->
+
+        <!-- Latest AI Generated Recommendations Card -->
+        <div class="card latest-ai-card">
+          <div class="card-body">
+            <span class="card-title">
+              <p><strong>Latest AI Recommendations</strong></p>
+              <p class="smaller-font">{{ user_notifications[0].notification_content}}</p>
+            </span>
+          </div>
+        </div><!-- End Latest AI Generated Recommendations Card -->
+
+        <!-- Meal Logs Card -->
+        <div class="card meal-logs-card">
+          <div class="meal-card-body p-0" style="flex: 1;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Food Items</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for record in records_food_intake %}
+                  {% if loop.index0 < 5 %}
+                  <tr>
+                    <td>{{ record.food_items }}</td>
+                    <td>{{ record.timestamp }}</td>
+                  </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div><!-- End Meal Logs Card -->
+        
+        </div><!-- End Right side columns -->
+
       </div>
-          <div clss="card">
-              <div class="pl-5">
-                <h3>User basic information</h3>
-                <p>Name {{ user.name }}</p>
-                <p>Birthday {{ user.birthday }}</p>
-                <p>Age: {{age}}</p>
-                <p>Gender: {{user.gender}}</p>
-                <p>Weight: {{ records_weight_tracking["value"][0] }}kg</p>
+    </section>
 
-                <!-- --------------------------- 3 cards at top ---------------------------- -->
-                 <h3>3 cards at top</h3>
-                 <p>Blood Sugar: {{records_glucose_monitoring["value"][0]}}</p>
-                 <p>HbA1c Level: {{records_hba1c["value"][0]}}</p>
-                 <p>Blood Pressure Systolic: {{records_blood_pressure["value_systolic"][0]}}</p>
-                 <p>Blood Pressure Diastolic: {{records_blood_pressure["value_diastolic"][0]}}</p>
+  </main><!-- End #main -->
 
-                <!-- ---------------------- Latest AI Recommendations ---------------------- -->
-                <p><strong>Latest AI Recommendations</strong></p>
-                <p>{{user_notifications[0].notification_content}}</p>
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
 
-                <!-- ------------------------------ Meal Logs ------------------------------ -->
-                 <table class="table">
-                     <tbody>
-                     {% for record in records_food_intake %}
-                        <tr>
-                            <td>{{ record.food_items }}</td>
-                            <td>{{ record.timestamp }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    </table>
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
 
-                <!-- Line Chart Cholesterol -->
-              <div id="lineChartCholesterol"></div>
-                
-              <script>
-                    var options = {
-                        series: [{
-                        name: 'Cholesterol Level',
-                        data: {{records_cholesterol["value"] | tojson}}
-                        }],
-                        chart: {
-                        type: 'area',
-                        stacked: false,
-                        height: 350,
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        }
-                        },
-                        dataLabels: {
-                        enabled: false
-                        },
-                        markers: {
-                        size: 0,
-                        },
-                        title: {
-                        text: 'Cholesterol Levels',
-                        align: 'left'
-                        },
-                        fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            inverseColors: false,
-                            opacityFrom: 0.5,
-                            opacityTo: 0,
-                            stops: [0, 90, 100]
-                        },
-                        },
-                        yaxis: {
+</body>
 
-                        title: {
-                            text: 'Cholesterol level'
-                        },
-                        },
-                        xaxis: {
-                        type: 'datetime',
-                        categories: {{records_cholesterol["timestamp"] | tojson}} 
-                        },
-                        tooltip: {
-                        shared: false,
-                        }
-                        };
-
-                        var chart = new ApexCharts(document.querySelector("#lineChartCholesterol"), options);
-                        chart.render();
-                </script>
-                <!-- End Line Chart Glucose-->
-
-                <!-- Line Chart Glucose -->
-              <div id="lineChartGlucose"></div>
-                
-              <script>
-                    var options = {
-                        series: [{
-                        name: 'Glucose Level',
-                        data: {{records_glucose_monitoring["value"] | tojson}}
-                        }],
-                        chart: {
-                        type: 'area',
-                        stacked: false,
-                        height: 350,
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        }
-                        },
-                        dataLabels: {
-                        enabled: false
-                        },
-                        markers: {
-                        size: 0,
-                        },
-                        title: {
-                        text: 'Blood Glucose Levels',
-                        align: 'left'
-                        },
-                        fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            inverseColors: false,
-                            opacityFrom: 0.5,
-                            opacityTo: 0,
-                            stops: [0, 90, 100]
-                        },
-                        },
-                        yaxis: {
-
-                        title: {
-                            text: 'Glucose level'
-                        },
-                        },
-                        xaxis: {
-                        type: 'datetime',
-                        categories: {{records_glucose_monitoring["timestamp"] | tojson}} 
-                        },
-                        tooltip: {
-                        shared: false,
-                        }
-                        };
-
-                        var chart = new ApexCharts(document.querySelector("#lineChartGlucose"), options);
-                        chart.render();
-                </script>
-                <!-- End Line Chart Glucose-->
-
-                <!-- Line Chart HbA1c -->
-                <div id="lineChartHbA1c"></div>
-
-                <script>
-                    var options = {
-                        series: [{
-                        name: 'HbA1c Level',
-                        data: {{records_hba1c["value"] | tojson}}
-                        }],
-                        chart: {
-                        type: 'area',
-                        stacked: false,
-                        height: 350,
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        }
-                        },
-                        dataLabels: {
-                        enabled: false
-                        },
-                        markers: {
-                        size: 0,
-                        },
-                        title: {
-                        text: 'HbA1c Levels',
-                        align: 'left'
-                        },
-                        fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            inverseColors: false,
-                            opacityFrom: 0.5,
-                            opacityTo: 0,
-                            stops: [0, 90, 100]
-                        },
-                        },
-                        yaxis: {
-
-                        title: {
-                            text: 'HbA1c level'
-                        },
-                        },
-                        xaxis: {
-                        type: 'datetime',
-                        categories: {{records_hba1c["timestamp"] | tojson}} 
-                        },
-                        tooltip: {
-                        shared: false,
-                        }
-                        };
-
-                        var chart = new ApexCharts(document.querySelector("#lineChartHbA1c"), options);
-                        chart.render();
-              </script>
-              <!-- End Line Chart HbA1c-->
-
-              <!-- Line Chart Weight -->
-              <div id="lineChartWeightTracking"></div>
-
-              <script>
-                var options = {
-                    series: [{
-                    name: 'Body Weight (kg)',
-                    data: {{records_weight_tracking["value"] | tojson}}
-                    }],
-                    chart: {
-                    type: 'area',
-                    stacked: false,
-                    height: 350,
-                    zoom: {
-                        type: 'x',
-                        enabled: true,
-                        autoScaleYaxis: true
-                    },
-                    toolbar: {
-                        autoSelected: 'zoom'
-                    }
-                    },
-                    dataLabels: {
-                    enabled: false
-                    },
-                    markers: {
-                    size: 0,
-                    },
-                    title: {
-                    text: 'Body Weight',
-                    align: 'left'
-                    },
-                    fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        inverseColors: false,
-                        opacityFrom: 0.5,
-                        opacityTo: 0,
-                        stops: [0, 90, 100]
-                    },
-                    },
-                    yaxis: {
-
-                    title: {
-                        text: 'Body Weight (kg)'
-                    },
-                    },
-                    xaxis: {
-                    type: 'datetime',
-                    categories: {{records_weight_tracking["timestamp"] | tojson}} 
-                    },
-                    tooltip: {
-                    shared: false,
-                    }
-                    };
-
-                    var chart = new ApexCharts(document.querySelector("#lineChartWeightTracking"), options);
-                    chart.render();
-          </script>
-              <!-- End Line Chart Weight-->
-
-            <!-- Line Chart Blood Pressure -->
-            <div id="lineChartBloodPressure"></div>
-
-            <script>
-                var options = {
-                    series: [{
-                    name: 'Systolic',
-                    data: {{records_blood_pressure["value_systolic"]}}
-                    },{
-                    name: 'Diastolic',
-                    data: {{records_blood_pressure["value_diastolic"]}}
-                    }],
-                    chart: {
-                    type: 'area',
-                    stacked: false,
-                    height: 350,
-                    zoom: {
-                        type: 'x',
-                        enabled: true,
-                        autoScaleYaxis: true
-                    },
-                    toolbar: {
-                        autoSelected: 'zoom'
-                    }
-                    },
-                    dataLabels: {
-                    enabled: false
-                    },
-                    markers: {
-                    size: 0,
-                    },
-                    title: {
-                    text: 'Blood Pressure',
-                    align: 'left'
-                    },
-                    fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        inverseColors: false,
-                        opacityFrom: 0.5,
-                        opacityTo: 0,
-                        stops: [0, 90, 100]
-                    },
-                    },
-                    yaxis: {
-
-                    title: {
-                        text: 'Blood Pressure'
-                    },
-                    },
-                    xaxis: {
-                    type: 'datetime',
-                    categories: {{records_blood_pressure["timestamp"] | tojson}} 
-                    },
-                    tooltip: {
-                    shared: false,
-                    }
-                    };
-
-                    var chart = new ApexCharts(document.querySelector("#lineChartBloodPressure"), options);
-                    chart.render();
-          </script>
-
-            <!-- End Line Chart Blood Pressure -->
-                </div>
-                </div>
-                </div>
-
-   
-{% endblock content %}
-
+</html>

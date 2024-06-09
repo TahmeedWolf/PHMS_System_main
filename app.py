@@ -104,6 +104,15 @@ def load_user(user_id):
 # Redirect to login when user is not logged in (with default message)
 login_manager.login_view = "login"
 
+# Index route to fix bug
+@app.route('/')
+def index():
+    return render_template('home/index.html')  
+
+# Chat route 
+@app.route('/chat')
+def chat():
+    return render_template('home/chat.html')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -275,6 +284,8 @@ def home():
 
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
 
+
+    # Check if 'age' is defined to decide which template variables to pass
     if age is not None:
         return render_template('home/index.html', user=user,
                                age=age,
@@ -292,9 +303,10 @@ def home():
                                records_hba1c=records_hba1c,
                                records_weight_tracking=records_weight_tracking,
                                records_blood_pressure=records_blood_pressure,
-                               user_notifications=user_notifications
+                               records_cholesterol=records_cholesterol,
+                               user_notifications=user_notifications,
+                               records_food_intake=records_food_intake
                                )
-
 
 
 
