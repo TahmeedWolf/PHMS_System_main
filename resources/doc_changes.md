@@ -1,10 +1,10 @@
 # Change log
 
 
-## Fire
-- data upload took too long -> Mysql issue or KG issue?
-- hba1c, the 1 got removed!!
+## V0.0.1 11/06/2024
 
+### Added
+- NLG Insights in place (4 types of recommendations in total)
 
 ## V0.0.1 04/06/2024
 

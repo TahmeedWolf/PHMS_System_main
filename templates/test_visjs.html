@@ -1,0 +1,116 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} BioTective {% endblock title %}
+
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script> -->
+{% endblock javascripts %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+#mynetwork {
+  width: 600px;
+  height: 400px;
+  border: 1px solid lightgray;
+}
+</style>
+{% endblock stylesheets %}
+{% block content %}
+
+<!-- Something hereeee -->
+<div class="container pb-5 pl-5">
+    <div class="row">
+      <div class="col-lg-9 col-10">
+          <h1 class="p-3">Settings</h1>
+      </div>
+      </div>
+          <div clss="card">
+              <div class="col-5 text-left">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-info" role="alert">{{ message[-1] }}</div>
+                {% endif %}
+                {% endwith %}
+                <p>Create a simple network with some nodes and edges.</p>
+                {% for row in kg_data %}
+                      <p>{{ row }}</p>
+                {% endfor %}
+                <p>{{ kg_data }}</p>
+                <div id="mynetwork"></div>
+                <div id="nodes"></div>
+                <div id="edges"></div>
+                <script>
+                    // Example record data extracted from your description
+                    // const graphData = [
+                    //   { nodeId: '4', label: 'Patient', hba1cData: [
+                    //     { recordId: '3024', hba1c: 9.64, timestamp: '2024-01-14' },
+                    //     { recordId: '3025', hba1c: 6.99, timestamp: '2024-03-13' },
+                    //     { recordId: '3026', hba1c: 4.44, timestamp: '2024-05-12' },
+                    //     { recordId: '3027', hba1c: 5.59, timestamp: '2024-07-12' }
+                    //   ]}
+                    // ];
+                    const graphData = [
+                      { nodeId: {{kg_data["nodeId"] }} , label: '{{kg_data["label"] }}', hba1cData: [
+                        {% for row in kg_data["hba1cData"] %}
+                          { recordId: '{{ row["timestamp"] }}', hba1c: {{ row["hba1c"] }}, timestamp: '{{ row["timestamp"] }}' },
+                        {% endfor %}
+                      ]}
+                    ];
+                    // const graphData = [{ kg_data | tojson }}];
+
+
+                    
+                  // create an array with nodes
+                      var nodes = new vis.DataSet();
+
+                      // create an array with edges
+                      var edges = new vis.DataSet();
+                      // sth wrg, somewhere here
+
+                        // Adding nodes and edges from the provided graph data
+                      // graphData.forEach(data => {
+                      //   nodes.add({ id: data["nodeId"], label: data["label"] });
+
+                      //   data.hba1cData.forEach(record => {
+                      //     const recordNodeId = `${data["nodeId"]}-${record["recordId"]}`;
+                      //     nodes.add({ id: recordNodeId, label: `HbA1c: ${record["hba1c"]} (${record["timestamp"]})` });
+                      //     edges.add({ from: data["nodeId"], to: recordNodeId });
+                      //   });
+                      // });
+                      // Adding nodes and edges from the provided graph data
+                      graphData.forEach(data => {
+                        nodes.add({ id: data.nodeId, label: data.label });
+
+                        data.hba1cData.forEach(record => {
+                          const recordNodeId = `${data.nodeId}-${record.recordId}`;
+                          nodes.add({ id: recordNodeId, label: `HbA1c: ${record.hba1c} (${record.timestamp})` });
+                          edges.add({ from: data.nodeId, to: recordNodeId });
+                        });
+                      });
+
+                      // var nodes_container = document.getElementById("nodes");
+                      // var edges_container = document.getElementById("edges");
+
+                      nodes_container.textContent = graphData;
+                      edges_container.innerText = JSON.stringify(edges);
+
+                      // create a network
+                      var container = document.getElementById("mynetwork");
+                      var data = {
+                        nodes: nodes,
+                        edges: edges
+                      };
+                      var options = {};
+                      var network = new vis.Network(container, data, options);
+
+                </script>
+              </div>
+          </div>
+          <br>
+  
+    {% endblock content %}
+

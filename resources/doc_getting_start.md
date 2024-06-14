@@ -36,3 +36,7 @@ to delete all data from postgreql
 ```
 select 'drop table "' || tablename || '" cascade;' from pg_tables;
 ```
+
+## To add a recommendations type into PHMS
+1. go to PHMS\integrations\nlg\insight_types.py
+2. name a type of recommendations, put in data needed, and prompts

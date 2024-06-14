@@ -8,3 +8,4 @@ class Notifications(db.Model):
     created_time = db.Column(db.String(100), default=datetime.now(timezone.utc))
     active = db.Column(db.Boolean, default=True)
     to_user_id = db.Column(db.String(100))
+    type = db.Column(db.String(100))

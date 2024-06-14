@@ -1,7 +1,7 @@
 from extension import db
 from datetime import datetime, timezone
 
-class Records_Hba1c(db.Model):
+class Records_Hba1C(db.Model):
     __tablename__ = 'records_hba1c'
     entry_id = db.Column(db.String(100), primary_key=True)
     timestamp = db.Column(db.String(100), default=datetime.now(timezone.utc))

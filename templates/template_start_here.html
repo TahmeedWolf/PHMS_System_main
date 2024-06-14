@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} Customer {% endblock title %}
+{% block title %} BioTective {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -12,7 +12,6 @@
       <div class="col-lg-9 col-10">
           <h1 class="p-3">Settings</h1>
       </div>
-      <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
       </div>
           <div clss="card">
               <div class="col-5 text-left">
@@ -20,9 +19,7 @@
                     <div>
                       {% with messages = get_flashed_messages() %}
                       {% if messages %}
-                          {% for message in messages %}
-                          <div class="alert alert-info" role="alert">{{ message }}</div>
-                          {% endfor %}
+                          <div class="alert alert-info" role="alert">{{ message[-1] }}</div>
                       {% endif %}
                       {% endwith %}
                     </div>

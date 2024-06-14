@@ -16,20 +16,25 @@ class MessangeAnalyzer(object):
     def _prompt(self):
         prompt = """
             The following sentence my meal and glucose level is in %s language. 
-            Please give advice how do i manage my body weight and blood glucose level.
-            Please return this in simple paragraph format not longer than 100 words, in html format.
+            Please return this in simple paragraph format not longer than 100 words and
+            prevent using the word 'I' and focus on facts and recommendations.
+            Avoid using any markdown format or '*' symbols.
         """ % self._language
         return prompt
 
-    def evaluate(self, messages):
-        prompt = self._prompt() + (messages)
+    def evaluate(self, data, prompt):
+        """data: healthcare data
+            prompt: crafted prompt saved in nlg_types
+        """
+        prompt = self._prompt() + data + prompt
+        print(prompt)
         # Using chatgpt-4o is much faster, but still not able to compress total runtime below 30seconds
         completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo", # 4o
         messages=[
             {"role": "system", "content": "You are a healthcare assistant, skilled in discovering healthcare insights from data provided, and gives healthy lifestyle recommendations for diabetic patients."},
             {"role": "user", "content": prompt}
         ]
         )
-        print(completion.choices[0].message.content)
+        # print(completion.choices[0].message.content)
         return(completion.choices[0].message.content)
