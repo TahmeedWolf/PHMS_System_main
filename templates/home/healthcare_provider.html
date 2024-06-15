@@ -1,62 +1,62 @@
-<!-- This section shows all healthcare providers -->
+{% include 'layouts/base.html' %}  
 
-{% extends 'layouts/base.html' %}
+{% block title %}Healthcare Provider{% endblock %}
+<body>
 
-{% block title %} Customer {% endblock title %}
+  <!-- Main -->
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1><strong>Healthcare Provider</strong></h1>
+    </div>
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
-
-{% block content %}
-<!-- Something hereeee -->
-<div class="container pb-5">
-    <div class="row">
-      <div class="col-lg-9 col-10">
-          <h1 class="pt-3 pl-4">Healthcare Provider</h1>
-      </div>
-      <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
-      </div>
-          <div clss="card">
-              <div class="pl-5">
-                    <div class="mb-3">
-                    <div class="row">
-                    <!-- Card with an image on left -->
-                    <div class="card mb-3">
-                        <div class="row g-0">
-                        <div class="col-md-2 p-3">
-                            <img src="{{ healthcare_provider.profile_img_url }}" class="img-fluid rounded-start img-thumbnail rounded-circle" alt="Profile_of_{{ healthcare_provider.name }}">
-                        </div>
-                        <div class="col-md-8 text-left">
-                            <div class="card-body">
-                            <h5 class="card-title"></h5>
-
-
-                                  <h5 class="card-title text-xl">{{ healthcare_provider.name.title() }}</h5>
-                    
-                                  <!-- List group With Icons -->
-                                  <ul class="list-group">
-                                    <li class="list-group-item"><i class="bi bi-star me-1 text-success"></i><strong>Designation: </strong>{{ healthcare_provider.user_raw[0].designation}}</li>
-                                    <li class="list-group-item"><i class="bi bi-collection me-1 text-primary"></i><strong>Address: </strong>{{ healthcare_provider.user_raw[0].address}}</li>
-                                    <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i><strong>Qualification: </strong>{{ healthcare_provider.user_raw[0].qualification}}</li>
-                                    <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i><strong>License Number: </strong>{{ healthcare_provider.user_raw[0].license_number}}</li>
-                                  </ul><!-- End List group With Icons -->
-                    
-
-
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <!-- End Card with an image on left -->
-
-                    </div>
-                    </div>
-
+    <section class="section">
+        {% block content %}
+        <!-- Something hereeee -->
+        <div class="container pb-5">
+            <div class="row">
+              <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
               </div>
-          </div>
-          <br>
-  
-    {% endblock content %}
+                  <div clss="card">
+                      <div class="pl-5">
+                            <div class="mb-3">
+                            <div class="row">
+                            <!-- Card with an image on left -->
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                <div class="col-md-2 p-3">
+                                    <img src="{{ healthcare_provider.profile_img_url }}" class="img-fluid rounded-start img-thumbnail rounded-circle" alt="Profile_of_{{ healthcare_provider.name }}">
+                                </div>
+                                <div class="col-md-8 text-left">
+                                    <div class="card-body">
+                                    <h5 class="card-title"></h5>
+        
+        
+                                          <h5 class="card-title text-xl">{{ healthcare_provider.name.title() }}</h5>
+                            
+                                          <!-- List group With Icons -->
+                                          <ul class="list-group">
+                                            <li class="list-group-item"><i class="bi bi-star me-1 text-success"></i><strong>Designation: </strong>{{ healthcare_provider.user_raw[0].designation}}</li>
+                                            <li class="list-group-item"><i class="bi bi-collection me-1 text-primary"></i><strong>Address: </strong>{{ healthcare_provider.user_raw[0].address}}</li>
+                                            <li class="list-group-item"><i class="bi bi-check-circle me-1 text-danger"></i><strong>Qualification: </strong>{{ healthcare_provider.user_raw[0].qualification}}</li>
+                                            <li class="list-group-item"><i class="bi bi-exclamation-octagon me-1 text-warning"></i><strong>License Number: </strong>{{ healthcare_provider.user_raw[0].license_number}}</li>
+                                          </ul><!-- End List group With Icons -->
+                            
+        
+        
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- End Card with an image on left -->
+        
+                            </div>
+                            </div>
+        
+                      </div>
+                  </div>
+                  <br>
+          
+            {% endblock content %}
+            </section>
+  </main>
 
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}

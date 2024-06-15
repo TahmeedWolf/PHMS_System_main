@@ -1,86 +1,136 @@
-{% extends 'layouts/base-fullscreen.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% from 'bootstrap5/form.html' import render_form %}
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-{% block title %} Login {% endblock title %}
+  <title>Get Started</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+  <!-- Favicons -->
+  <link rel="icon" href="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" type="image/svg+xml">
 
-{% block content %}
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-    <!-- Page content -->
-    <div class="container mt--8 pb-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-5 col-md-7">
-          <div class="card bg-secondary border-0 mb-0">
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
 
-            <div class="card-body px-lg-5 py-lg-5">
+  <!-- Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
 
-              <div class="text-center text-muted mb-4">
-                <h2>Let's get started!</h2>
-                <p>Personalise your health profile and manage your medical data with a phms account.</p>
+  <style>
+    .btn-custom {
+      background-color: #49a3f2;
+      border-color: #49a3f2;
+    }
+
+    .btn-custom:hover {
+      background-color: #217dbb;
+      border-color: #217dbb;
+    }
+
+    .form-group label {
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                  <div class="pt-4 pb-2 text-center">
+                    <img src="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview15574-766.svg') }}" alt="PHMS Logo" class="img-fluid" style="max-width: 150px;" />
+                    <h5 class="card-title text-center pb-0 fs-4">Let's get started!</h5>
+                    <p class="text-center">Personalize your health profile and manage your medical data with a PHMS account.</p>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                  </div>
+
+                  <form class="row g-3 needs-validation" novalidate method="post" action="/get_started">
+                    <div class="col-12">
+                      <div class="form-group mb-3">
+                        <label for="gender">Gender</label>
+                        <select class="form-control" id="gender" name="gender" required>
+                          <option value="m">Male</option>
+                          <option value="f">Female</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your gender.</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-group mb-3">
+                        <label for="birthday">Birthday</label>
+                        <input type="date" id="birthday" name="birthday" class="form-control" required>
+                        <div class="invalid-feedback">Please enter your birthday.</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-group mb-3">
+                        <label for="weight">Body Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" class="form-control" required placeholder="Enter your weight">
+                        <div class="invalid-feedback">Please enter your body weight.</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-group mb-3">
+                        <label for="height">Body Height (cm)</label>
+                        <input type="number" id="height" name="height" class="form-control" required placeholder="Enter your height">
+                        <div class="invalid-feedback">Please enter your body height.</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 text-center">
+                      <p><a href="{{ url_for('home') }}">Skip this for now</a></p>
+                      <button class="btn btn-primary w-100 btn-custom" type="submit">Let's Get Started!</button>
+                    </div>
+
+                  </form>
+
+                </div>
               </div>
-              {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                      {% for message in messages %}
-                      <p class="text-red text-center">{{ message }}</p>  
-                      {% endfor %}
-                  {% endif %}
-              {% endwith %}
 
-              <!-- <div class="container">
-                 render_form(form) }}
-              </div> -->
-              <form role="form" action="/get_started" method="post">
-                <div class="form-group mb-3">
-                    <div class="row mb-3">
-                        <label class="col-sm-5 col-form-label">Gender</label>
-                        <div class="col-sm-7">
-                          <select class="form-control form-control-sm" aria-label="Default select example" name="gender" required>
-                            <option value="m">Male</option>
-                            <option value="f">Female</option>
-                          </select>
-                        </div>
-                      </div>
-                </div>
-                <div class="form-group">
-                    <div class="row mb-3">
-                        <label for="inputDate" class="col-sm-5 col-form-label">Birthday</label>
-                        <div class="col-sm-7">
-                          <input type="date" class="form-control" name="birthday" required>
-                        </div>
-                      </div>
-                </div>
-                <div class="form-group">
-                    <div class="row mb-3">
-                        <label for="weight" class="col-sm-5 col-form-label">Body Weight (kg)</label>
-                        <div class="col-sm-7">
-                          <input type="number" class="form-control" name="weight" placeholder="Weight" required>
-                        </div>
-                      </div>
-                </div>
-                <div class="form-group">
-                    <div class="row mb-3">
-                        <label for="inputNumber" class="col-sm-5 col-form-label">Body Height (cm)</label>
-                        <div class="col-sm-7">
-                          <input type="number" class="form-control" name="height" placeholder="Height" required>
-                        </div>
-                      </div>
-                </div>
-                <div class="text-center">
-                    <p><a href="{{ url_for('home')}}">Skip this for now</a></p>
-                  <button type="submit" class="btn btn-primary my-4">Let's Get Started!</button>
-                </div>
-              </form>
             </div>
           </div>
-          </div>
         </div>
-      </div>
+
+      </section>
+
     </div>
+  </main><!-- End #main -->
 
-{% endblock content %}
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}
+</body>
+
+</html>

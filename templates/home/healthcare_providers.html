@@ -1,54 +1,65 @@
-<!-- This section shows all healthcare providers -->
+{% include 'layouts/base.html' %}  
 
-{% extends 'layouts/base.html' %}
+{% block title %}Healthcare Providers{% endblock %}
 
-{% block title %} Customer {% endblock title %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+  <!-- Main -->
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1><strong>Healthcare Providers</h1>
+    </div>
 
-{% block content %}
-<!-- Something hereeee -->
-<div class="container pb-5">
-    <div class="row">
-      <div class="col-lg-9 col-10">
-          <h1 class="pt-3 pl-4">Healthcare Providers</h1>
-      </div>
-      <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
-      </div>
-          <div clss="card">
-              <div class="pl-3">
-                  <form action="/users/{{ current_user.user_id }}" method="post">
-                    <div>
+    <section class="section">
+        <section class="section dashboard">
+            <div class="row">
+      {% block content %}
+      <div class="container pb-5">
+        <div class="row">
+          <!--<div class="col-lg-9 col-10">
+            <h1 class="pt-3 pl-4">Healthcare Providers</h1>
+          </div>-->
+          <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
+        </div>
+        <div class="card">
+          <div class="pl-3">
+            <form action="/users/{{ current_user.user_id }}" method="post">
+              <div class="mb-3">
+                <div class="row">
+                  {% for healthcare_provider in healthcare_providers %}
+                    <div class="col-lg-3 text-center">
+                      <div class="card align-items-center pt-4">
+                        <img src="{{ healthcare_provider.profile_img_url }}" class="card-img-top img-thumbnail rounded-circle" alt="Profile_of_{{ healthcare_provider.name }}" style="width:120px;">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ healthcare_provider.name.title() }}</h5>
+                          {% if healthcare_provider.user_raw is defined %}
+                            <p class="card-text p-3">{{ healthcare_provider.user_raw[0].designation }}</p>
+                            <p class="card-text p-3">{{ healthcare_provider.user_raw[0].address }}</p>
+                          {% endif %}
+                          <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('get_one_healthcare_provider', user_id=healthcare_provider.user_id )}}'">
+                            <i class="bi bi-person-circle me-1"></i>Profile
+                          </button>
+                          <button type="button" class="btn btn-primary btn-sm">
+                            <i class="bi bi-chat-left me-1"></i>Message
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                      <div class="mb-3">
-
-                        <div class="row">
-                            {% for healthcare_provider in healthcare_providers %}
-                                <div class="col-lg-3 text-center">
-                                    <!-- Card with an image on top -->
-                                    <div class="card align-items-center pt-4">
-                                        <img src="{{ healthcare_provider.profile_img_url }}" class="card-img-top img-thumbnail rounded-circle" alt="Profile_of_{{ healthcare_provider.name }}" style="width:120px;">
-                                        <div class="card-body">
-                                        <h5 class="card-title">{{ healthcare_provider.name.title() }}</h5>
-                                        {% if healthcare_provider.user_raw is defined %}
-                                            <p class="card-text p--3">{{ healthcare_provider.user_raw[0].designation}}</p>
-                                            <p class="card-text p--3">{{ healthcare_provider.user_raw[0].address}}</p>
-                                        {% endif %}
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('get_one_healthcare_provider', user_id=healthcare_provider.user_id )}}'"><i class="bi bi-person-circle me-1"></i>Profile</button>   
-                                        <button type="button" class="btn btn-primary btn-sm"><i class="bi bi-chat-left me-1" href="/settings"></i>Message</button>   
-                                    </div>
-                                    </div><!-- End Card with an image on top -->
-                                </div>
-                                {% endfor %}
-                        </div>
-                        </div>
-                    </form>
+                  {% endfor %}
+                </div>
               </div>
+            </form>
           </div>
-          <br>
-  
-    {% endblock content %}
+        </div>
+        <br>
+      </div>
+      {% endblock content %}
+    </section>
+  </main>
 
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}
+</body>
+</html>

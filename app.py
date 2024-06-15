@@ -308,7 +308,18 @@ def home():
                                records_food_intake=records_food_intake
                                )
 
+# ---------------------------------------------------------------------------- #
+#                             Overview Page                                    #
+# ---------------------------------------------------------------------------- #
 
+@app.route('/overview')
+def overview():
+    # Fetch total number of patients
+    # total_patients = Users.query.filter_by(permission='user', active=1).count()
+
+    # Render template with total_patients passed as context variable
+    # return render_template('home/overview.html', total_patients=total_patients)
+    return render_template('home/overview.html')
 
 # ---------------------------------------------------------------------------- #
 #                           Upload of Healthcare Data                          #
@@ -606,6 +617,7 @@ def get_one_healthcare_provider(user_id):
 def get_access_logs():
     access_logs = Access_Log.query.all()
     return render_template("cybersecurity/access_logs.html", access_logs=access_logs)
+
 
 # ---------------------------------------------------------------------------- #
 #                                 Miscellaneous                                #
