@@ -25,6 +25,17 @@ venv\Scripts\activate
 flask run --reload
 ```
 
+## To start EC2 server
+- Run AWS
+- ssh into the 'phms_ubuntu_2204' and run flask run --reload --host 0.0.0.0
+- at browser, go to 'http://44.207.83.243:5000/'
+
+## To deploy changes in EC2 Server
+- Run AWS Learner Lab
+- cd PHMS
+- git pull (to get the latest git repository)
+- flask run --reload --host 0.0.0.0
+
 ## Update dependencies (when new package is added)
 
 ```

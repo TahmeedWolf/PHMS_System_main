@@ -322,8 +322,31 @@ def get_overview():
     patient_record_high = Records_Glucose_Monitoring.query.where(text("glucose_level > 16")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
 
     # ------------------- Histogram of patient's Glucose levels ------------------ #
-    data_glucose = Records_Glucose_Monitoring.query.all()
+    data_glucose = db.session.execute(text("select * from records_glucose_monitoring limit 10;")).all()
     data_glucose = pd.DataFrame(data_glucose)
+    print(data_glucose.head(10))
+    bins = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30]
+    data_glucose['binned'] = pd.cut(data_glucose['glucose_level'], bins)
+    # print(data_glucose)
+    # data_glucose_raw = data_glucose.groupby(pd.cut(data_glucose['glucose_level'], bins=bins)).size()
+    data_glucose_raw = pd.cut(data_glucose['glucose_level'], bins=bins).value_counts()
+    # TODO: No i dunwant to sort it descendingly with value_counts!!
+    print(data_glucose_raw)
+    data_glucose_data = data_glucose_raw.to_list()
+    # print(data_glucose_raw)
+    # print(data_glucose_raw.info())
+    # print(data_glucose_raw.index)
+    # data_glucose_label = []
+    # data_glucose_data = []
+    # # for bin, count in data_glucose_raw.iterrows():
+    # for i in data_glucose_raw:
+    #     data_glucose_label.append(i.index)
+    #     data_glucose_data.append(i)
+    data_glucose_label = bins = ["0-2", "2-4", "4-6", "6-8", "8-10","10-12", "12-14", "14-16", "16-18", "18-20", "20-22", "22-24", "24-26", "26-28"]
+
+    print(data_glucose_label)
+    print(data_glucose_data)
+    data_glucose_hist = {"label":data_glucose_label, "data": data_glucose_data }
 
     # ------------------------ Histogram of patient's BMI ------------------------ #
 
@@ -331,8 +354,8 @@ def get_overview():
     # -------------------- Histogram of patient's hba1c levels ------------------- #
 
 
-    dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high, data_glucose]
-    return render_template("home/overview.html", dict=dict)
+    dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
+    return render_template("home/overview.html", dict=dict, data_glucose_hist=data_glucose_hist)
 
 
 
