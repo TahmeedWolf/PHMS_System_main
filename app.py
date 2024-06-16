@@ -314,7 +314,7 @@ def get_overview():
     user_count = Users.query.where(text(f"users.permission='user'")).count()
     active_user_count = Users.query.where(text(f"users.permission='user' and users.active=1")).count()
     avg_glucose_levels = db.session.execute(text("select round(avg(rgm.glucose_level),2) from records_glucose_monitoring rgm;")).first()
-    print(avg_glucose_levels[0])
+    # print(avg_glucose_levels[0])
 
     # -- Record of patient who has higher or lower than critical glucose levels (Lower) -- #
     patient_record_low = Records_Glucose_Monitoring.query.where(text("glucose_level < 3")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
@@ -322,40 +322,24 @@ def get_overview():
     patient_record_high = Records_Glucose_Monitoring.query.where(text("glucose_level > 16")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
 
     # ------------------- Histogram of patient's Glucose levels ------------------ #
-    data_glucose = db.session.execute(text("select * from records_glucose_monitoring limit 10;")).all()
-    data_glucose = pd.DataFrame(data_glucose)
-    print(data_glucose.head(10))
-    bins = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30]
-    data_glucose['binned'] = pd.cut(data_glucose['glucose_level'], bins)
-    # print(data_glucose)
-    # data_glucose_raw = data_glucose.groupby(pd.cut(data_glucose['glucose_level'], bins=bins)).size()
-    data_glucose_raw = pd.cut(data_glucose['glucose_level'], bins=bins).value_counts()
-    # TODO: No i dunwant to sort it descendingly with value_counts!!
-    print(data_glucose_raw)
-    data_glucose_data = data_glucose_raw.to_list()
-    # print(data_glucose_raw)
-    # print(data_glucose_raw.info())
-    # print(data_glucose_raw.index)
-    # data_glucose_label = []
-    # data_glucose_data = []
-    # # for bin, count in data_glucose_raw.iterrows():
-    # for i in data_glucose_raw:
-    #     data_glucose_label.append(i.index)
-    #     data_glucose_data.append(i)
-    data_glucose_label = bins = ["0-2", "2-4", "4-6", "6-8", "8-10","10-12", "12-14", "14-16", "16-18", "18-20", "20-22", "22-24", "24-26", "26-28"]
-
-    print(data_glucose_label)
-    print(data_glucose_data)
-    data_glucose_hist = {"label":data_glucose_label, "data": data_glucose_data }
+    data_glucose_hist = get_overview_glucose_data()
 
     # ------------------------ Histogram of patient's BMI ------------------------ #
-
+    data_bmi_hist = get_overview_bmi_data()
 
     # -------------------- Histogram of patient's hba1c levels ------------------- #
-
+    data_hba1c_hist = get_overview_hba1c_data()
 
     dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
-    return render_template("home/overview.html", dict=dict, data_glucose_hist=data_glucose_hist)
+    return render_template("home/overview.html", 
+                           user_count=user_count, 
+                           active_user_count=active_user_count,
+                           avg_glucose_levels=avg_glucose_levels[0],
+                           patient_record_low=patient_record_low,
+                           patient_record_high=patient_record_high,
+                           data_glucose_hist=data_glucose_hist, 
+                           data_bmi_hist=data_bmi_hist,
+                           data_hba1c_hist=data_hba1c_hist)
 
 
 
@@ -584,21 +568,43 @@ def route_generate_insights():
 @login_required
 # @access_log
 def get_neo4j():
-
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
         driver.verify_connectivity()
         records, summary, keys = driver.execute_query(
-            f"""MATCH (p:Patient WHERE p.id='{current_user.user_id}')<- [r:RECORDS_FOR]-(n:Records_Hba1C) RETURN p,r,n limit 2;""",
-            database_="neo4j",
-        )
+            f"""// Match patient nodes connected to glucose monitoring nodes with glucose levels higher than 16
+                MATCH (p:Patient)<-[q:RECORDS_FOR]-(g:Records_Glucose_Monitoring)
+                WHERE g.glucose_level > 16 and p.id = 'fa15ab8c-16bc-11ef-93c9-28d0ea7c5d57'
 
+                // From those glucose monitoring nodes, find other record nodes connected to the same patient within a 3-hour window before the glucose reading
+                WITH p, g, q, datetime(g.timestamp) AS glucoseTime
+                MATCH (p)<-[r:RECORDS_FOR]-(n:Records_Food_Intake)
+                WHERE n.timestamp < g.timestamp 
+                AND datetime(n.timestamp) >= glucoseTime - duration('PT3H')
+                AND NOT n:Records_Glucose_Monitoring
+
+                RETURN p, g, q, r, n ;""",
+                            database_="neo4j",
+                        )
+        # print(records)
+        # for record in records:
+        #     print(record.data())
+        # print(records[0].data())
         # Loop through results and do something with them
-        kg_data = { "nodeId": '1', "label": 'Patient', "hba1cData": []}
+        kg_data = { "nodeId": '1', "label": 'Patient', "user_id": f"{current_user.user_id}", "glucoseData": [], "foodintakeData" : []}
         for record in records:
-            hba1c = record.data()["n"]["hba1c"]
+            glucose_level = record.data()["g"]["glucose_level"]
+            timestamp = record.data()["g"]["timestamp"]
+            raw_glucose = {"glucose_level": str(glucose_level), "timestamp": str(timestamp)}
+            if raw_glucose not in kg_data["glucoseData"]:
+                # print(f"raw: {raw_glucose}")
+                kg_data["glucoseData"].append(raw_glucose)
+
+            food_items = record.data()["n"]["food_items"]
             timestamp = record.data()["n"]["timestamp"]
-            raw = {"hba1c": str(hba1c), "timestamp": str(timestamp)}
-            kg_data["hba1cData"].append(raw)
+            raw_food_items = {"food_items": str(food_items), "timestamp": str(timestamp), "value": str(record.data()["n"]["carbohydrates"])}
+            if raw_food_items not in kg_data["foodintakeData"]:
+                # print(f"food items checking: {food_items}")
+                kg_data["foodintakeData"].append(raw_food_items)
         print(kg_data)
         return render_template("test_visjs.html", kg_data=kg_data)
 

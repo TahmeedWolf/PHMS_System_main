@@ -39,64 +39,58 @@
                 {% for row in kg_data %}
                       <p>{{ row }}</p>
                 {% endfor %}
+                <p>KG_DATA</p>
                 <p>{{ kg_data }}</p>
+                <h3>Below are from js</h3>
                 <div id="mynetwork"></div>
                 <div id="nodes"></div>
                 <div id="edges"></div>
                 <script>
                     // Example record data extracted from your description
-                    // const graphData = [
-                    //   { nodeId: '4', label: 'Patient', hba1cData: [
-                    //     { recordId: '3024', hba1c: 9.64, timestamp: '2024-01-14' },
-                    //     { recordId: '3025', hba1c: 6.99, timestamp: '2024-03-13' },
-                    //     { recordId: '3026', hba1c: 4.44, timestamp: '2024-05-12' },
-                    //     { recordId: '3027', hba1c: 5.59, timestamp: '2024-07-12' }
-                    //   ]}
-                    // ];
                     const graphData = [
-                      { nodeId: {{kg_data["nodeId"] }} , label: '{{kg_data["label"] }}', hba1cData: [
-                        {% for row in kg_data["hba1cData"] %}
-                          { recordId: '{{ row["timestamp"] }}', hba1c: {{ row["hba1c"] }}, timestamp: '{{ row["timestamp"] }}' },
+                      { nodeId: {{kg_data["nodeId"] }} , label: '{{kg_data["label"] }}', user_id: '{{kg_data["user_id"] }}', 
+                      glucoseData: [
+                        {% for row in kg_data["glucoseData"] %}
+                          { recordId: '{{ row["timestamp"] }}', glucose_level: {{ row["glucose_level"] }}, timestamp: '{{ row["timestamp"] }}' },
                         {% endfor %}
-                      ]}
+                      ],
+                      foodintakeData: [
+                        {% for row in kg_data["foodintakeData"] %}
+                          { recordId: '{{ row["timestamp"] }}', food_items: '{{ row["food_items"] }}', timestamp: '{{ row["timestamp"] }}', value: '{{row["value"]}}' },
+                        {% endfor %}
+                      ],
+                    
+                    }
                     ];
-                    // const graphData = [{ kg_data | tojson }}];
-
-
                     
                   // create an array with nodes
                       var nodes = new vis.DataSet();
 
                       // create an array with edges
                       var edges = new vis.DataSet();
-                      // sth wrg, somewhere here
 
-                        // Adding nodes and edges from the provided graph data
-                      // graphData.forEach(data => {
-                      //   nodes.add({ id: data["nodeId"], label: data["label"] });
-
-                      //   data.hba1cData.forEach(record => {
-                      //     const recordNodeId = `${data["nodeId"]}-${record["recordId"]}`;
-                      //     nodes.add({ id: recordNodeId, label: `HbA1c: ${record["hba1c"]} (${record["timestamp"]})` });
-                      //     edges.add({ from: data["nodeId"], to: recordNodeId });
-                      //   });
-                      // });
                       // Adding nodes and edges from the provided graph data
                       graphData.forEach(data => {
-                        nodes.add({ id: data.nodeId, label: data.label });
+                        nodes.add({ id: data.nodeId, label: data.label, title: `${data.user_id}`, color: "#203468" });
 
-                        data.hba1cData.forEach(record => {
+                        data.glucoseData.forEach(record => {
                           const recordNodeId = `${data.nodeId}-${record.recordId}`;
-                          nodes.add({ id: recordNodeId, label: `HbA1c: ${record.hba1c} (${record.timestamp})` });
-                          edges.add({ from: data.nodeId, to: recordNodeId });
+                          nodes.add({ id: recordNodeId, label: `cgm: ${record.glucose_level}`, title: `${record.timestamp}`, value:record.glucose_level  });
+                          edges.add({ from: data.nodeId, to: recordNodeId});
+                        });
+                        data.foodintakeData.forEach(record => {
+                          const recordNodeId = `${data.nodeId}-${record.recordId}`;
+                          nodes.add({ id: recordNodeId, label: `food: ${record.food_items}`, title: `${record.timestamp}`, color: "#FB7E81" });
+                          edges.add({ from: data.nodeId, to: recordNodeId, value:record.value+70  });
                         });
                       });
 
+                      // the graph wont show if i commented line below out... why??
                       // var nodes_container = document.getElementById("nodes");
                       // var edges_container = document.getElementById("edges");
 
-                      nodes_container.textContent = graphData;
-                      edges_container.innerText = JSON.stringify(edges);
+                      // nodes_container.textContent = graphData;
+                      // edges_container.innerText = JSON.stringify(edges);
 
                       // create a network
                       var container = document.getElementById("mynetwork");
@@ -104,8 +98,17 @@
                         nodes: nodes,
                         edges: edges
                       };
-                      var options = {};
+                      var options = {
+                          nodes: {
+                            shape: "dot",
+
+                          },
+                        };
                       var network = new vis.Network(container, data, options);
+
+                      window.addEventListener("load", () => {
+                          draw();
+                        });
 
                 </script>
               </div>

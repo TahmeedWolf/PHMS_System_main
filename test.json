@@ -1,0 +1,37 @@
+{
+    "p": {
+        "id": "fa15ab8c-16bc-11ef-93c9-28d0ea7c5d57"
+    },
+    "g": {
+        "device_id": "6b9cc970-2250-11ef-a9b8-0242ac1c000c",
+        "timestamp": "2024-06-04T21: 54: 02",
+        "glucose_level": 22.1
+    },
+    "r": {
+        "carbohydrates": 15,
+        "food_items": "Wantan , Grassjelly",
+        "meal_type": "Dinner",
+        "calories": 105,
+        "timestamp": "2024-06-04T19: 00: 00.493608"
+    },
+    "n": ({
+        "carbohydrates": 15,
+        "food_items": "Wantan , Grassjelly",
+        "meal_type": "Dinner",
+        "calories": 105,
+        "timestamp": "2024-06-04T19: 00: 00.493608"
+    },
+    "RECORDS_FOR",
+    {
+        "id": "fa15ab8c-16bc-11ef-93c9-28d0ea7c5d57"
+    }),
+    "q": ({
+        "device_id": "6b9cc970-2250-11ef-a9b8-0242ac1c000c",
+        "timestamp": "2024-06-04T21: 54: 02",
+        "glucose_level": 22.1
+    },
+    "RECORDS_FOR",
+    {
+        "id": "fa15ab8c-16bc-11ef-93c9-28d0ea7c5d57"
+    })
+}
