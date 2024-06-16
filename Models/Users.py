@@ -25,7 +25,7 @@ class Users(db.Model):
     # Parent relationship to records_cholesterol
     user_cholesterol = db.relationship('Records_Cholesterol', back_populates="data_cholesterol")
     # Parent relationship to records_hba1c
-    user_hba1c = db.relationship('Records_Hba1c', back_populates="data_hba1c")
+    user_hba1c = db.relationship('Records_Hba1C', back_populates="data_hba1c")
     # Parent relationship to records_hba1c
     user_bp = db.relationship('Records_Blood_Pressure', back_populates="data_bp")
     # Parent relationship to records_food_intake
@@ -34,6 +34,8 @@ class Users(db.Model):
     user_insulin = db.relationship('Records_Insulin_Intake', back_populates="data_insulin")
     # Parent relationship to records_activity
     user_activity = db.relationship('Records_Physical_Activity', back_populates="data_activity")
+    # Parent relationship to records_cgm
+    user_cgm = db.relationship('Records_Glucose_Monitoring', back_populates="data_cgm")
     # Parent relationship to Access Logs
     access_log = db.relationship('Access_Log', back_populates="user_access")
 

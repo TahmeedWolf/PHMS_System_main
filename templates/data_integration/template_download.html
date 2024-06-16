@@ -23,9 +23,9 @@
                                   <h6 class="card-title">{{ record_type | replace("_"," ") }}</h6>
                                   {% for type, item in dict_sample_templates.items() %}
                                         {% if type == 'sample' %}
-                                        <button type="button" class="btn btn-info py-1 m-1 px-2" onclick="location.href='{{ item }}'"><i class="bi bi-cloud-arrow-down-fill">Template</i></button>
+                                        <button type="button" class="btn btn-info py-1 m-1 px-2" onclick="location.href='{{ item }}'"><i class="bi bi-cloud-arrow-down-fill">Sample</i></button>
                                         {% else %}
-                                        <button type="button" class="btn btn-dark py-1 m-1 px-2" onclick="location.href='{{ item }}'"><i class="bi bi-file-earmark-bar-graph-fill">Sample</i></button>
+                                        <button type="button" class="btn btn-dark py-1 m-1 px-2" onclick="location.href='{{ item }}'"><i class="bi bi-file-earmark-bar-graph-fill">Template</i></button>
                                         {% endif %}
                                   {% endfor %}
                                 </div>

@@ -15,3 +15,10 @@ class Records_Physical_Activity(db.Model):
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
+
+    def get_value(self):
+        response = self.activity_type + " " + str(self.duration_minute) + "Minutes " + self.intensity + "Intensity"
+        return response
+
+    def get_timestamp(self):
+        return self.timestamp

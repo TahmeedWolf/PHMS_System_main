@@ -14,7 +14,7 @@ from Models.Records.Records_Insulin_Intake import *
 from Models.Records.Records_Physical_Activity import *
 from Models.Records.Records_Weight_Tracking import *
 from Models.Records.Records_Cholesterol import *
-from Models.Records.Records_Hba1c import *
+from Models.Records.Records_Hba1C import *
 from Models.Records.Records_Blood_Pressure import *
 
 # Templates, Samples, attributes in each record type
@@ -45,7 +45,7 @@ def data_extract(f):
 def data_insert(key, df, attributes, current_user, driver):
     print("start selecting")
     if key == "records_glucose_monitoring":
-        message = data_insert_internal(df=df, record_class=Record_Glucose_Monitoring, attributes=attributes , current_user=current_user, key=key, kg_driver=driver)
+        message = data_insert_internal(df=df, record_class=Records_Glucose_Monitoring, attributes=attributes , current_user=current_user, key=key, kg_driver=driver)
     elif key == "records_food_intake":
         message = data_insert_internal(df=df, record_class=Records_Food_Intake, attributes=attributes, current_user=current_user, key=key, kg_driver=driver)
     elif key == "records_insulin_intake":
@@ -57,7 +57,7 @@ def data_insert(key, df, attributes, current_user, driver):
     elif key == "records_cholesterol":
         message = data_insert_internal(df=df, record_class=Records_Cholesterol, attributes=attributes, current_user=current_user, key=key, kg_driver=driver)
     elif key == "records_hba1c":
-        message = data_insert_internal(df=df, record_class=Records_Hba1c, attributes=attributes, current_user=current_user, key=key, kg_driver=driver)
+        message = data_insert_internal(df=df, record_class=Records_Hba1C, attributes=attributes, current_user=current_user, key=key, kg_driver=driver)
     elif key == "records_blood_pressure":
         message = data_insert_internal(df=df, record_class=Records_Blood_Pressure, attributes=attributes, current_user=current_user, key=key, kg_driver=driver)
     return message

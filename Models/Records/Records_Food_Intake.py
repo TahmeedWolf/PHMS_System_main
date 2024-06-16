@@ -17,3 +17,9 @@ class Records_Food_Intake(db.Model):
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
+
+    def get_timestamp(self):
+        return self.timestamp
+
+    def get_value(self):
+        return self.food_items

@@ -42,6 +42,7 @@
                         <th>Created Time</th>
                         <th>Height</th>
                         <th>Health Status</th>
+                        <th><b>Details</b></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,7 @@
                         <td>{{ patient.created_time }}</td>
                         <td>{{ patient.height }}</td>
                         <td>{{ patient.health_status }}</td>
+                        <td class="text-center"><a href="{{url_for('home', user_id= patient.user_id)}}"><i class="bi bi-bar-chart-fill"></i></a></td>
                       </tr>
                       {% endfor %}
                     </tbody>

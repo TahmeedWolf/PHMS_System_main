@@ -4,6 +4,11 @@
 
     <nav class="header-nav ms-auto" style="height:40px;">
       <ul class="d-flex align-items-center">
+        <li>
+          {% if current_user.height == undefined %}
+                <button class="btn btn-primary btn-sm"><a href="{{url_for('get_started')}}" class="text-white">Getting Started!</a></button>
+          {% endif %}
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-chat-left-text"></i>
