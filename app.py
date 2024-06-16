@@ -282,6 +282,10 @@ def home():
     records_blood_pressure = get_dashboard_data_bp(user_id=user.user_id)
     records_food_intake = Records_Food_Intake.query.filter_by(user_id=user_id).order_by(desc(Records_Food_Intake.timestamp)).limit(10).all()
 
+    # --------------------------- Retrieve data for kg --------------------------- #
+    with GraphDatabase.driver(URI, auth=AUTH) as driver:
+        kg_data = get_kg_chart_data(driver=driver, user_id=user.user_id)
+
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
 
     if age is not None:
@@ -293,7 +297,8 @@ def home():
                                records_blood_pressure=records_blood_pressure,
                                records_cholesterol=records_cholesterol,
                                user_notifications=user_notifications,
-                               records_food_intake=records_food_intake
+                               records_food_intake=records_food_intake,
+                               kg_data=kg_data
                                )
     else:
         return render_template('home/index.html', user=user,
@@ -585,11 +590,6 @@ def get_neo4j():
                 RETURN p, g, q, r, n ;""",
                             database_="neo4j",
                         )
-        # print(records)
-        # for record in records:
-        #     print(record.data())
-        # print(records[0].data())
-        # Loop through results and do something with them
         kg_data = { "nodeId": '1', "label": 'Patient', "user_id": f"{current_user.user_id}", "glucoseData": [], "foodintakeData" : []}
         for record in records:
             glucose_level = record.data()["g"]["glucose_level"]

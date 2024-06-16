@@ -42,9 +42,9 @@
                 <p>KG_DATA</p>
                 <p>{{ kg_data }}</p>
                 <h3>Below are from js</h3>
-                <div id="mynetwork"></div>
                 <div id="nodes"></div>
                 <div id="edges"></div>
+                <div id="mynetwork"></div>
                 <script>
                     // Example record data extracted from your description
                     const graphData = [
@@ -84,13 +84,6 @@
                           edges.add({ from: data.nodeId, to: recordNodeId, value:record.value+70  });
                         });
                       });
-
-                      // the graph wont show if i commented line below out... why??
-                      // var nodes_container = document.getElementById("nodes");
-                      // var edges_container = document.getElementById("edges");
-
-                      // nodes_container.textContent = graphData;
-                      // edges_container.innerText = JSON.stringify(edges);
 
                       // create a network
                       var container = document.getElementById("mynetwork");
