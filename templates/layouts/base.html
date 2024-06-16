@@ -46,12 +46,7 @@
 
   <!-- Argon CSS -->
   <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
-  <link rel="stylesheet" href="/static/assets/css/style.css" type="text/css">
   <link rel="stylesheet" href="/static/assets/css/main.css" type="text/css">
- 
-  <!-- Specific CSS goes HERE -->
-  <link  src="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" type="text/css">
-  <link  src="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" type="text/css">
   
   <!-- For dashboard vis.js -->
   <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
@@ -63,7 +58,7 @@
 
 <body>
   <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
+  <header id="header" class="bg-white fixed-top d-flex align-items-center">
     <a href="{{ url_for('home') }}" class="logo d-flex align-items-center">
       <img src="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" alt="">
       <span class="d-none d-lg-block">LUMI</span>
@@ -96,7 +91,7 @@
                 <i class="bi bi-info-circle text-primary"></i>
                 <div>
                   <h4>{{ notification.title }}</h4>
-                  <p>{{ notification.notification_content }}</p>
+                  <p>{{ notification.notification_content[:100] }}...</p>
                   <p>{{ notification.created_time.strftime('%Y-%m-%d %H:%M') }}</p>
                 </div>
               </li>
@@ -190,12 +185,6 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <!--<li class="nav-item">
-            <a class="nav-link collapsed" href="/chat">
-                <i class="bi bi-chat-left-text" style="color: orange;"></i>
-                <span>Chat</span>
-            </a>
-        </li>-->
         <li class="nav-item">
             <a class="nav-link collapsed" href="/upload_files">
                 <i class="bi bi-cloud-arrow-up" style="color: orange;"></i>

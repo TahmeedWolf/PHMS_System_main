@@ -10,431 +10,10 @@
 
   {% block content %}
 
-  {% block styles %}
-
-  <style>
-    .pagetitle {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font */
-    }
-    
-    .pagetitle h1 {
-      font-weight: 500;
-      font-weight: bold;
-      padding-top: 10px;
-    }
-    
-    .pagetitle-time h6 {
-      font-size: 0.75rem;
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-    
-    .blood-sugar-card {
-      border-radius: 15px; /* Rounded corners */
-      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
-      height: 300px; /* Ensures the card takes full vertical space available */
-      transition: transform 0.2s, box-shadow 0.2s; /* Adding transition for hover effect */
-    }
-    
-    .blood-sugar-card:hover {
-      transform: translateY(-5px); /* Move the card up slightly */
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    }
-    
-    .blood-sugar-card .card-body {
-      height: 400px; /* Adjust height as needed */
-      /*display: flex;
-      flex-direction: column;
-      justify-content: center;*/
-    }
-    
-    .blood-sugar-card .card-title {
-      margin-left: 5px;
-      margin-right: 20px;
-      margin-top: 40px;
-      font-size: 16px; /* Small title font size*/
-    }
-    
-    .blood-sugar-card .card-icon {
-     /* Adjust margin as needed for spacing */
-      margin-top: 40px;
-    }
-    
-    .blood-sugar-card .ps-3.mt-3 {
-      margin-top: 10px; /* Adjust margin as needed for spacing */
-      text-align: left;
-      
-    }
-    
-    .blood-sugar-card .ps-3.mt-3 h6 {
-      margin: 0; /* Adjust margin as needed */
-      
-    }
-    
-    .blood-sugar-card .ps-3.mt-3 span {
-      display: inline; /* Ensure "mg / dL" appears inline */
-      
-    }
-    
-    .blood-sugar-card .bs-bg {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 210px;
-    }
-            
-    .heart-rate-card {
-      border-radius: 15px; /* Rounded corners */
-      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
-      height: 300px; /* Ensures the card takes full vertical space available */
-      position: relative; /* Required for absolute positioning of the wave */
-      transition: transform 0.2s, box-shadow 0.2s; /* Adding transition for hover effect */
-    }
-    
-    .heart-rate-card:hover {
-      transform: translateY(-5px); /* Move the card up slightly */
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    }
-    
-    
-    .heart-rate-card .card-body {
-      padding-bottom: 60px; /* Make space for the wave at the bottom */
-    }
-    
-    .heart-rate-card .card-title {
-      margin-left: 5px;
-      margin-right: 20px;
-      margin-top: 40px;
-      font-size: 16px; /* Small title font size*/
-    }
-    
-    .heart-rate-card .card-icon {
-      margin-top: 40px; /* Adjust margin as needed for spacing */
-    }
-    
-    .heart-rate-card .ps-3.mt-3 {
-      margin-top: 10px; /* Adjust margin as needed for spacing */
-      text-align: left;
-    }
-    
-    .heart-rate-card .ps-3.mt-3 h6 {
-      margin: 0; /* Adjust margin as needed */
-    }
-    
-    .heart-rate-card .ps-3.mt-3 span {
-      display: inline; /* Ensure "bpm" appears inline */
-    }
-    
-    .heart-rate-card .bs-bg {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 210px; /* Adjust the width as needed */
-    }
-    
-
-    .blood-pressure-card {
-      border-radius: 15px; /* Rounded corners */
-      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
-      height: 300px; /* Ensures the card takes full vertical space available */
-      position: relative; /* Required for absolute positioning of the wave */
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .blood-pressure-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }    
-    
-    .blood-pressure-card .card-body {
-      padding-bottom: 60px; /* Make space for the wave at the bottom */
-    }
-    
-    .blood-pressure-card .card-title {
-      margin-right: 40px;
-      margin-top: 40px;
-      font-size: 16px; /* Small title font size*/
-
-    }
-    
-    .blood-pressure-card .card-icon {
-      margin-top: 40px; /* Adjust margin as needed for spacing */
-    }
-    
-    .blood-pressure-card .ps-3.mt-3 {
-      margin-top: 10px; /* Adjust margin as needed for spacing */
-      text-align: left;
-    }
-    
-    .blood-pressure-card .ps-3.mt-3 h6 {
-      margin: 0; /* Adjust margin as needed */
-    }
-    
-    .blood-pressure-card .ps-3.mt-3 span {
-      display: inline; /* Ensure "mmHg" appears inline */
-    }
-    
-    .blood-pressure-card .bs-bg {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 210px; /* Adjust the width as needed */
-    }
-    
-    .height-card {
-      background-color: rgb(244, 207, 166);
-      font-size: 14px;
-      margin-top: 40px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .height-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .height-card .card-title {
-      font-size: 14px;
-    }    
-    
-    .bmi-card {
-      background-color: rgb(91, 90, 90);
-      color: white;
-      padding-bottom: 55px;
-      position: relative; /* Ensure the card can contain the absolute positioned elements */
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .bmi-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .bmi-card .card-title {
-      color: white;
-      font-size: 14px;
-    }
-    
-    .bmi-container {
-      display: flex;
-      align-items: center;
-      gap: 30px; /* space between BMI value and status */
-    }
-    
-    .bmi-status {
-      font-size: 12px; /* smaller font size */
-      font-weight: bold;
-      color: black;
-      background-color: #d4ffbb; /* background color */
-      padding: 2px 5px; /* smaller padding */
-      border-radius: 10px;
-    }
-    
-    .bmi-scale {
-      position: relative;
-      width: 100%;
-      height: 11px; /* Adjust height to fit numbers */
-      background: linear-gradient(to right, #ff9999, #ffd480, #ffff99, #ccffcc, #99ccff, #d1b3ff, #ffb3e6);
-      border-radius: 5px; /* Optional: to make the ends of the scale rounded */
-      margin-top: 60px; /* Space between the BMI container and the scale */
-    }
-    
-    .bmi-indicator {
-      position: absolute;
-      top: -5px; /* Position above the scale */
-      width: 8px;
-      height: 8px;
-      background-color: red; /* Color of the indicator */
-      border-radius: 50%; /* Make it a circle */
-      border: 1.2px solid white; /* White border */
-      transform: translateX(-50%); /* Center the circle on the position */
-    }
-    
-    .bmi-numbers {
-      position: absolute;
-      top: 20px; /* Position below the scale */
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: white;
-    }
-    
-    .bmi-numbers span {
-      position: relative;
-      transform: translateX(-50%);
-    }
-    
-    .height-container, .weight-container {
-      display: flex;
-      align-items: center;
-      gap: 10px; /* Space between value and scale */
-    }
-    
-    .height-scale, .weight-scale {
-      position: relative;
-      flex-grow: 1;
-      height: 5px; /* Adjust height for a typical scale */
-      background: #363636; /* Gray background for height and weight scales */
-      border-radius: 2px; /* Optional: to make the ends of the scale rounded */
-    }
-    
-    .height-indicator, .weight-indicator {
-      position: absolute;
-      top: -5px; /* Position above the scale */
-      width: 8px;
-      height: 8px;
-      background-color: red; /* Color of the indicator */
-      border-radius: 50%; /* Make it a circle */
-      border: 1.2px solid white; /* White border */
-      transform: translateX(-50%); /* Center the circle on the position */
-    }
-    
-    .height-numbers, .weight-numbers {
-      position: absolute;
-      top: -20px; /* Position above the scale */
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px; /* Smaller font size */
-      color: black;
-    }
-    
-    .height-numbers span, .weight-numbers span {
-      position: relative;
-      transform: translateX(-50%);
-    }
-                        
-    .weight-card {
-      background-color: rgb(193, 230, 245);
-      margin-top: -155px;
-      font-size: 14px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .weight-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .weight-card .card-title {
-      font-size: 14px;
-    }
-
-    .diagnostic-chart-card .card {
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    
-    .diagnostic-chart-card .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    
-    .general-info{
-      margin-top: -32px;
-      margin-bottom: 45px;
-      
-    }
-        
-    .card-title {
-      font-size: 1.25rem;
-      margin: 0;
-      padding: 10px;
-    }
-
-    .latest-ai-card {
-      height: 150px; 
-      max-height: 150px;
-      overflow-y: auto;
-      margin-top: -50px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .latest-ai-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    
-    .meal-card-body {
-      padding-bottom: 0;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .meal-card-body:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .card-title {
-      margin-bottom: 10px;
-    }
-    
-    .smaller-font {
-      font-size: 0.8em;
-    }
-    .card Patient-card{
-      max-height: 20px;
-      overflow-y: auto; 
-      margin-top: -50px;
-    }
-    .smaller-font {
-      font-size: 0.875rem; /* Adjust the size as needed */
-    }
-    
-    .patient-card {
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .patient-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .patient-card .card-title {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font stack */
-    }
-    
-    .patient-card .card-text {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font stack */
-    }
-    
-    .patient-card hr {
-      border-top: 1px solid #dee2e6;
-    }
-
-    .card consultation-card{
-      overflow-y: auto; 
-      margin-top: -50px;
-      height: 20px; 
-      padding: 0px; 
-    }
-
-    .consultation-card {
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .consultation-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-     #mynetwork {
-      width: 600px;
-      height: 400px;
-      border: 1px solid lightgray;
-    }
-  </style>
-  {% endblock styles %}
-</head>
-<body>
+  {% block styles %}{% endblock styles %}
   <main id="main" class="main">
 
-    <div class="pagetitle mt-4">
+    <div class="pagetitle mt-1">
       <h1 class="mb-0">Health Overview</h1>
       <div class="pagetitle-time">
         <h6 class="mb-0">May 25, 2024</h6>
@@ -449,18 +28,7 @@
 
 <!-- Blood Sugar Card -->
 <div class="col-xxl-4 col-md-6">
-    <div class="card info-card sales-card blood-sugar-card">
-        <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                </li>
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-            </ul>
-        </div>
+    <div class="card info-card blood-sugar-card">
         <div class="card-body">
             <div class="d-flex align-items-center">
                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -469,517 +37,85 @@
                 <div class="ps-3">
                     <h5 class="card-title">Blood&nbsp;Sugar</h5>
 
-<div class="container pb-5">
-    <div class="row">
-      <div class="col-lg-9 col-10">
-          <h1 class="pt-3 pl-4">Healthcare Providers</h1>
-      </div>
-      </div>
-          <div clss="card">
-              <div class="pl-5">
-                <h3>User basic information</h3>
-                <p>Name {{ user.name }}</p>
-                <p>Birthday {{ user.birthday }}</p>
-                <p>Height {{ user.height }}</p>
-                <p>Age: {{age}}</p>
-                <p>Gender: {{user.gender}}</p>
-                <p>Weight: {{ records_weight_tracking["value"][0] }}kg</p>
 
-                <!-- -- knowledge graph showing connection between glucose spike and meal -- -->
-                <div id="mynetwork"></div>
-                <script>
-                    // Example record data extracted from your description
-                    const graphData = [
-                      { nodeId: {{kg_data["nodeId"] }} , label: '{{kg_data["label"] }}', user_id: '{{kg_data["user_id"] }}', 
-                      glucoseData: [
-                        {% for row in kg_data["glucoseData"] %}
-                          { recordId: '{{ row["timestamp"] }}', glucose_level: {{ row["glucose_level"] }}, timestamp: '{{ row["timestamp"] }}' },
-                        {% endfor %}
-                      ],
-                      foodintakeData: [
-                        {% for row in kg_data["foodintakeData"] %}
-                          { recordId: '{{ row["timestamp"] }}', food_items: '{{ row["food_items"] }}', timestamp: '{{ row["timestamp"] }}', value: '{{row["value"]}}' },
-                        {% endfor %}
-                      ],
-                    
-                    }
-                    ];
-                    
-                  // create an array with nodes
-                      var nodes = new vis.DataSet();
-
-                      // create an array with edges
-                      var edges = new vis.DataSet();
-
-                      // Adding nodes and edges from the provided graph data
-                      graphData.forEach(data => {
-                        nodes.add({ id: data.nodeId, label: data.label, title: `${data.user_id}`, color: "#203468" });
-
-                        data.glucoseData.forEach(record => {
-                          const recordNodeId = `${data.nodeId}-${record.recordId}`;
-                          nodes.add({ id: recordNodeId, label: `cgm: ${record.glucose_level}`, title: `${record.timestamp}`, value:record.glucose_level  });
-                          edges.add({ from: data.nodeId, to: recordNodeId});
-                        });
-                        data.foodintakeData.forEach(record => {
-                          const recordNodeId = `${data.nodeId}-${record.recordId}`;
-                          nodes.add({ id: recordNodeId, label: `food: ${record.food_items}`, title: `${record.timestamp}`, color: "#FB7E81" });
-                          edges.add({ from: data.nodeId, to: recordNodeId, value:record.value+70  });
-                        });
-                      });
-
-                      // create a network
-                      var container = document.getElementById("mynetwork");
-                      var data = {
-                        nodes: nodes,
-                        edges: edges
-                      };
-                      var options = {
-                          nodes: {
-                            shape: "dot",
-
-                          },
-                        };
-                      var network = new vis.Network(container, data, options);
-
-                      window.addEventListener("load", () => {
-                          draw();
-                        });
-
-                </script>
-
-                <!-- --------------------------- 3 cards at top ---------------------------- -->
-                 <h3>3 cards at top</h3>
-                 <p>Blood Sugar: {{records_glucose_monitoring["value"][0]}}</p>
-                 <p>HbA1c Level: {{records_hba1c["value"][0]}}</p>
-                 <p>Blood Pressure Systolic: {{records_blood_pressure["value_systolic"][0]}}</p>
-                 <p>Blood Pressure Diastolic: {{records_blood_pressure["value_diastolic"][0]}}</p>
-
-                <!-- ---------------------- Latest AI Recommendations ---------------------- -->
-                <p><strong>Latest AI Recommendations</strong></p>
-                <p>{{user_notifications[0].notification_content}}</p>
-
-                <!-- ------------------------------ Meal Logs ------------------------------ -->
-                 <table class="table">
-                     <tbody>
-                     {% for record in records_food_intake %}
-                        <tr>
-                            <td>{{ record.food_items }}</td>
-                            <td>{{ record.timestamp }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                    </table>
-
-                <!-- Line Chart Cholesterol -->
-              <div id="lineChartCholesterol"></div>
-                
-              <script>
-                    var options = {
-                        series: [{
-                        name: 'Cholesterol Level',
-                        data: {{records_cholesterol["value"] | tojson}}
-                        }],
-                        chart: {
-                        type: 'area',
-                        stacked: false,
-                        height: 350,
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        }
-                        },
-                        dataLabels: {
-                        enabled: false
-                        },
-                        markers: {
-                        size: 0,
-                        },
-                        title: {
-                        text: 'Cholesterol Levels',
-                        align: 'left'
-                        },
-                        fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            inverseColors: false,
-                            opacityFrom: 0.5,
-                            opacityTo: 0,
-                            stops: [0, 90, 100]
-                        },
-                        },
-                        yaxis: {
-
-                        title: {
-                            text: 'Cholesterol level'
-                        },
-                        },
-                        xaxis: {
-                        type: 'datetime',
-                        categories: {{records_cholesterol["timestamp"] | tojson}} 
-                        },
-                        tooltip: {
-                        shared: false,
-                        }
-                        };
-
-                        var chart = new ApexCharts(document.querySelector("#lineChartCholesterol"), options);
-                        chart.render();
-                </script>
-                <!-- End Line Chart Glucose-->
-
-                <!-- Line Chart Glucose -->
-              <div id="lineChartGlucose"></div>
-                
-              <script>
-                    var options = {
-                        series: [{
-                        name: 'Glucose Level',
-                        data: {{records_glucose_monitoring["value"] | tojson}}
-                        }],
-                        chart: {
-                        type: 'area',
-                        stacked: false,
-                        height: 350,
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        }
-                        },
-                        dataLabels: {
-                        enabled: false
-                        },
-                        markers: {
-                        size: 0,
-                        },
-                        title: {
-                        text: 'Blood Glucose Levels',
-                        align: 'left'
-                        },
-                        fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            inverseColors: false,
-                            opacityFrom: 0.5,
-                            opacityTo: 0,
-                            stops: [0, 90, 100]
-                        },
-                        },
-                        yaxis: {
-
-                        title: {
-                            text: 'Glucose level'
-                        },
-                        },
-                        xaxis: {
-                        type: 'datetime',
-                        categories: {{records_glucose_monitoring["timestamp"] | tojson}} 
-                        },
-                        tooltip: {
-                        shared: false,
-                        }
-                        };
-
-                        var chart = new ApexCharts(document.querySelector("#lineChartGlucose"), options);
-                        chart.render();
-                </script>
-                <!-- End Line Chart Glucose-->
-
-                <!-- Line Chart HbA1c -->
-                <div id="lineChartHbA1c"></div>
-
-                <script>
-                    var options = {
-                        series: [{
-                        name: 'HbA1c Level',
-                        data: {{records_hba1c["value"] | tojson}}
-                        }],
-                        chart: {
-                        type: 'area',
-                        stacked: false,
-                        height: 350,
-                        zoom: {
-                            type: 'x',
-                            enabled: true,
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            autoSelected: 'zoom'
-                        }
-                        },
-                        dataLabels: {
-                        enabled: false
-                        },
-                        markers: {
-                        size: 0,
-                        },
-                        title: {
-                        text: 'HbA1c Levels',
-                        align: 'left'
-                        },
-                        fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            inverseColors: false,
-                            opacityFrom: 0.5,
-                            opacityTo: 0,
-                            stops: [0, 90, 100]
-                        },
-                        },
-                        yaxis: {
-
-                        title: {
-                            text: 'HbA1c level'
-                        },
-                        },
-                        xaxis: {
-                        type: 'datetime',
-                        categories: {{records_hba1c["timestamp"] | tojson}} 
-                        },
-                        tooltip: {
-                        shared: false,
-                        }
-                        };
-
-                        var chart = new ApexCharts(document.querySelector("#lineChartHbA1c"), options);
-                        chart.render();
-              </script>
-              <!-- End Line Chart HbA1c-->
-
-              <!-- Line Chart Weight -->
-              <div id="lineChartWeightTracking"></div>
-
-              <script>
-                var options = {
-                    series: [{
-                    name: 'Body Weight (kg)',
-                    data: {{records_weight_tracking["value"] | tojson}}
-                    }],
-                    chart: {
-                    type: 'area',
-                    stacked: false,
-                    height: 350,
-                    zoom: {
-                        type: 'x',
-                        enabled: true,
-                        autoScaleYaxis: true
-                    },
-                    toolbar: {
-                        autoSelected: 'zoom'
-                    }
-                    },
-                    dataLabels: {
-                    enabled: false
-                    },
-                    markers: {
-                    size: 0,
-                    },
-                    title: {
-                    text: 'Body Weight',
-                    align: 'left'
-                    },
-                    fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        inverseColors: false,
-                        opacityFrom: 0.5,
-                        opacityTo: 0,
-                        stops: [0, 90, 100]
-                    },
-                    },
-                    yaxis: {
-
-                    title: {
-                        text: 'Body Weight (kg)'
-                    },
-                    },
-                    xaxis: {
-                    type: 'datetime',
-                    categories: {{records_weight_tracking["timestamp"] | tojson}} 
-                    },
-                    tooltip: {
-                    shared: false,
-                    }
-                    };
-
-                    var chart = new ApexCharts(document.querySelector("#lineChartWeightTracking"), options);
-                    chart.render();
-          </script>
-              <!-- End Line Chart Weight-->
-
-            <!-- Line Chart Blood Pressure -->
-            <div id="lineChartBloodPressure"></div>
-
-            <script>
-                var options = {
-                    series: [{
-                    name: 'Systolic',
-                    data: {{records_blood_pressure["value_systolic"]}}
-                    },{
-                    name: 'Diastolic',
-                    data: {{records_blood_pressure["value_diastolic"]}}
-                    }],
-                    chart: {
-                    type: 'area',
-                    stacked: false,
-                    height: 350,
-                    zoom: {
-                        type: 'x',
-                        enabled: true,
-                        autoScaleYaxis: true
-                    },
-                    toolbar: {
-                        autoSelected: 'zoom'
-                    }
-                    },
-                    dataLabels: {
-                    enabled: false
-                    },
-                    markers: {
-                    size: 0,
-                    },
-                    title: {
-                    text: 'Blood Pressure',
-                    align: 'left'
-                    },
-                    fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        inverseColors: false,
-                        opacityFrom: 0.5,
-                        opacityTo: 0,
-                        stops: [0, 90, 100]
-                    },
-                    },
-                    yaxis: {
-
-                    title: {
-                        text: 'Blood Pressure'
-                    },
-                    },
-                    xaxis: {
-                    type: 'datetime',
-                    categories: {{records_blood_pressure["timestamp"] | tojson}} 
-                    },
-                    tooltip: {
-                    shared: false,
-                    }
-                    };
-
-                    var chart = new ApexCharts(document.querySelector("#lineChartBloodPressure"), options);
-                    chart.render();
-          </script>
-
-            <!-- End Line Chart Blood Pressure -->
-
-                </div>
-            </div>
             <div class="ps-3 mt-3">
                 <h6 class="mb-0">{{ records_glucose_monitoring["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">mg / dL</span></h6>
                 <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Normal</span>
             </div>
         </div>
-        <div class="bs-bg">
-            <img src="{{ url_for('static', filename='public2/bgsugarwave.png') }}" alt="Wave" style="width: 100%; display: block;">
-        </div>
     </div>
+</div>
+</div>
 </div><!-- End Blood Sugar Card -->
 
-<!-- Heart Rate Card -->
+<!-- hba1c Card -->
 <div class="col-xxl-4 col-md-6">
-    <div class="card info-card sales-card heart-rate-card">
-        <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                </li>
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-            </ul>
-        </div>
+    <div class="card info-card blood-sugar-card">
         <div class="card-body">
             <div class="d-flex align-items-center">
                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                     <img src="{{ url_for('static', filename='public2/heartrate.png') }}" alt="" style="background-color: rgb(249, 226, 234); border-radius: 25%; width: 65px;">
                 </div>
                 <div class="ps-3">
-                    <h5 class="card-title">Heart&nbsp;Rate</h5>
-                </div>
-            </div>
+                    <h5 class="card-title">Hba1c&nbsp;Level</h5>
+
+
             <div class="ps-3 mt-3">
-                <h6 class="mb-0">{{ records_hba1c["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">bpm</span></h6>
-                <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(249, 226, 234); padding: 5px 10px; margin-top: 10px;">Normal</span>
+                <h6 class="mb-0">{{ records_hba1c["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;"></span></h6>
+                <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Normal</span>
             </div>
-        </div>
-        <div class="bs-bg">
-            <img src="{{ url_for('static', filename='public2/heartrate-wave.png') }}" alt="Wave" style="width: 210px; display: block;">
         </div>
     </div>
-</div><!-- End Heart Rate Card -->
-
-<!-- Blood Pressure Card -->
+</div>
+</div>
+</div><!-- End hba1c Card -->
+<!-- hba1c Card -->
 <div class="col-xxl-4 col-md-6">
-    <div class="card info-card sales-card blood-pressure-card">
-        <div class="filter">
-            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                </li>
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-            </ul>
-        </div>
+    <div class="card info-card blood-sugar-card">
         <div class="card-body">
             <div class="d-flex align-items-center">
                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <img src="{{ url_for('static', filename='public2/bloodpressure.png') }}" alt="" style="background-color: rgb(193, 230, 245); border-radius: 25%; width: 65px;">
+                    <img src="{{ url_for('static', filename='public2/heartrate.png') }}" alt="" style="background-color: rgb(249, 226, 234); border-radius: 25%; width: 65px;">
+                </div>
+                <div class="ps-3">
+                    <h5 class="card-title">Hba1c&nbsp;Level</h5>
+
+
+            <div class="ps-3 mt-3">
+                <h6 class="mb-0">{{ records_hba1c["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;"></span></h6>
+                <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Normal</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div><!-- End hba1c Card -->
+<!-- bp Card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card blood-sugar-card">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <img src="{{ url_for('static', filename='public2/bloodpressure.png') }}" alt="" style="background-color: rgb(249, 226, 234); border-radius: 25%; width: 65px;">
                 </div>
                 <div class="ps-3">
                     <h5 class="card-title">Blood&nbsp;Pressure</h5>
-                </div>
+
+
+            <div class="ps-1 mt-1">
+                <h6 class="mb-0">{{ records_blood_pressure["value_systolic"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">/ {{ records_blood_pressure["value_diastolic"][0] }} &nbsp;&nbsp;mmHg</h6>
+                <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Normal</span>
             </div>
-            <div class="ps-3 mt-3">
-                <h6 class="mb-0">{{ records_blood_pressure["value_systolic"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">/ {{ records_blood_pressure["value_diastolic"][0] }} &nbsp;&nbsp;mmHg</span></h6>
-                <span class="text-danger small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(193, 230, 245); padding: 5px 10px; margin-top: 10px;">Critical</span>
-            </div>
-        </div>
-        <div class="bs-bg">
-            <img src="{{ url_for('static', filename='public2/bloodpressurewave.png') }}" alt="Wave" style="width: 210px; display: block;">
         </div>
     </div>
-</div><!-- End Blood Pressure Card -->
+</div>
+</div>
+</div><!-- End bp Card -->
+
 
         <!-- Diagnostic Analysis Chart-->
         <div class="col-12 diagnostic-chart-card">
           <div class="card">    
-              <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                      <li class="dropdown-header text-start">
-                          <h6>Filter</h6>
-                      </li>
-                      <li><a class="dropdown-item" href="#">Today</a></li>
-                      <li><a class="dropdown-item" href="#">This Month</a></li>
-                      <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-              </div>
-
               <div class="card-body">
                   <h5 class="card-title">Diagnostic Analysis</h5>
 
@@ -1326,8 +462,5 @@
       </div>
     </section>
   </main><!-- End #main -->
-</body>
+
 {% endblock content %}
-
-
-</html>
