@@ -1,72 +1,87 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} New HP {% endblock title %}
+{% block title %} New Healthcare Provider {% endblock title %}
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+
+<!-- Include Bootstrap Icons CSS -->
 
 {% block content %}
-<!-- Something hereeee -->
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.2/font/bootstrap-icons.min.css">
+<style>
+  .custom-card {
+      max-width: 100%; 
+      margin: 40px auto 0; 
+      padding-top: 20px;
+  }
+</style>
+{% endblock stylesheets %}
+
 <div class="container pb-5">
     <div class="row">
-      <div class="col-lg-9 col-10">
-          <h1 class="p-3">New Healthcare Provider</h1>
-      </div>
-      <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
-      </div>
-          <div clss="card">
-              <div class="col-5 text-left">
-                  <form action="{{ url_for('create_new_hp') }}" method="post">
-                    <div>
-                      {% with messages = get_flashed_messages() %}
-                      {% if messages %}
-                          {% for message in messages %}
-                          <div class="alert alert-info" role="alert">{{ message }}</div>
-                          {% endfor %}
-                      {% endif %}
-                      {% endwith %}
+        <div class="col-12">
+            <h1 class="text-center pt-3">New Healthcare Provider</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <div class="small">
+                        <div>
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <form action="{{ url_for('create_new_hp') }}" method="post">
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+                                    </div>
+                                    <input class="form-control" placeholder="Username" type="text" name="username" required/>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    </div>
+                                    <input class="form-control" placeholder="Email" type="email" name="email" required/>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    </div>
+                                    <input class="form-control" placeholder="Password" type="password" name="password" required/>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    </div>
+                                    <input class="form-control" placeholder="Confirm Password" type="password" name="password_check" required/>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary my-4">Create</button>
+                            </div>
+                        </form>
+                        <input type="reset" class="btn btn-outline-danger mt-5" value="Reset" />
                     </div>
-                        <div class="form-group mb-3">
-                          <div class="input-group input-group-merge input-group-alternative">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
-                            </div>
-                            <input class="form-control" placeholder="Username" type="text" name="username" required/>
-                          </div>
-                        </div>
-                        <div class="form-group mb-3">
-                          <div class="input-group input-group-merge input-group-alternative">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                            </div>
-                            <input class="form-control" placeholder="Email" type="email" name="email" required/>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="input-group input-group-merge input-group-alternative">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                            </div>
-                            <input class="form-control" placeholder="Password" type="password" name="password" required/>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="input-group input-group-merge input-group-alternative">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                            </div>
-                            <input class="form-control" placeholder="Confirm Password" type="password" name="password_check" required/>
-                          </div>
-                        </div>
-                        <div class="text-center">
-                          <button type="submit" class="btn btn-primary my-4">Create</button>
-                        </div>
-                      </form>
-              </div>
-          </div>
-          <br>
-  
-    {% endblock content %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}{% endblock javascripts %}

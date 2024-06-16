@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 
 {% block title %} Doctors {% endblock title %}
+
 <!-- Specific script goes HERE -->
 {% block script %} 
     {{ super() }}
@@ -8,62 +9,69 @@
     {{ moment.include_moment() }}
 {% endblock script %}
 
+{% block content %}
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+<style>
+    #myTable th, #myTable td {
+        padding: 10px; /*space between columns */
+        text-align: left; 
+    }
+    #myTable th {
+        background-color: #f2f2f2; 
+    }
+</style>
 {% endblock stylesheets %}
-
-{% block content %}
 <div class="container text-center">
     <div class="row">
-      <div class="col">
-        <div class="card">
-            <div class="card-body">
-                  <h5 class="card-title">Doctors</h5>
-    
-                  <!-- Table with stripped rows -->
-                  <table class="display text-sm" id="myTable">
-                    <thead>
-                      <tr>
-                        <th><b>Name</b></th>
-                        <th>Gender</th>
-                        <th>Email</th>
-                        <th>Created Time</th>
-                        <th>Address</th>
-                        <th>Active</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for doctor in doctors %}
-                      <tr>
-                        <td>{{ doctor.name }}</td>
-                        <td>{{ doctor.gender }}</td>
-                        <td>{{ doctor.email }}</td>
-                        <td>{{ doctor.created_time }}</td>
-                        <td>{{ doctor.user_raw[0].address }}</td>
-                        <td>{{ doctor.active }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                  <!-- End Table with stripped rows -->
- 
-      </div>
-    </div>
-  </div>
-  </div>
-  </div>
+        <div class="col-10 d-flex justify-content-end">
+            <div class="card" style="max-width: 850px; margin-left: 50px; margin-top: 85px;">
+                <div class="card-body">
+                    <h5 class="card-title">Doctors</h5>
 
-    {% endblock content %}
+                    <!-- Table with stripped rows -->
+                    <table class="display text-sm" id="myTable">
+                        <thead>
+                            <tr>
+                                <th><b>Name</b></th>
+                                <th>Gender</th>
+                                <th>Email</th>
+                                <th>Created Time</th>
+                                <th>Address</th>
+                                <th>Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doctor in doctors %}
+                            <tr>
+                                <td>{{ doctor.name }}</td>
+                                <td>{{ doctor.gender }}</td>
+                                <td>{{ doctor.email }}</td>
+                                <td>{{ doctor.created_time }}</td>
+                                <td>{{ doctor.user_raw[0].address }}</td>
+                                <td>{{ doctor.active }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
 <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
 
 <script>
-    $(document).ready( function () {
-    // $('#myTable').DataTable();
-    new DataTable('#myTable');
-} );
+    $(document).ready(function () {
+        new DataTable('#myTable');
+    });
 </script>
 {% endblock javascripts %}

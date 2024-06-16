@@ -1,4 +1,46 @@
-<!-- ----------------------------------------------------------------------- -->
-<!--                                 Tahmeed                                 -->
-<!-- ----------------------------------------------------------------------- -->
- <h3>Terms and Conditions</h3>
+{% include 'layouts/base.html' %}  
+
+{% block title %}Terms and Conditions{% endblock %}
+
+{% block styles %}
+<style>
+  .terms-card {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .terms-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .terms-card p {
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<main id="main" class="main">
+  <div class="terms-card">
+    <h2><strong>Terms and Conditions</strong></h2>
+    <p>Welcome to our Personalized Health Management System (PHMS). These terms and conditions outline the rules and regulations for the use of our system.</p>
+    <p><b>1. Acceptance of Terms</b></p>
+    <p>By accessing and using the PHMS, you accept and agree to be bound by the terms and provisions of this agreement. In addition, when using our services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
+    <p><b>2. Privacy Policy</b></p>
+    <p>Your privacy is very important to us. We designed our Privacy Policy to make important disclosures about how you can use the PHMS to share with others and how we collect and can use your content and information.</p>
+    <p><b>3. User Obligations</b></p>
+    <p>You must provide accurate and complete information when creating an account and using the PHMS. You are responsible for the security of your login credentials and for any activities or actions under your account.</p>
+    <p><b>4. Limitation of Liability</b></p>
+    <p>The PHMS is provided on an "as is" and "as available" basis. We do not warrant that the service will be uninterrupted, timely, secure, or error-free.</p>
+    <p><b>5. Changes to the Terms</b></p>
+    <p>We reserve the right to modify these terms at any time. We will provide notice of such changes by posting the updated terms on our system.</p>
+    <p><b>6. Contact Us</b></p>
+    <p>If you have any questions about these Terms, please contact us at phms_80029@outlook.com.</p>
+  </div>
+</main>
+{% endblock %}
+

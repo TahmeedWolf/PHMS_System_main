@@ -1,29 +1,14 @@
-<!--
-=========================================================
-* Argon Dashboard - v1.2.0
-=========================================================
-* Product Page: https://www.creative-tim.com/product/argon-dashboard
-
-* Copyright  Creative Tim (http://www.creative-tim.com)
-* Coded by www.creative-tim.com
-
-=========================================================
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="canonical" href="https://appseed.us/admin-dashboards/flask-boilerplate-dashboard-argon">
-  
-  <title>
-    PHMS {% block title %} Dashboard {% endblock %}
-  </title>
 
-  <!-- Favicon - loaded as static -->
-  <link rel="icon" href="/static/assets/images/brand/favicon.ico" type="image/png">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>{% block title %}LUMI{% endblock %}</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
   <!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
   <!-- Boostrap Icons -->
@@ -31,75 +16,267 @@
   <!-- Icons -->
   <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
   <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
-  <!-- Page plugins -->
   <!-- Bootstrap v5.3 -->
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
   {{ bootstrap.load_css() }}
+  
+  <!-- Favicons -->
+  <link rel="icon" href="/static/assets/images/brand/favicon.ico" type="image/png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
+  <script src="/static/assets/js/main.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='path_to_tinymce/tinymce.min.js') }}"></script>
+  <link  src="/static/assets/css/datatable.css" rel="stylesheet" type="text/css">
+
   <!-- Argon CSS -->
   <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
   <link rel="stylesheet" href="/static/assets/css/style.css" type="text/css">
   <link rel="stylesheet" href="/static/assets/css/main.css" type="text/css">
-
+ 
   <!-- Specific CSS goes HERE -->
   <link  src="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" type="text/css">
   <link  src="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" type="text/css">
-  <!-- <link  src="/static/assets/vendor/simple-datatables/style.css" rel="stylesheet" type="text/css"> -->
-  <link  src="/static/assets/css/datatable.css" rel="stylesheet" type="text/css">
+  
   <!-- For dashboard vis.js -->
   <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
   <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
   <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
-  {% block stylesheets %}{% endblock stylesheets %}
+
 
 </head>
 
-<body class="">
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <a href="{{ url_for('home') }}" class="logo d-flex align-items-center">
+      <img src="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" alt="">
+      <span class="d-none d-lg-block">LUMI</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div><!-- End LUMI Logo -->
 
-  {% include "includes/sidenav.html" %}
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
 
-  <div class="main-content" id="panel">
-    <!-- main-content removed from top -->
-    {% include "includes/top-toolbar.html" %}
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
 
-    <!-- { include "includes/navigation.html" } removed % -->
+        <li class="nav-item dropdown">
+            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-bell"></i>
+              <span class="badge bg-primary badge-number">{{ user_notifications|length }}</span>
+            </a><!-- End Notification Icon -->
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+              <li class="dropdown-header">
+                You have {{ user_notifications|length }} new notifications
+                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% for notification in user_notifications %}
+              <li class="notification-item">
+                <i class="bi bi-info-circle text-primary"></i>
+                <div>
+                  <h4>{{ notification.title }}</h4>
+                  <p>{{ notification.notification_content }}</p>
+                  <p>{{ notification.created_time.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              {% endfor %}
+              <li class="dropdown-footer">
+                <a href="#">Show all notifications</a>
+              </li>
+            </ul><!-- End Notification Dropdown Items -->
+          </li><!-- End Notification Nav -->
+          
+        <li class="nav-item dropdown pe-3">
 
-    <div id="content">{% block content %}{% endblock content %}</div>
+          <li class="nav-item dropdown pe-3 align-items-center">
 
-  </div>
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+              <div class="text-end">
+                <span class="d-none d-md-block dropdown-toggle ps-2 fw-semibold text-sm">Hey, {{ current_user.name.title() }}
+                  {% if current_user.permission == 'doctor' or current_user.permission == 'admin' %}
+                </span>
+                <span class="text-sm pr-3 text-light">{{ current_user.permission }}</span>
+              </div>
+                {% endif %}
+              {% if current_user.profile_img_url %}
+              <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
+              {% else %}
+              <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
+              {% endif %}
+            </a><!-- End Profile Image Icon -->
+  
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+              <li class="dropdown-header">
+                <b>{{ current_user.name }}</b>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/user_settings">
+                  <i class="bi bi-person"></i>
+                  <span>My Profile</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/settings">
+                  <i class="bi bi-gear"></i>
+                  <span>Account Settings</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/terms_and_condition">
+                  <i class="bi bi-file-earmark-text"></i>
+                  <span>Terms and Conditions</span>
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="/logout">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </a>
+              </li>
+  
+            </ul><!-- End Profile Dropdown Items -->
+          </li><!-- End Profile Nav -->  
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar d-flex flex-column justify-content-between">
+
+<!-- Nav items -->
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('home') }}">
+                <i class="bi bi-grid" style="color: orange;"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <!--<li class="nav-item">
+            <a class="nav-link collapsed" href="/chat">
+                <i class="bi bi-chat-left-text" style="color: orange;"></i>
+                <span>Chat</span>
+            </a>
+        </li>-->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/upload_files">
+                <i class="bi bi-cloud-arrow-up" style="color: orange;"></i>
+                <span>Upload</span>
+            </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="/overview">
+            <i class="bi bi-diagram-2" style="color: orange;"></i>
+            <span>Overview</span>
+          </a>
+      </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/my_data">
+              <i class="bi bi-file-earmark-bar-graph" style="color: orange;"></i>
+              <span>My Data</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/notifications">
+                <i class="bi bi-lightbulb"  style="color: orange;"></i>
+                <span>Insights</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="/healthcare_providers">
+              <i class="bi bi-person-square"  style="color: orange;;"></i>
+              <span>Doctors</span>
+            </a>
+        </li>
+        {% if current_user.permission == "admin" or current_user.permission == "doctor" %}
+        <li class="nav-item">
+            <a class="nav-link collapsed" href='/patients'>
+                <i class="bi bi-people" style="color: orange;"></i>
+                <span>Patients</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% if current_user.permission == "admin" %}
+        <li class="nav-item dropdown">
+            <a class="nav-link collapsed dropdown-toggle" onclick="adminToolToggler()">
+                <i class="bi bi-gear "style="color: orange;"></i>
+                <span>Admin Tools</span>
+            </a>
+            <div class="dropdown collapse" aria-labelledby="navbarDropdownMenuLink" id="navbarDropdownMenuLink">
+                <a class="nav-link pl-5" href="{{ url_for('get_all_doctors') }}"><span>Manage Doctors</span></a>
+                <a class="nav-link pl-5" href="/create_new_hp"><span>Create Account</span></a>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href='/access_logs'>
+                <i class="bi-journal-text" style="color: orange;"></i>
+                <span>Access Log</span>
+            </a>
+        </li>
+        {% endif %}
+      </ul>
+
+    </aside><!-- End Sidebar-->
+
+  <!-- Vendor JS Files -->
+  <script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/chart.js/chart.umd.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/echarts/echarts.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/quill/quill.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/tinymce/tinymce.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js') }}"></script>
+
+  <!-- Main JS File -->
+  <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+
+  <div id="content">{% block content %}{% endblock content %}</div>
 
   {% include "includes/scripts.html" %}
 
   <!-- Specific JS goes HERE --> 
   {% block javascripts %}{% endblock javascripts %}
 
-  <script src="/static/assets/js/main.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <div id="loading">
-    <div class="box-secondary text-center">
-        <div><img src="{{ url_for('static', filename='assets/images/PHMS_LOGO_white.png') }}"  style="max-width:200px;"/></div>
-        <div>
-          <div class="spinner-border m-5" role="status"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    </div>
-
 </body>
-  <script language="Javascript">
-    function loading() {
-      $("#loading").show();
-      $("#content").hide();
-    }
-    $(window).on("load", function () {
-      $("#loading").hide();
-      $("#content").show();
-    });
-
-    window.addEventListener("beforeunload", function (e) {
-      loading();
-    });
-    </script>
-    {% extends 'includes/footer.html' %}
 </html>

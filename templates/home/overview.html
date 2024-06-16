@@ -1,11 +1,938 @@
-{% extends 'layouts/base.html' %}
 
-{% block title %} BioTective {% endblock title %}
+{% extends 'layouts/base.html' %}  
 
-<!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block title %} Overview {% endblock title %}
 
+<head>
 {% block content %}
+{% block styles %}
+  <style>
+    .pagetitle {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font */
+    }
+    
+    .pagetitle h1 {
+      font-weight: 500;
+      font-weight: bold;
+      padding-top: 10px;
+    }
+    
+    .pagetitle-time h6 {
+      font-size: 0.75rem;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    
+    .blood-sugar-card {
+      border-radius: 15px; /* Rounded corners */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+      height: 300px; /* Ensures the card takes full vertical space available */
+      transition: transform 0.2s, box-shadow 0.2s; /* Adding transition for hover effect */
+    }
+    
+    .blood-sugar-card:hover {
+      transform: translateY(-5px); /* Move the card up slightly */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    }
+    
+    .blood-sugar-card .card-body {
+      height: 400px; /* Adjust height as needed */
+      /*display: flex;
+      flex-direction: column;
+      justify-content: center;*/
+    }
+    
+    .blood-sugar-card .card-title {
+      margin-left: 5px;
+      margin-right: 20px;
+      margin-top: 40px;
+      font-size: 16px; /* Small title font size*/
+    }
+    
+    .blood-sugar-card .card-icon {
+     /* Adjust margin as needed for spacing */
+      margin-top: 40px;
+    }
+    
+    .blood-sugar-card .ps-3.mt-3 {
+      margin-top: 10px; /* Adjust margin as needed for spacing */
+      text-align: left;
+      
+    }
+    
+    .blood-sugar-card .ps-3.mt-3 h6 {
+      margin: 0; /* Adjust margin as needed */
+      
+    }
+    
+    .blood-sugar-card .ps-3.mt-3 span {
+      display: inline; /* Ensure "mg / dL" appears inline */
+      
+    }
+    
+    .blood-sugar-card .bs-bg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px;
+    }
+            
+    .heart-rate-card {
+      border-radius: 15px; /* Rounded corners */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+      height: 300px; /* Ensures the card takes full vertical space available */
+      position: relative; /* Required for absolute positioning of the wave */
+      transition: transform 0.2s, box-shadow 0.2s; /* Adding transition for hover effect */
+    }
+    
+    .heart-rate-card:hover {
+      transform: translateY(-5px); /* Move the card up slightly */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    }
+    
+    
+    .heart-rate-card .card-body {
+      padding-bottom: 60px; /* Make space for the wave at the bottom */
+    }
+    
+    .heart-rate-card .card-title {
+      margin-left: 5px;
+      margin-right: 20px;
+      margin-top: 40px;
+      font-size: 16px; /* Small title font size*/
+    }
+    
+    .heart-rate-card .card-icon {
+      margin-top: 40px; /* Adjust margin as needed for spacing */
+    }
+    
+    .heart-rate-card .ps-3.mt-3 {
+      margin-top: 10px; /* Adjust margin as needed for spacing */
+      text-align: left;
+    }
+    
+    .heart-rate-card .ps-3.mt-3 h6 {
+      margin: 0; /* Adjust margin as needed */
+    }
+    
+    .heart-rate-card .ps-3.mt-3 span {
+      display: inline; /* Ensure "bpm" appears inline */
+    }
+    
+    .heart-rate-card .bs-bg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px; /* Adjust the width as needed */
+    }
+    
+
+    .blood-pressure-card {
+      border-radius: 15px; /* Rounded corners */
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1); /* Shadow */
+      height: 300px; /* Ensures the card takes full vertical space available */
+      position: relative; /* Required for absolute positioning of the wave */
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .blood-pressure-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }    
+    
+    .blood-pressure-card .card-body {
+      padding-bottom: 60px; /* Make space for the wave at the bottom */
+    }
+    
+    .blood-pressure-card .card-title {
+      margin-right: 40px;
+      margin-top: 40px;
+      font-size: 16px; /* Small title font size*/
+
+    }
+    
+    .blood-pressure-card .card-icon {
+      margin-top: 40px; /* Adjust margin as needed for spacing */
+    }
+    
+    .blood-pressure-card .ps-3.mt-3 {
+      margin-top: 10px; /* Adjust margin as needed for spacing */
+      text-align: left;
+    }
+    
+    .blood-pressure-card .ps-3.mt-3 h6 {
+      margin: 0; /* Adjust margin as needed */
+    }
+    
+    .blood-pressure-card .ps-3.mt-3 span {
+      display: inline; /* Ensure "mmHg" appears inline */
+    }
+    
+    .blood-pressure-card .bs-bg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px; /* Adjust the width as needed */
+    }
+    
+    .height-card {
+      background-color: rgb(244, 207, 166);
+      font-size: 14px;
+      margin-top: 40px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .height-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .height-card .card-title {
+      font-size: 14px;
+    }    
+    
+    .bmi-card {
+      background-color: rgb(91, 90, 90);
+      color: white;
+      padding-bottom: 55px;
+      position: relative; /* Ensure the card can contain the absolute positioned elements */
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .bmi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bmi-card .card-title {
+      color: white;
+      font-size: 14px;
+    }
+    
+    .bmi-container {
+      display: flex;
+      align-items: center;
+      gap: 30px; /* space between BMI value and status */
+    }
+    
+    .bmi-status {
+      font-size: 12px; /* smaller font size */
+      font-weight: bold;
+      color: black;
+      background-color: #d4ffbb; /* background color */
+      padding: 2px 5px; /* smaller padding */
+      border-radius: 10px;
+    }
+    
+    .bmi-scale {
+      position: relative;
+      width: 100%;
+      height: 11px; /* Adjust height to fit numbers */
+      background: linear-gradient(to right, #ff9999, #ffd480, #ffff99, #ccffcc, #99ccff, #d1b3ff, #ffb3e6);
+      border-radius: 5px; /* Optional: to make the ends of the scale rounded */
+      margin-top: 60px; /* Space between the BMI container and the scale */
+    }
+    
+    .bmi-indicator {
+      position: absolute;
+      top: -5px; /* Position above the scale */
+      width: 8px;
+      height: 8px;
+      background-color: red; /* Color of the indicator */
+      border-radius: 50%; /* Make it a circle */
+      border: 1.2px solid white; /* White border */
+      transform: translateX(-50%); /* Center the circle on the position */
+    }
+    
+    .bmi-numbers {
+      position: absolute;
+      top: 20px; /* Position below the scale */
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: white;
+    }
+    
+    .bmi-numbers span {
+      position: relative;
+      transform: translateX(-50%);
+    }
+    
+    .height-container, .weight-container {
+      display: flex;
+      align-items: center;
+      gap: 10px; /* Space between value and scale */
+    }
+    
+    .height-scale, .weight-scale {
+      position: relative;
+      flex-grow: 1;
+      height: 5px; /* Adjust height for a typical scale */
+      background: #363636; /* Gray background for height and weight scales */
+      border-radius: 2px; /* Optional: to make the ends of the scale rounded */
+    }
+    
+    .height-indicator, .weight-indicator {
+      position: absolute;
+      top: -5px; /* Position above the scale */
+      width: 8px;
+      height: 8px;
+      background-color: red; /* Color of the indicator */
+      border-radius: 50%; /* Make it a circle */
+      border: 1.2px solid white; /* White border */
+      transform: translateX(-50%); /* Center the circle on the position */
+    }
+    
+    .height-numbers, .weight-numbers {
+      position: absolute;
+      top: -20px; /* Position above the scale */
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px; /* Smaller font size */
+      color: black;
+    }
+    
+    .height-numbers span, .weight-numbers span {
+      position: relative;
+      transform: translateX(-50%);
+    }
+                        
+    .weight-card {
+      background-color: rgb(193, 230, 245);
+      margin-top: -155px;
+      font-size: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .weight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .weight-card .card-title {
+      font-size: 14px;
+    }
+
+    .diagnostic-chart-card .card {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .diagnostic-chart-card .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    
+    .general-info{
+      margin-top: -32px;
+      margin-bottom: 45px;
+      
+    }
+        
+    .card-title {
+      font-size: 1.25rem;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .latest-ai-card {
+      height: 150px; 
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: -50px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .latest-ai-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    
+    .meal-card-body {
+      padding-bottom: 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .meal-card-body:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+      margin-bottom: 10px;
+    }
+    
+    .smaller-font {
+      font-size: 0.8em;
+    }
+    .card Patient-card{
+      max-height: 20px;
+      overflow-y: auto; 
+      margin-top: -50px;
+    }
+    .smaller-font {
+      font-size: 0.875rem; /* Adjust the size as needed */
+    }
+    
+    .patient-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .patient-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .patient-card .card-title {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font stack */
+    }
+    
+    .patient-card .card-text {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* Default Bootstrap font stack */
+    }
+    
+    .patient-card hr {
+      border-top: 1px solid #dee2e6;
+    }
+
+    .card consultation-card{
+      overflow-y: auto; 
+      margin-top: -50px;
+      height: 20px; 
+      padding: 0px; 
+    }
+  
+    .patient-card .glucose-level {
+        color: #ff0000; /* Red color for critical glucose level */
+        font-weight: bold;
+        margin-left: 10px; /* Adjust spacing between name and glucose level */
+    }
+  
+  </style>
+{% endblock styles %}
+
+</head>
+<body>
+  <main id="main" class="main">
+    <div class="pagetitle mt">
+      <h1 class="mb-0">Overview</h1>
+      <div class="pagetitle-time">
+        <h6 class="mb-0">May 25, 2024</h6>
+      </div>
+    </div>
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+          <!-- Number of Patient Cards -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card no_patients blood-sugar-card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person" style="background-color: rgb(244, 207, 166); border-radius: 25%; font-size: 32px;"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h5 class="card-title">Patients</h5>
+                        </div>
+                    </div>
+                    <div class="ps-3 mt-3">
+                        <h6 class="mb-0">100&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">Total</span></h6>
+                        <span class="text-success small pt-1 fw-bold" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Total</span>
+                    </div>
+                </div>
+                <div class="bs-bg">
+                    <img src="{{ url_for('static', filename='public2/bgsugarwave.png') }}" alt="Wave" style="width: 100%; display: block;">
+                </div>
+            </div>
+          </div><!-- End Number of patients Card -->
+
+          <!-- Number of Doctors Cards -->
+
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card no_doctors blood-sugar-card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person" style="background-color: rgb(244, 207, 166); border-radius: 25%; font-size: 32px;"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h5 class="card-title">Doctors</h5>
+                        </div>
+                    </div>
+                    <div class="ps-3 mt-3">
+                        <h6 class="mb-0">50&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">Total</span></h6>
+                        <span class="text-success small pt-1 fw-bold" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Total</span>
+                    </div>
+                </div>
+                <div class="bs-bg">
+                    <img src="{{ url_for('static', filename='public2/bgsugarwave.png') }}" alt="Wave" style="width: 100%; display: block;">
+                </div>
+            </div>
+          </div>
+
+          <!-- Patient with glucose spikes Cards -->
+
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card glucose_spike blood-sugar-card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-graph-up" style="background-color: rgb(244, 207, 166); border-radius: 25%; font-size: 32px;"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h5 class="card-title">Glucose&nbsp;Spikes</h5>
+                        </div>
+                    </div>
+                    <div class="ps-3 mt-3">
+                        <h6 class="mb-0">20&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">High Glucose</span></h6>
+                        <span class="text-success small pt-1 fw-bold" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">High Glucose</span>
+                    </div>
+                </div>
+                <div class="bs-bg">
+                    <img src="{{ url_for('static', filename='public2/bgsugarwave.png') }}" alt="Wave" style="width: 100%; display: block;">
+                </div>
+            </div>
+          </div>
+
+          <!-- Patients with low glucose Cards -->
+
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card low_glucose blood-sugar-card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-graph-down" style="background-color: rgb(244, 207, 166); border-radius: 25%; font-size: 32px;"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h5 class="card-title">Low&nbsp;Glucose</h5>
+                        </div>
+                    </div>
+                    <div class="ps-3 mt-3">
+                        <h6 class="mb-0">15&nbsp;&nbsp;&nbsp;<span style="color: #f48c94; font-size: 14px; font-weight: 400;">Low Glucose</span></h6>
+                        <span class="text-danger small pt-1 fw-bold" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Low Glucose</span>
+                    </div>
+                </div>
+                <div class="bs-bg">
+                    <img src="{{ url_for('static', filename='public2/bgsugarwave.png') }}" alt="Wave" style="width: 100%; display: block;">
+                </div>
+            </div>
+          </div>
+
+          <!-- Diagnostic Analysis Chart-->
+          <div class="col-12 diagnostic-chart-card">
+            <div class="card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Diagnostic Analysis for Glucose levels</h5>
+
+                    <!-- Nav Tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="glucose-tab" data-bs-toggle="tab" data-bs-target="#glucose" type="button" role="tab" aria-controls="glucose" aria-selected="true">Glucose</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="glucose" role="tabpanel" aria-labelledby="glucose-tab">
+                            <div id="glucoseChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <!-- End Diagnostic Analysis Chart-->
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Hardcoded glucose levels for 10 patients
+                const glucoseData = [90, 85, 88, 92, 87, 89, 91, 95, 86, 93];
+
+                // Prepare histogram data
+                const histogramData = glucoseData.map((value, index) => ({
+                    x: `Patient ${index + 1}`,
+                    y: value
+                }));
+
+                // Chart options
+                const options = {
+                    series: [{
+                        name: 'Glucose Levels',
+                        data: histogramData
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'bar',
+                        toolbar: {
+                            show: false
+                        },
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                            distributed: true,
+                            dataLabels: {
+                                position: 'top', // Display data labels at the top of each bar
+                                offsetX: -10, // Optionally adjust horizontal offset
+                                style: {
+                                    colors: ['#304758'],
+                                    fontSize: '12px',
+                                    fontWeight: 500
+                                }
+                            }
+                        }
+                    },
+                    colors: ['#3e82fc'], 
+                    xaxis: {
+                        categories: histogramData.map(dataPoint => dataPoint.x),
+                        labels: {
+                            show: true,
+                            formatter: function(val) {
+                                return val;
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Glucose Level'
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(val) {
+                                return val;
+                            }
+                        }
+                    }
+                };
+
+                // Initialize chart
+                const chart = new ApexCharts(document.querySelector("#glucoseChart"), options);
+                chart.render();
+            });
+          </script>
+          
+          <!-- Diagnostic Analysis Chart for BMI and HbA1c -->
+          <div class="col-12 diagnostic-chart-card">
+            <div class="card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Filter</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Diagnostic Analysis for BMI and Hb1Ac levels</h5>
+
+                    <!-- Nav Tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="bmi-tab" data-bs-toggle="tab" data-bs-target="#bmi" type="button" role="tab" aria-controls="bmi" aria-selected="true">BMI</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="hba1c-tab" data-bs-toggle="tab" data-bs-target="#hba1c" type="button" role="tab" aria-controls="hba1c" aria-selected="false">HbA1c</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="bmi" role="tabpanel" aria-labelledby="bmi-tab">
+                            <div id="diagnosticChart"></div>
+                        </div>
+                        <div class="tab-pane fade" id="hba1c" role="tabpanel" aria-labelledby="hba1c-tab">
+                            <div id="diagnosticChartHbA1c"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <!-- End Diagnostic Analysis Chart -->
+
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Hardcoded BMI and HbA1c levels for 10 patients
+                const bmiData = [24.5, 28.1, 22.3, 25.9, 26.7, 23.8, 27.4, 29.6, 26.2, 25.0];
+                const hba1cData = [5.2, 6.1, 5.5, 6.3, 5.8, 6.0, 5.9, 5.4, 6.2, 5.7];
+
+                // Prepare histogram data for BMI
+                const histogramDataBMI = bmiData.map((value, index) => ({
+                    x: `Patient ${index + 1}`,
+                    y: value
+                }));
+
+                // Prepare histogram data for HbA1c
+                const histogramDataHbA1c = hba1cData.map((value, index) => ({
+                    x: `Patient ${index + 1}`,
+                    y: value
+                }));
+
+                // Chart options for BMI and HbA1c
+                const optionsBMI = {
+                    series: [{
+                        name: 'BMI Levels',
+                        data: histogramDataBMI
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'bar',
+                        toolbar: {
+                            show: false
+                        },
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                            distributed: true,
+                            dataLabels: {
+                                position: 'top',
+                                offsetX: 0,
+                                style: {
+                                    colors: ['#304758'],
+                                    fontSize: '12px',
+                                    fontWeight: 500
+                                }
+                            }
+                        }
+                    },
+                    colors: ['#3e82fc'], // Blue for BMI
+                    xaxis: {
+                        categories: histogramDataBMI.map(dataPoint => dataPoint.x),
+                        labels: {
+                            show: true,
+                            formatter: function(val) {
+                                return val;
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'BMI Levels'
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(val) {
+                                return val.toFixed(1); // Format tooltip value to one decimal place
+                            }
+                        }
+                    }
+                };
+
+                const optionsHbA1c = {
+                    series: [{
+                        name: 'HbA1c Levels',
+                        data: histogramDataHbA1c
+                    }],
+                    chart: {
+                        height: 350,
+                        type: 'bar',
+                        toolbar: {
+                            show: false
+                        },
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: true,
+                            distributed: true,
+                            dataLabels: {
+                                position: 'top',
+                                offsetX: 0,
+                                style: {
+                                    colors: ['#304758'],
+                                    fontSize: '12px',
+                                    fontWeight: 500
+                                }
+                            }
+                        }
+                    },
+                    colors: ['#fd7e14'], // Orange for HbA1c
+                    xaxis: {
+                        categories: histogramDataHbA1c.map(dataPoint => dataPoint.x),
+                        labels: {
+                            show: true,
+                            formatter: function(val) {
+                                return val;
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'HbA1c Levels'
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(val) {
+                                return val.toFixed(1); // Format tooltip value to one decimal place
+                            }
+                        }
+                    }
+                };
+
+                // Initialize BMI chart
+                const chartBMI = new ApexCharts(document.querySelector("#diagnosticChart"), optionsBMI);
+                chartBMI.render();
+
+                // Initialize HbA1c chart (hidden initially)
+                const chartHbA1c = new ApexCharts(document.querySelector("#diagnosticChartHbA1c"), optionsHbA1c);
+                chartHbA1c.render();
+
+                // Handle tab click events to toggle between BMI and HbA1c charts
+                const tabBMI = document.querySelector("#bmi-tab");
+                const tabHbA1c = document.querySelector("#hba1c-tab");
+
+                tabBMI.addEventListener("click", function() {
+                    chartBMI.updateOptions(optionsBMI);
+                    chartHbA1c.hide();
+                    chartBMI.show();
+                });
+
+                tabHbA1c.addEventListener("click", function() {
+                    chartHbA1c.updateOptions(optionsHbA1c);
+                    chartBMI.hide();
+                    chartHbA1c.show();
+                });
+            });
+          </script>
+          <!--End chart-->
+      
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+        <!-- High Critical card -->
+
+          <div class="card patient-card shadow-sm border-0">
+            <div class="card-body pb-0">
+                <div class="pl-4 smaller-font">
+                  <h3 class="card-title"><strong>High Critical</strong> <span class="badge bg-danger">High</span></h3>
+                  <hr>
+                    <div class="patient-info">
+                        <p class="card-text">Name: John Doe <span class="glucose-level">8.5 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                        <p class="card-text">Name: Jane Smith <span class="glucose-level">10.2 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                        <p class="card-text">Name: Mike Johnson <span class="glucose-level">7.9 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                        <p class="card-text">Name: Sarah Brown <span class="glucose-level">9.8 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                        <p class="card-text">Name: David Wilson <span class="glucose-level">11.1 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                        <p class="card-text">Name: Emily Davis <span class="glucose-level">8.3 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                        <p class="card-text">Name: Robert Taylor <span class="glucose-level">12.5 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End High Critical card -->
+
+        
+        <!-- Low Critical card -->
+
+        <div class="card patient-card shadow-sm border-0">
+          <div class="card-body pb-0">
+              <div class="pl-4 smaller-font">
+                <h3 class="card-title"><strong>Low Critical</strong> <span class="badge bg-danger">High</span></h3>
+                <hr>
+                  <div class="patient-info">
+                      <p class="card-text">Name: John Doe <span class="glucose-level">8.5 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                      <p class="card-text">Name: Jane Smith <span class="glucose-level">10.2 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                      <p class="card-text">Name: Mike Johnson <span class="glucose-level">7.9 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                      <p class="card-text">Name: Sarah Brown <span class="glucose-level">9.8 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                      <p class="card-text">Name: David Wilson <span class="glucose-level">11.1 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                      <p class="card-text">Name: Emily Davis <span class="glucose-level">8.3 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                      <p class="card-text">Name: Robert Taylor <span class="glucose-level">12.5 mmol/L</span></p> <!-- Replace with actual name and glucose level -->
+                  </div>
+              </div>
+              
+          </div>
+          
+      </div>
+      
+        <!-- End Low Critical card -->
+          
+        </div><!-- End Right side columns -->
+        
+
+      </div>
+      {% endblock content %}
+
+
+    </section>
+
+  </main><!-- End #main -->
+
+
 <!-- Something hereeee -->
 <div class="container pb-5">
     <div class="row">
@@ -148,8 +1075,6 @@
               </div>
           </div>
           <br>
-  
-    {% endblock content %}
 
-<!-- Specific JS goes HERE --> 
-{% block javascripts %}{% endblock javascripts %}
+
+

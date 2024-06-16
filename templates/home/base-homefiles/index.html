@@ -1,0 +1,369 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<script src="static/assets/vendor/apexcharts/apexcharts.min.js"></script>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container pb-5">
+    <div class="row">
+      <div class="col-lg-9 col-10">
+          <h1 class="pt-3 pl-4">Healthcare Providers</h1>
+      </div>
+      </div>
+          <div clss="card">
+              <div class="pl-5">
+                <h3>User basic information</h3>
+                <p>Name {{ user.name }}</p>
+                <p>Birthday {{ user.birthday }}</p>
+                <p>Age: {{age}}</p>
+                <p>Gender: {{user.gender}}</p>
+                <p>Height: {{user.height}}</p>
+                <p>Weight: {{ records_weight_tracking["value"][0] }}kg</p>
+
+                <!-- --------------------------- 3 cards at top ---------------------------- -->
+                 <h3>3 cards at top</h3>
+                 <p>Blood Sugar: {{records_glucose_monitoring["value"][0]}}</p>
+                 <p>HbA1c Level: {{records_hba1c["value"][0]}}</p>
+                 <p>Blood Pressure Systolic: {{records_blood_pressure["value_systolic"][0]}}</p>
+                 <p>Blood Pressure Diastolic: {{records_blood_pressure["value_diastolic"][0]}}</p>
+
+                <!-- ---------------------- Latest AI Recommendations ---------------------- -->
+                <p><strong>Latest AI Recommendations</strong></p>
+                <p>{{user_notifications[0].notification_content}}</p>
+
+                <!-- ------------------------------ Meal Logs ------------------------------ -->
+                 <table class="table">
+                     <tbody>
+                     {% for record in records_food_intake %}
+                        <tr>
+                            <td>{{ record.food_items }}</td>
+                            <td>{{ record.timestamp }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+
+                <!-- Line Chart Cholesterol -->
+              <div id="lineChartCholesterol"></div>
+                
+              <script>
+                    var options = {
+                        series: [{
+                        name: 'Cholesterol Level',
+                        data: {{records_cholesterol["value"] | tojson}}
+                        }],
+                        chart: {
+                        type: 'area',
+                        stacked: false,
+                        height: 350,
+                        zoom: {
+                            type: 'x',
+                            enabled: true,
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            autoSelected: 'zoom'
+                        }
+                        },
+                        dataLabels: {
+                        enabled: false
+                        },
+                        markers: {
+                        size: 0,
+                        },
+                        title: {
+                        text: 'Cholesterol Levels',
+                        align: 'left'
+                        },
+                        fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            inverseColors: false,
+                            opacityFrom: 0.5,
+                            opacityTo: 0,
+                            stops: [0, 90, 100]
+                        },
+                        },
+                        yaxis: {
+
+                        title: {
+                            text: 'Cholesterol level'
+                        },
+                        },
+                        xaxis: {
+                        type: 'datetime',
+                        categories: {{records_cholesterol["timestamp"] | tojson}} 
+                        },
+                        tooltip: {
+                        shared: false,
+                        }
+                        };
+
+                        var chart = new ApexCharts(document.querySelector("#lineChartCholesterol"), options);
+                        chart.render();
+                </script>
+                <!-- End Line Chart Glucose-->
+
+                <!-- Line Chart Glucose -->
+              <div id="lineChartGlucose"></div>
+                
+              <script>
+                    var options = {
+                        series: [{
+                        name: 'Glucose Level',
+                        data: {{records_glucose_monitoring["value"] | tojson}}
+                        }],
+                        chart: {
+                        type: 'area',
+                        stacked: false,
+                        height: 350,
+                        zoom: {
+                            type: 'x',
+                            enabled: true,
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            autoSelected: 'zoom'
+                        }
+                        },
+                        dataLabels: {
+                        enabled: false
+                        },
+                        markers: {
+                        size: 0,
+                        },
+                        title: {
+                        text: 'Blood Glucose Levels',
+                        align: 'left'
+                        },
+                        fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            inverseColors: false,
+                            opacityFrom: 0.5,
+                            opacityTo: 0,
+                            stops: [0, 90, 100]
+                        },
+                        },
+                        yaxis: {
+
+                        title: {
+                            text: 'Glucose level'
+                        },
+                        },
+                        xaxis: {
+                        type: 'datetime',
+                        categories: {{records_glucose_monitoring["timestamp"] | tojson}} 
+                        },
+                        tooltip: {
+                        shared: false,
+                        }
+                        };
+
+                        var chart = new ApexCharts(document.querySelector("#lineChartGlucose"), options);
+                        chart.render();
+                </script>
+                <!-- End Line Chart Glucose-->
+
+                <!-- Line Chart HbA1c -->
+                <div id="lineChartHbA1c"></div>
+
+                <script>
+                    var options = {
+                        series: [{
+                        name: 'HbA1c Level',
+                        data: {{records_hba1c["value"] | tojson}}
+                        }],
+                        chart: {
+                        type: 'area',
+                        stacked: false,
+                        height: 350,
+                        zoom: {
+                            type: 'x',
+                            enabled: true,
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            autoSelected: 'zoom'
+                        }
+                        },
+                        dataLabels: {
+                        enabled: false
+                        },
+                        markers: {
+                        size: 0,
+                        },
+                        title: {
+                        text: 'HbA1c Levels',
+                        align: 'left'
+                        },
+                        fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            inverseColors: false,
+                            opacityFrom: 0.5,
+                            opacityTo: 0,
+                            stops: [0, 90, 100]
+                        },
+                        },
+                        yaxis: {
+
+                        title: {
+                            text: 'HbA1c level'
+                        },
+                        },
+                        xaxis: {
+                        type: 'datetime',
+                        categories: {{records_hba1c["timestamp"] | tojson}} 
+                        },
+                        tooltip: {
+                        shared: false,
+                        }
+                        };
+
+                        var chart = new ApexCharts(document.querySelector("#lineChartHbA1c"), options);
+                        chart.render();
+              </script>
+              <!-- End Line Chart HbA1c-->
+
+              <!-- Line Chart Weight -->
+              <div id="lineChartWeightTracking"></div>
+
+              <script>
+                var options = {
+                    series: [{
+                    name: 'Body Weight (kg)',
+                    data: {{records_weight_tracking["value"] | tojson}}
+                    }],
+                    chart: {
+                    type: 'area',
+                    stacked: false,
+                    height: 350,
+                    zoom: {
+                        type: 'x',
+                        enabled: true,
+                        autoScaleYaxis: true
+                    },
+                    toolbar: {
+                        autoSelected: 'zoom'
+                    }
+                    },
+                    dataLabels: {
+                    enabled: false
+                    },
+                    markers: {
+                    size: 0,
+                    },
+                    title: {
+                    text: 'Body Weight',
+                    align: 'left'
+                    },
+                    fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: false,
+                        opacityFrom: 0.5,
+                        opacityTo: 0,
+                        stops: [0, 90, 100]
+                    },
+                    },
+                    yaxis: {
+
+                    title: {
+                        text: 'Body Weight (kg)'
+                    },
+                    },
+                    xaxis: {
+                    type: 'datetime',
+                    categories: {{records_weight_tracking["timestamp"] | tojson}} 
+                    },
+                    tooltip: {
+                    shared: false,
+                    }
+                    };
+
+                    var chart = new ApexCharts(document.querySelector("#lineChartWeightTracking"), options);
+                    chart.render();
+          </script>
+              <!-- End Line Chart Weight-->
+
+            <!-- Line Chart Blood Pressure -->
+            <div id="lineChartBloodPressure"></div>
+
+            <script>
+                var options = {
+                    series: [{
+                    name: 'Systolic',
+                    data: {{records_blood_pressure["value_systolic"]}}
+                    },{
+                    name: 'Diastolic',
+                    data: {{records_blood_pressure["value_diastolic"]}}
+                    }],
+                    chart: {
+                    type: 'area',
+                    stacked: false,
+                    height: 350,
+                    zoom: {
+                        type: 'x',
+                        enabled: true,
+                        autoScaleYaxis: true
+                    },
+                    toolbar: {
+                        autoSelected: 'zoom'
+                    }
+                    },
+                    dataLabels: {
+                    enabled: false
+                    },
+                    markers: {
+                    size: 0,
+                    },
+                    title: {
+                    text: 'Blood Pressure',
+                    align: 'left'
+                    },
+                    fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: false,
+                        opacityFrom: 0.5,
+                        opacityTo: 0,
+                        stops: [0, 90, 100]
+                    },
+                    },
+                    yaxis: {
+
+                    title: {
+                        text: 'Blood Pressure'
+                    },
+                    },
+                    xaxis: {
+                    type: 'datetime',
+                    categories: {{records_blood_pressure["timestamp"] | tojson}} 
+                    },
+                    tooltip: {
+                    shared: false,
+                    }
+                    };
+
+                    var chart = new ApexCharts(document.querySelector("#lineChartBloodPressure"), options);
+                    chart.render();
+          </script>
+
+            <!-- End Line Chart Blood Pressure -->
+                </div>
+                </div>
+                </div>
+
+   
+{% endblock content %}
+
