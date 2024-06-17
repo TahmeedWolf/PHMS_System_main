@@ -599,10 +599,10 @@ h6 {
 --------------------------------------------------------------*/
 .sidebar {
   position: fixed;
-  top: 60px;
-  left: 0;
+  top: 50px;
+  left: -300px;
   bottom: 0;
-  width: 300px;
+  width: 200px;
   z-index: 996;
   transition: all 0.3s;
   padding: 20px;
@@ -633,13 +633,14 @@ h6 {
 
   #main,
   #footer {
-    margin-left: 300px;
+    margin-left: 0px;
   }
 }
 
 @media (max-width: 1199px) {
   .toggle-sidebar .sidebar {
-    left: 0;
+    left: 0px;
+    /* display:none; */
   }
 }
 
@@ -647,11 +648,13 @@ h6 {
 
   .toggle-sidebar #main,
   .toggle-sidebar #footer {
-    margin-left: 0;
+    margin-left: 200px;
+    /* display: none; */
   }
 
   .toggle-sidebar .sidebar {
-    left: -300px;
+    left: 0px;
+    /* display:none; */
   }
 }
 

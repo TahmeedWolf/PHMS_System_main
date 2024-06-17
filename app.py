@@ -33,6 +33,8 @@ import pandas as pd
 
 # Dashboard
 from data_integration.dashboard_data_query import *
+# Display time on dashboard
+from datetime import datetime, timezone
 
 # Security
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -274,6 +276,7 @@ def home():
         user_id = current_user.user_id
     elif current_user.permission == 'admin' or current_user.permission == 'doctor' and request.args.get('user_id') is not None:
         user_id = request.args.get('user_id')
+        patient_notification_one = Notifications.query.where(text(f"notification_logs.to_user_id='{user_id}'")).order_by(desc(Notifications.created_time)).first()
     else:
         user_id = current_user.user_id
     user = Users.query.filter_by(user_id=user_id).first()
@@ -297,19 +300,23 @@ def home():
 
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
 
+    # Set-up current datetime in template
+    current_datetime = datetime.now(timezone.utc)
 
     # Check if 'age' is defined to decide which template variables to pass
     if age is not None:
         return render_template('home/index.html', user=user,
                                age=age,
                                records_glucose_monitoring=records_glucose_monitoring,
+                               patient_notification_one=patient_notification_one,
                                records_hba1c=records_hba1c,
                                records_weight_tracking=records_weight_tracking,
                                records_blood_pressure=records_blood_pressure,
                                records_cholesterol=records_cholesterol,
                                user_notifications=user_notifications,
                                records_food_intake=records_food_intake,
-                               kg_data=kg_data
+                               kg_data=kg_data,
+                               current_datetime=current_datetime
                                )
     else:
         return render_template('home/index.html', user=user,
@@ -319,7 +326,8 @@ def home():
                                records_blood_pressure=records_blood_pressure,
                                records_cholesterol=records_cholesterol,
                                user_notifications=user_notifications,
-                               records_food_intake=records_food_intake
+                               records_food_intake=records_food_intake,
+                               current_datetime=current_datetime
                                )
 
 
@@ -336,6 +344,7 @@ def get_overview():
     """This endpoints delivers a top-overview of all registered patients."""
     user_count = Users.query.where(text(f"users.permission='user'")).count()
     active_user_count = Users.query.where(text(f"users.permission='user' and users.active=1")).count()
+    doctor_user_count = Users.query.where(text(f"users.permission='doctor' and users.active=1")).count()
     avg_glucose_levels = db.session.execute(text("select round(avg(rgm.glucose_level),2) from records_glucose_monitoring rgm;")).first()
     # print(avg_glucose_levels[0])
 
@@ -353,10 +362,15 @@ def get_overview():
     # -------------------- Histogram of patient's hba1c levels ------------------- #
     data_hba1c_hist = get_overview_hba1c_data()
 
+    # Set-up current datetime in template
+    current_datetime = datetime.now(timezone.utc)
+
     dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
     return render_template("home/overview.html", 
                            user_count=user_count, 
+                           current_datetime=current_datetime,
                            active_user_count=active_user_count,
+                           doctor_user_count=doctor_user_count,
                            avg_glucose_levels=avg_glucose_levels[0],
                            patient_record_low=patient_record_low,
                            patient_record_high=patient_record_high,
@@ -642,7 +656,10 @@ def get_openai():
 @doctor_admin_only
 def get_all_patients():
     patients = Users.query.where(text(f"users.permission='user' and users.active=1")).all()
-    return render_template("users/patients.html", patients=patients)
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    return render_template("users/patients.html", 
+                           patients=patients, 
+                           user_notifications=user_notifications)
 
 
 # ---------------------------------------------------------------------------- #
@@ -654,8 +671,11 @@ def get_all_patients():
 # @access_log
 @admin_only
 def get_all_doctors():
-    doctors = Users.query.filter_by(permission="doctor").join(Users.user_raw).all() 
-    return render_template("users/doctors.html", doctors=doctors)
+    doctors = Users.query.filter_by(permission="doctor").join(Users.user_raw).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    return render_template("users/doctors.html", 
+                           doctors=doctors,
+                           user_notifications=user_notifications)
 
 @app.route('/doctors/<string:user_id>')
 @login_required
@@ -663,8 +683,11 @@ def get_all_doctors():
 @admin_only
 def get_one_doctor(user_id):
     """Update other user's setting (Admin-only)"""
-    doctor = Users.query.filter_by(user_id=user_id).all() 
-    return render_template("users/user_settings.html", user=doctor)
+    doctor = Users.query.filter_by(user_id=user_id).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    return render_template("users/user_settings.html", 
+                           user=doctor,
+                           user_notifications=user_notifications)
 
 # ---------------------------------------------------------------------------- #
 #                                 User Settings                                #
@@ -683,13 +706,19 @@ def get_settings():
 # @access_log
 def user_settings():
     if request.method== "GET":
-        return render_template("users/user_settings.html", user=current_user)
+        user_id = request.args.get('user_id')
+        if user_id == current_user.user_id:
+            return render_template("users/user_settings.html", user=current_user)
+        elif user_id != current_user.user_id and current_user.permission == 'admin':
+            user = Users.query.get(user_id)
+            return render_template("users/user_settings.html", user=user)
     elif request.method == "POST":
         if request.args.get('user_id') == current_user.user_id:
             updated_user = Users.query.get(current_user.user_id)
             updated_user.email = request.form.get('email')
             updated_user.password = request.form.get('password')
             updated_user.name = request.form.get('name')
+            updated_user.gender = request.form.get('gender')
             db.session.commit()
             flash("Settings have been updated successfully!")
             return render_template("users/user_settings.html", user=updated_user)
@@ -699,6 +728,7 @@ def user_settings():
             updated_user.email = request.form.get('email')
             updated_user.password = request.form.get('password')
             updated_user.name = request.form.get('name')
+            updated_user.gender = request.form.get('gender')
             db.session.commit()
             flash("Settings have been updated successfully!")
             return render_template("users/user_settings.html", user=updated_user)

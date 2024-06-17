@@ -61,12 +61,12 @@
   <header id="header" class="bg-white fixed-top d-flex align-items-center">
     <a href="{{ url_for('home') }}" class="logo d-flex align-items-center">
       <img src="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" alt="">
-      <span class="d-none d-lg-block">LUMI</span>
+      <span class="d-none d-lg-block">PHMS</span>
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div><!-- End LUMI Logo -->
 
-    <nav class="header-nav ms-auto">
+    <nav class="header-nav ms-auto ">
       <ul class="d-flex align-items-center">
 
         <li class="nav-item d-block d-lg-none">
@@ -74,6 +74,11 @@
             <i class="bi bi-search"></i>
           </a>
         </li><!-- End Search Icon-->
+        {% if current_user.height == undefined %}
+        <li>
+                <button class="btn btn-primary btn-sm"><a href="{{url_for('get_started')}}" class="text-white">Getting Started!</a></button>
+              </li>
+          {% endif %}
 
         <li class="nav-item dropdown">
             <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -175,86 +180,95 @@
   </header><!-- End Header -->
 
     <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar d-flex flex-column justify-content-between">
-
-<!-- Nav items -->
-      <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ url_for('home') }}">
-                <i class="bi bi-grid" style="color: orange;"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/upload_files">
-                <i class="bi bi-cloud-arrow-up" style="color: orange;"></i>
-                <span>Upload</span>
-            </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="/overview">
-            <i class="bi bi-diagram-2" style="color: orange;"></i>
-            <span>Overview</span>
-          </a>
-      </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/my_data">
-              <i class="bi bi-file-earmark-bar-graph" style="color: orange;"></i>
-              <span>My Data</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/notifications">
-                <i class="bi bi-lightbulb"  style="color: orange;"></i>
-                <span>Insights</span>
-            </a>
+    <div class="">
+      <aside id="sidebar" class="sidebar d-flex flex-column justify-content-between">
+      
+      <!-- Nav items -->
+        <ul class="sidebar-nav" id="sidebar-nav">
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="{{ url_for('home') }}">
+                  <i class="bi bi-grid" style="color: orange;"></i>
+                  <span>Dashboard</span>
+              </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link collapsed" href="/healthcare_providers">
-              <i class="bi bi-person-square"  style="color: orange;;"></i>
-              <span>Doctors</span>
+              <a class="nav-link collapsed" href="/upload_files">
+                  <i class="bi bi-cloud-arrow-up" style="color: orange;"></i>
+                  <span>Upload</span>
+              </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="/overview">
+              <i class="bi bi-diagram-2" style="color: orange;"></i>
+              <span>Overview</span>
             </a>
         </li>
-        {% if current_user.permission == "admin" or current_user.permission == "doctor" %}
-        <li class="nav-item">
-            <a class="nav-link collapsed" href='/patients'>
-                <i class="bi bi-people" style="color: orange;"></i>
-                <span>Patients</span>
-            </a>
-        </li>
-        {% endif %}
-
-        {% if current_user.permission == "admin" %}
-        <li class="nav-item dropdown">
-            <a class="nav-link collapsed dropdown-toggle" onclick="adminToolToggler()">
-                <i class="bi bi-gear "style="color: orange;"></i>
-                <span>Admin Tools</span>
-            </a>
-            <div class="dropdown collapse" aria-labelledby="navbarDropdownMenuLink" id="navbarDropdownMenuLink">
-                <a class="nav-link pl-5" href="{{ url_for('get_all_doctors') }}"><span>Manage Doctors</span></a>
-                <a class="nav-link pl-5" href="/create_new_hp"><span>Create Account</span></a>
-            </div>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href='/access_logs'>
-                <i class="bi-journal-text" style="color: orange;"></i>
-                <span>Access Log</span>
-            </a>
-        </li>
-        {% endif %}
-      </ul>
-
-    </aside><!-- End Sidebar-->
+          <li class="nav-item dropdown">
+              <a class="nav-link collapsed dropdown-toggle" onclick="dataToggler()">
+                <i class="bi bi-file-earmark-bar-graph" style="color: orange;"></i>
+                <span class="nav-link-text show multi-collapse" id="multiCollapseExample6">My Data</span>
+              </a>
+              <div class="dropdown collapse" aria-labelledby="navbarDropdownMenuLink" id="navbarDataDropdownMenuLink">
+                <a class="nav-link pl-5" href="{{ url_for('get_records_glucose_monitoring') }}"><span class="nav-link-text">CGM</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_food_intake') }}"><span class="nav-link-text">Meals</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_insulin_intake') }}"><span class="nav-link-text">Insulin</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_physical_activity') }}"><span class="nav-link-text">Activity</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_weight_tracking') }}"><span class="nav-link-text">Weight</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_cholesterol') }}"><span class="nav-link-text">Cholesterol</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_hba1c') }}"><span class="nav-link-text">HbA1c</span></a>
+                <a class="nav-link pl-5" href="{{ url_for('get_records_blood_pressure') }}"><span class="nav-link-text">Blood Pressure</span></a>
+              </div>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="/notifications">
+                  <i class="bi bi-lightbulb"  style="color: orange;"></i>
+                  <span>Insights</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link collapsed" href="/healthcare_providers">
+                <i class="bi bi-person-square"  style="color: orange;;"></i>
+                <span>Doctors</span>
+              </a>
+          </li>
+          {% if current_user.permission == "admin" or current_user.permission == "doctor" %}
+          <li class="nav-item">
+              <a class="nav-link collapsed" href='/patients'>
+                  <i class="bi bi-people" style="color: orange;"></i>
+                  <span>Patients</span>
+              </a>
+          </li>
+          {% endif %}
+          {% if current_user.permission == "admin" %}
+          <li class="nav-item dropdown">
+              <a class="nav-link collapsed dropdown-toggle" onclick="adminToolToggler()">
+                  <i class="bi bi-gear "style="color: orange;"></i>
+                  <span>Admin Tools</span>
+              </a>
+              <div class="dropdown collapse" aria-labelledby="navbarDropdownMenuLink" id="navbarDropdownMenuLink">
+                  <a class="nav-link pl-5" href="{{ url_for('get_all_doctors') }}"><span>Manage Doctors</span></a>
+                  <a class="nav-link pl-5" href="/create_new_hp"><span>Create Account</span></a>
+              </div>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link collapsed" href='/access_logs'>
+                  <i class="bi-journal-text" style="color: orange;"></i>
+                  <span>Access Log</span>
+              </a>
+          </li>
+          {% endif %}
+        </ul>
+      </aside>
+    </div><!-- End Sidebar-->
 
   <!-- Vendor JS Files -->
   <script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/vendor/chart.js/chart.umd.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/vendor/echarts/echarts.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/quill/quill.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='assets/vendor/quill/quill.min.js') }}"></script> -->
   <script src="{{ url_for('static', filename='assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/tinymce/tinymce.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='assets/vendor/tinymce/tinymce.min.js') }}"></script> -->
   <script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js') }}"></script>
 
   <!-- Main JS File -->

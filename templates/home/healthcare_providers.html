@@ -17,9 +17,8 @@
           <!--<div class="col-lg-9 col-10">
             <h1 class="pt-3 pl-4">Healthcare Providers</h1>
           </div>-->
-          <div class="col-lg-10 col-2">{% include 'includes/sidenav-toggler.html' %}</div>
         </div>
-        <div class="card">
+        <div class="">
           <div class="pl-3">
             <form action="/users/{{ current_user.user_id }}" method="post">
               <div class="mb-3">
@@ -36,9 +35,6 @@
                           {% endif %}
                           <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('get_one_healthcare_provider', user_id=healthcare_provider.user_id )}}'">
                             <i class="bi bi-person-circle me-1"></i>Profile
-                          </button>
-                          <button type="button" class="btn btn-primary btn-sm">
-                            <i class="bi bi-chat-left me-1"></i>Message
                           </button>
                         </div>
                       </div>

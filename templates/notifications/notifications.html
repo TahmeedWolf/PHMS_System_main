@@ -15,29 +15,62 @@
 <div class="container text-center">
     <div class="row">
       <div class="col">
-        <div class="card">
+        <div class="card" style="margin-top: 85px;">
             <div class="card-body">
-              <h5 class="card-title">Insights</h5>
+              <span class="card-title pb-2">Insights</span>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Generate Insight
+                </button>
               <div class="py-2">
-                <h6 class="h6">Generate Insights</h6>
+                <!-- <h6 class="h6">Generate Insights</h6> -->
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <div class="alert alert-info" role="alert">{{ messages[-1] }}</div>
                 {% endif %}
                   {% endwith %}
-                {% for key  in insight_list %}
-                    <button class="btn btn-primary pt-2 btn-sm" onclick='window.location.href="{{url_for("route_generate_insights",insight_type=key)}}"'>{{key.replace("_"," ") | title() }}</button>
-                {% endfor %}
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Generate Insights</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div>
+                          <table class="table table-sm">
+                            <tbody>
+                              {% for key in insight_list %}
+                              <tr>
+                                <td class="text-left">{{key.replace("_"," ") | title() }}</td>
+                                <td><a class="btn  btn-primary pt-2 btn-sm text-white" onclick='window.location.href="{{url_for("route_generate_insights",insight_type=key)}}"'>Generate</a></td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               <!-- Vertical Pills Tabs -->
               {% if error != "Error:no_record" %}
               <div class="d-flex align-items-start">
-                <div class="nav flex-column nav-pills me-3 text-sm px-2" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="width:50px">
-                  <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">{{ user_notifications[0].created_time.strftime('%Y-%m-%d') }}</button>
+                <div class="nav flex-column nav-pills me-3 text-sm px-2" id="v-pills-tab" role="tablist" aria-orientation="vertical" style="width:600px">
+                  <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">{{ user_notifications[0].created_time.strftime('%Y-%m-%d') }}<br> <span style="font-size: 10pt;">{{ user_notifications[0].type.replace("_"," ") }}</span></button>
                       {% for notification in user_notifications[1:] %}
                       <button class="nav-link" id="notification{{ notification.notification_id }}-tab" data-bs-toggle="pill" data-bs-target="#notification{{ notification.notification_id }}" 
-                      type="button" role="tab" aria-controls="notification{{ notification.notification_id }}" aria-selected="false">{{ notification.created_time.strftime('%Y-%m-%d') }}</button>
+                      type="button" role="tab" aria-controls="notification{{ notification.notification_id }}" aria-selected="false">{{ notification.created_time.strftime('%Y-%m-%d') }}<br> <span style="font-size: 10pt;">{{ notification.type.replace("_"," ") }}</span></button>
                       {% endfor %}
                     </div>
                     <div class="tab-content px-2" id="v-pills-tabContent">

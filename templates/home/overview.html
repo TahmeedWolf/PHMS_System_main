@@ -15,7 +15,7 @@
     <div class="pagetitle mt">
       <h1 class="mb-0">Overview</h1>
       <div class="pagetitle-time">
-        <h6 class="mb-0">May 25, 2024</h6>
+        <h6 class="mb-0">{{current_datetime.strftime('%B %d, %Y')}}</h6>
       </div>
     </div>
     <section class="section dashboard">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                     <div class="ps-3 mt-3">
-                        <h6 class="mb-0">50&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">Total</span></h6>
+                        <h6 class="mb-0">{{doctor_user_count}}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">Total</span></h6>
                     </div>
                 </div>
             </div>
@@ -270,29 +270,26 @@
 
           <div class="card patient-card shadow-sm border-0">
             <div class="card-body pb-0">
-                <div class="pl-2 smaller-font">
+                <div class="pl-2 flex-fill">
                   <h3 class="card-title"><strong>High Critical</strong> <span class="badge bg-danger text-white">High</span></h3>
-                    <div class="">
+                  <table class="table table-sm pr-2">
+                    <tbody>
                       {% for row in patient_record_high %}
-                      <div class="container text-left">
-                        <div class="row">
-                          <div class="col-3">
-                            {% if row.data_cgm.profile_img_url %}
-                          <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px; width: 40px;">
+                      <tr>
+                        <td style="max-width: 50px; padding-left:0px; padding-right:0px;">
+                          {% if row.data_cgm.profile_img_url %}
+                            <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
                           {% else %}
-                          <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px; width: 40px;">
+                            <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
                           {% endif %}
-                          </div>
-                          <div class="col-5">
-                            <p>{{ row.data_cgm.name }}</p>
-                          </div>
-                          <div class="col-4 text-right text-sm">
-                            <span class="glucose-level">{{ row.glucose_level }} mmol/L</span>
-                          </div>
-                        </div>
-                      </div>
+                        </td>
+                        <td style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.data_cgm.name }}<br>
+                        <span>{{ row.timestamp.strftime('%Y-%m-%d') }}</span></td>
+                        <td class="text-danger text-right" style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.glucose_level }} mmol/L</td>
+                      </tr>
                       {% endfor %}
-                      </div>
+                    </tbody>
+                  </table>
                 </div>
             </div>
         </div>
@@ -301,29 +298,26 @@
 
           <div class="card patient-card shadow-sm border-0">
             <div class="card-body pb-0">
-                <div class="pl-2 smaller-font">
+                <div class="pl-2 flex-fill">
                   <h3 class="card-title"><strong>Low Critical</strong> <span class="badge bg-danger text-white">Low</span></h3>
-                    <div class="">
+                  <table class="table table-sm pr-2">
+                    <tbody>
                       {% for row in patient_record_low %}
-                      <div class="container text-left">
-                        <div class="row">
-                          <div class="col-3">
-                            {% if row.data_cgm.profile_img_url %}
-                          <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px; width: 40px;">
+                      <tr>
+                        <td style="max-width: 50px; padding-left:0px; padding-right:0px;">
+                          {% if row.data_cgm.profile_img_url %}
+                            <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
                           {% else %}
-                          <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px; width: 40px;">
+                            <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
                           {% endif %}
-                          </div>
-                          <div class="col-5">
-                            <p>{{ row.data_cgm.name }}</p>
-                          </div>
-                          <div class="col-4 text-right text-sm">
-                            <span class="glucose-level">{{ row.glucose_level }} mmol/L</span>
-                          </div>
-                        </div>
-                      </div>
+                        </td>
+                        <td style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.data_cgm.name }}<br>
+                        <span>{{ row.timestamp.strftime('%Y-%m-%d') }}</span></td>
+                        <td class="text-danger text-right" style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.glucose_level }} mmol/L</td>
+                      </tr>
                       {% endfor %}
-                      </div>
+                    </tbody>
+                  </table>
                 </div>
             </div>
         </div>
@@ -342,51 +336,6 @@
   </main><!-- End #main -->
 
 
-<!-- Something hereeee -->
-<div class="container pb-5">
-    <div class="row">
-      <div class="col-lg-9 col-10">
-          <h1 class="p-3">Settings</h1>
-      </div>
-      </div>
-          <div clss="card">
-              <div class="text-left">
-                <div class="col-lg-12">
-                  {% for row in patient_record_low %}
-                  <p>{{ row.glucose_level }}</p>
-                  <p>{{ row.data_cgm.name }}</p>
-                  {% if row.data_cgm.profile_img_url %}
-                  <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
-                  {% else %}
-                  <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
-                  {% endif %}
-                  {% endfor %}
-                </div>
-                <div class="col-lg-12">
-                  {% for row in patient_record_high %}
-                  <p>{{ row.glucose_level }}</p>
-                  <p>{{ row.data_cgm.name }}</p>
-                  {% if row.data_cgm.profile_img_url %}
-                  <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
-                  {% else %}
-                  <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
-                  {% endif %}
-                  {% endfor %}
-                </div>
-                <div class="col-lg-12">
-                    <div class="card">
-                      <div class="card-body">
-                        <h5 class="card-title">Bar CHart</h5>
-                        <!-- Bar Chart -->
-                        
-                        <script>
-                          
-                        </script>
-                        <!-- End Bar CHart -->
-          
-                      </div>
-                    </div>
-                  </div>
                 
 
 
