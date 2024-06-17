@@ -727,12 +727,10 @@
         <div class="card latest-ai-card">
           <div class="card-body">
             <span class="card-title">
-                {% if patient_notification_one.notification_content != undefined %}
-              <p class="smaller-font">{{ patient_notification_one.notification_content }}</p>
-              {% elif user.user_id == current_user.user_id %}
-              <p class="smaller-font">{{ user_notifications[0].notification_content}}</p>
-              {% else %}
-              <p class="smaller-font">No insights generated.</p>
+                {% if patient_notification_one.notification_content | length == 0 %}
+                <p class="smaller-font">No insights generated.</p>
+                {% else %}
+                <p class="smaller-font">{{ patient_notification_one.notification_content }}</p>
               {% endif %}
             </span>
           </div>

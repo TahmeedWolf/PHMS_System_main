@@ -272,6 +272,7 @@ def landing():
 @login_required
 # @access_log
 def home():
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
     if request.args.get('user_id') is None:
         user_id = current_user.user_id
     elif current_user.permission == 'admin' or current_user.permission == 'doctor' and request.args.get('user_id') is not None:
@@ -298,7 +299,11 @@ def home():
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
         kg_data = get_kg_chart_data(driver=driver, user_id=user.user_id)
 
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    if 'patient_notification_one'not in locals() and len(user_notifications) != 0:
+        print(1)
+        patient_notification_one = user_notifications[0]
+    else:
+        patient_notification_one = ""
 
     # Set-up current datetime in template
     current_datetime = datetime.now(timezone.utc)
@@ -677,28 +682,28 @@ def get_all_doctors():
                            doctors=doctors,
                            user_notifications=user_notifications)
 
-@app.route('/doctors/<string:user_id>')
-@login_required
-# @access_log
-@admin_only
-def get_one_doctor(user_id):
-    """Update other user's setting (Admin-only)"""
-    doctor = Users.query.filter_by(user_id=user_id).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
-    return render_template("users/user_settings.html", 
-                           user=doctor,
-                           user_notifications=user_notifications)
+# @app.route('/doctors/<string:user_id>')
+# @login_required
+# # @access_log
+# @admin_only
+# def get_one_doctor(user_id):
+#     """Update other user's setting (Admin-only)"""
+#     doctor = Users.query.filter_by(user_id=user_id).all()
+#     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+#     return render_template("users/user_settings.html", 
+#                            user=doctor,
+#                            user_notifications=user_notifications)
 
 # ---------------------------------------------------------------------------- #
 #                                 User Settings                                #
 # ---------------------------------------------------------------------------- #
 
-@app.route('/settings')
-@login_required
-# @access_log
-def get_settings():
-    # user = current_user
-    return render_template("settings/settings.html")
+# @app.route('/settings')
+# @login_required
+# # @access_log
+# def get_settings():
+#     # user = current_user
+#     return render_template("settings/settings.html")
 
 
 @app.route('/user_settings', methods=['GET','POST'])
@@ -707,7 +712,7 @@ def get_settings():
 def user_settings():
     if request.method== "GET":
         user_id = request.args.get('user_id')
-        if user_id == current_user.user_id:
+        if user_id == current_user.user_id or user_id not in locals():
             return render_template("users/user_settings.html", user=current_user)
         elif user_id != current_user.user_id and current_user.permission == 'admin':
             user = Users.query.get(user_id)
