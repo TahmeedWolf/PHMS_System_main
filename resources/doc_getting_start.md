@@ -30,6 +30,7 @@ flask run --reload
 - ssh into the 'phms_ubuntu_2204'
 - cd PHMS
 - source venv/bin/activate
+- git pull (if there is any changes)
 - flask run --reload --host 0.0.0.0
 - at browser, go to 'http://44.207.83.243:5000/'
 
