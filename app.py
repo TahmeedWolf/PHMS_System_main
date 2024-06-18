@@ -112,8 +112,14 @@ login_manager.login_view = "login"
 
 # Index route to fix bug
 @app.route('/')
+@login_required
 def index():
-    return render_template('home/index.html')  
+    if current_user.permission == "user":
+        return redirect(url_for("home"))
+    elif current_user.permission == "admin" or current_user.permission == "doctor":
+        return redirect(url_for("get_overview"))
+    else:
+        return redirect(url_for("page_not_found"))
 
 # Chat route 
 @app.route('/chat')
@@ -369,6 +375,7 @@ def get_overview():
 
     # Set-up current datetime in template
     current_datetime = datetime.now(timezone.utc)
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
 
     dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
     return render_template("home/overview.html", 
@@ -381,7 +388,8 @@ def get_overview():
                            patient_record_high=patient_record_high,
                            data_glucose_hist=data_glucose_hist, 
                            data_bmi_hist=data_bmi_hist,
-                           data_hba1c_hist=data_hba1c_hist)
+                           data_hba1c_hist=data_hba1c_hist,
+                           user_notifications=user_notifications)
 
 # ---------------------------------------------------------------------------- #
 #                           Upload of Healthcare Data                          #

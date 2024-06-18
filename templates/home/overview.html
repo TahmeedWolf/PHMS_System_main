@@ -280,7 +280,7 @@
                           {% if row.data_cgm.profile_img_url %}
                             <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
                           {% else %}
-                            <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
+                          <div class="circle">{{ row.data_cgm.name[0] }}</div>
                           {% endif %}
                         </td>
                         <td style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.data_cgm.name }}<br>
@@ -308,7 +308,7 @@
                           {% if row.data_cgm.profile_img_url %}
                             <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
                           {% else %}
-                            <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="min-width: 40px; max-width: 40px;">
+                            <div class="circle">{{ row.data_cgm.name[0] }}</div>
                           {% endif %}
                         </td>
                         <td style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.data_cgm.name }}<br>

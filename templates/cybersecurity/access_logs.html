@@ -10,7 +10,6 @@
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
 {% endblock stylesheets %}
 
 {% block content %}
@@ -35,18 +34,18 @@
                         <th>Verb</th>
                         <th>User</th>
                         <th>Permission</th>
-                        <th>What</th>
+                        <th class="text-right">What</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for access_log in access_logs %}
                       <tr>
                         <td>{{ access_log.created_time }}</td>
-                        <td>{{ access_log.ip }}</td>
+                        <td>{{ access_log.ip | replace("ImmutableList", "") | replace("[","") | replace("]","") | replace("'", "") }}</td>
                         <td>{{ access_log.verb }}</td>
-                        <td>{{ access_log.user_access.email }}</td>
+                        <td>{{ access_log.user_access.name }}</td>
                         <td>{{ access_log.user_access.permission }}</td>
-                        <td>{{ access_log.what }}</td>
+                        <td class="text-right">{{ access_log.what }}</td>
                       </tr>
                       {% endfor %}
                     </tbody>
@@ -63,12 +62,5 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
-<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
-
-<script>
-    $(document).ready( function () {
-    // $('#myTable').DataTable();
-    new DataTable('#myTable');
-} );
-</script>
+{% include 'includes/datatable_script.html' %}
 {% endblock javascripts %}

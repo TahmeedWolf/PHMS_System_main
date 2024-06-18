@@ -443,3 +443,17 @@ div#loading {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow effect */
   }
   
+  /* -------------------------------------------------------------------------- */
+  /*                     Profile Picture (if not registered)                    */
+  /* -------------------------------------------------------------------------- */
+
+  .circle {
+    max-width: 40px;
+    max-height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    background: #cbe0dc;
+}

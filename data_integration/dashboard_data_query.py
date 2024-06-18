@@ -34,7 +34,7 @@ def get_dashboard_data_bp(user_id:str):
     return data_dict
 
 def get_overview_glucose_data():
-    data_glucose = db.session.execute(text("select * from records_glucose_monitoring limit 10;")).all()
+    data_glucose = db.session.execute(text("select * from records_glucose_monitoring;")).all()
     data_glucose = pd.DataFrame(data_glucose)
     # print(data_glucose.head(10))
     bins = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30]
@@ -77,7 +77,7 @@ def get_overview_bmi_data():
     return data_bmi_hist
 
 def get_overview_hba1c_data():
-    data_hba1c = db.session.execute(text("select * from records_hba1c limit 10;")).all()
+    data_hba1c = db.session.execute(text("select * from records_hba1c;")).all()
     data_hba1c = pd.DataFrame(data_hba1c)
     # print(data_hba1c.head(10))
     bins = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30]

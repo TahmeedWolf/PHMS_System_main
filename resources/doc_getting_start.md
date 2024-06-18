@@ -28,6 +28,7 @@ flask run --reload
 ## To start EC2 server
 - Run AWS
 - ssh into the 'phms_ubuntu_2204'
+- cd PHMS
 - source venv/bin/activate
 - flask run --reload --host 0.0.0.0
 - at browser, go to 'http://44.207.83.243:5000/'
