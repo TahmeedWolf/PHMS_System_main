@@ -566,41 +566,41 @@ def route_generate_insights():
     #    print(insight_type)
     analyzer = MessangeAnalyzer('English')
     data_classes = insight_list[insight_type]["data"]
+    # print(data_classes)
     
     data = ""
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
         driver.verify_connectivity()
         for data_class in data_classes:
-            # print(f"""MATCH (p:Patient WHERE p.id='{current_user.user_id}')<- [r:RECORDS_FOR]-(n:{data_class.__name__}) RETURN n limit 300;""")
-            if data_class == "Records_Glucose_Monitoring":
+            if data_class.__name__ == "Records_Glucose_Monitoring":
                 # Shorten the query if data is cgm
                 records, summary, keys = driver.execute_query(
-                    f"""MATCH (p:Patient WHERE p.id='{current_user.user_id}')<- [r:RECORDS_FOR]-(gm:{data_class.__name__}) RETURN gm.timestamp, gm.glucose_level;""",
+                    f"""MATCH (p:Patient WHERE p.id='{current_user.user_id}')<- [r:RECORDS_FOR]-(gm:{data_class.__name__}) RETURN gm.timestamp, gm.glucose_level limit 20;""",
                     database_="neo4j",
                 )
             else:
                 records, summary, keys = driver.execute_query(
-                    f"""MATCH (p:Patient WHERE p.id='{current_user.user_id}')<- [r:RECORDS_FOR]-(n:{data_class.__name__}) RETURN n limit 300;""",
+                    f"""MATCH (p:Patient WHERE p.id='{current_user.user_id}')<- [r:RECORDS_FOR]-(n:{data_class.__name__}) WHERE NOT n:Records_Glucose_Monitoring RETURN n limit 20;""",
                     database_="neo4j",
                 )
-            # print(f"records: {records}")
-            # Loop through results and do something with them
-            # for record in records:
-                # print(record.data())  # obtain record as dict
+
             if records:
                 data =  data + str(records) # records.data()
             else:
                 flash(f"Error: Data Insufficient {data_class.__name__}.")
                 return redirect(url_for('get_notifications'))
-    print(data)
+    # print(data)
 
     prompt = insight_list[insight_type]["prompt"]
-    print(prompt)
+    # print(prompt)
 
     analyzer_response = analyzer.evaluate(data=data, prompt=prompt)
     new_notification = Notifications(notification_content=analyzer_response,
                                     to_user_id=current_user.user_id,
                                         type=insight_type)
+    # ------------------------------ sanitize reply ------------------------------ #
+    new_notification = new_notification.replace("*","")
+
     db.session.add(new_notification)
     db.session.commit()
     print("An new insight has been added.")

@@ -1,5 +1,7 @@
 # Change log
 
+## V1.1.1 19/06/2024
+- Wrapped up all modules
 
 ## V0.0.1 11/06/2024
 
