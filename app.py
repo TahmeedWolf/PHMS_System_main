@@ -288,10 +288,12 @@ def home():
         user_id = current_user.user_id
     user = Users.query.filter_by(user_id=user_id).first()
 
-    if user.birthday is not None:
+    if user.birthday:
         year = user.birthday.strftime("%Y")
         current_year = datetime.now().strftime("%Y")
         age = int(current_year) - int(year)
+    else:
+        age=0
 
     # ------------------------ Retrieve data for dashboard ----------------------- #
     records_glucose_monitoring = get_dashboard_data(Records_Glucose_Monitoring, user_id=user.user_id)
@@ -595,11 +597,12 @@ def route_generate_insights():
     # print(prompt)
 
     analyzer_response = analyzer.evaluate(data=data, prompt=prompt)
+    # ------------------------------ sanitize reply ------------------------------ #
+    analyzer_response = analyzer_response.replace("*","")
+
     new_notification = Notifications(notification_content=analyzer_response,
                                     to_user_id=current_user.user_id,
                                         type=insight_type)
-    # ------------------------------ sanitize reply ------------------------------ #
-    new_notification = new_notification.replace("*","")
 
     db.session.add(new_notification)
     db.session.commit()

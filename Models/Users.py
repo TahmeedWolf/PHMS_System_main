@@ -6,7 +6,7 @@ class Users(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100))
-    birthday = db.Column(db.String(100), default=datetime.now(timezone.utc))
+    birthday = db.Column(db.String(100))
     gender = db.Column(db.String(12))
     active = db.Column(db.Boolean, default=True)
     email = db.Column(db.String(100))

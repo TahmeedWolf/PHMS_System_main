@@ -74,7 +74,7 @@
             <i class="bi bi-search"></i>
           </a>
         </li><!-- End Search Icon-->
-        {% if current_user.height == undefined %}
+        {% if current_user.age == 0 %}
         <li>
                 <button class="btn btn-primary btn-sm"><a href="{{url_for('get_started')}}" class="text-white">Getting Started!</a></button>
               </li>
@@ -113,18 +113,17 @@
           <li class="nav-item dropdown pe-3 align-items-center">
 
             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-              <div class="text-end">
-                <span class="d-none d-md-block dropdown-toggle ps-2 fw-semibold text-sm">Hey, {{ current_user.name.title() }}
+              <div class="text-end d-flex">
+                <span class="d-none d-md-block dropdown-toggle ps-2 fw-semibold text-sm">Hey, {{ current_user.name.title() }}</span>
                   {% if current_user.permission == 'doctor' or current_user.permission == 'admin' %}
-                </span>
                 <span class="text-sm pr-3 text-light">{{ current_user.permission }}</span>
-              </div>
                 {% endif %}
-              {% if current_user.profile_img_url %}
-              <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
-              {% else %}
-              <img src="https://phms-80029.s3.amazonaws.com/17.jpg" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
-              {% endif %}
+                {% if current_user.profile_img_url %}
+                <img src="{{ current_user.profile_img_url }}" alt="Profile" class="rounded-circle img-thumbnail" style="height:40px;">
+                {% else %}
+                  <div class="circle" style="height:40px; width:40px;">{{ current_user.name[0] }}</div>
+                {% endif %}
+              </div>
             </a><!-- End Profile Image Icon -->
   
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
