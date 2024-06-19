@@ -59,7 +59,7 @@
 <body>
   <!-- ======= Header ======= -->
   <header id="header" class="bg-white fixed-top d-flex align-items-center">
-    <a href="{{ url_for('home') }}" class="logo d-flex align-items-center">
+    <a href="{{ url_for('index') }}" class="logo d-flex align-items-center">
       <img src="{{ url_for('static', filename='public/phmslogowhiteremovebgpreview14326-3qnm.svg') }}" alt="">
       <span class="d-none d-lg-block">PHMS</span>
     </a>
@@ -88,7 +88,7 @@
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
               <li class="dropdown-header">
                 You have {{ user_notifications|length }} new notifications
-                <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+                <a href="{{url_for('get_notifications')}}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
               </li>
               <li><hr class="dropdown-divider"></li>
               {% for notification in user_notifications %}
