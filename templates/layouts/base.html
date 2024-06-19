@@ -190,12 +190,7 @@
                   <span>Upload</span>
               </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link collapsed" href="/overview">
-              <i class="bi bi-diagram-2" style="color: orange;"></i>
-              <span>Overview</span>
-            </a>
-        </li>
+
           <li class="nav-item dropdown">
               <a class="nav-link collapsed dropdown-toggle" onclick="dataToggler()">
                 <i class="bi bi-file-earmark-bar-graph" style="color: orange;"></i>
@@ -231,6 +226,12 @@
                   <span>Patients</span>
               </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="/overview">
+              <i class="bi bi-diagram-2" style="color: orange;"></i>
+              <span>Overview</span>
+            </a>
+        </li>
           {% endif %}
           {% if current_user.permission == "admin" %}
           <li class="nav-item dropdown">
