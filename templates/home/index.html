@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}  
 
-{% block title %} LUMI Dashboard {% endblock title %}
+{% block title %} PHMS Dashboard {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
 
@@ -38,8 +38,9 @@
                     <h5 class="card-title">Blood&nbsp;Sugar</h5>
 
 
-            <div class="ps-3 mt-3">
+            <div class="ps-3 mt--3">
                 {% if records_glucose_monitoring["value"][0] != undefined %}
+                <p class="text-muted text-sm mb--1">{{ records_glucose_monitoring["timestamp"][0] }}</p>
                 <h6 class="mb-0">{{ records_glucose_monitoring["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">mg / dL</span></h6>
                 <!-- <span class="text-success small pt-1 fw-bold bs-normal" style="display: inline-block; background-color: rgb(244, 207, 166); padding: 5px 10px; margin-top: 10px;">Normal</span> -->
                     {% if records_glucose_monitoring["value"][0] >16 %}
@@ -71,10 +72,11 @@
                     <h5 class="card-title">Hba1c&nbsp;Level</h5>
 
 
-            <div class="ps-3 mt-3">
+            <div class="ps-3 mt--3">
                 {% if records_hba1c["value"][0] != undefined %}
+                <p class="text-muted text-sm mb--1">{{ records_hba1c["timestamp"][0] }}</p>    
                 <h6 class="mb-0">{{ records_hba1c["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;"></span></h6>
-                    {% if records_hba1c["value"][0] >6.5 %}
+                {% if records_hba1c["value"][0] >6.5 %}
                         <span class="badge text-bg-danger">Diabetes</span>
                     {% elif records_hba1c["value"][0] > 5.7 %}
                     <span class="badge text-bg-danger">Prediabetes</span>
@@ -102,10 +104,11 @@
                     <h5 class="card-title">Cholesterol&nbsp;Level</h5>
 
 
-            <div class="ps-3 mt-3">
+            <div class="ps-3 mt--3">
                 {% if records_cholesterol["value"][0] != undefined %}
+                <p class="text-muted text-sm mb--1">{{ records_cholesterol["timestamp"][0] }}</p>       
                 <h6 class="mb-0">{{ records_cholesterol["value"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;"></span></h6>
-                    {% if records_cholesterol["value"][0] >240 %}
+                {% if records_cholesterol["value"][0] >240 %}
                         <span class="badge text-bg-danger">High</span>
                     {% elif records_cholesterol["value"][0] > 200 %}
                     <span class="badge text-bg-danger">Borderline High</span>
@@ -113,7 +116,7 @@
                     <span class="badge text-bg-light">Normal</span>
                     {% endif %}
                 {% else %}
-                <p class="text-muted">Please upload Hba1C data.</p>
+                <p class="text-muted">Please upload Cholesterol data.</p>
                 {% endif %}
             </div>
         </div>
@@ -133,8 +136,9 @@
                     <h5 class="card-title">Blood&nbsp;Pressure</h5>
 
 
-            <div class="ps-1 mt-1">
+            <div class="ps-1 mt--3">
                 {% if records_blood_pressure["value_systolic"][0] != undefined %}
+                <p class="text-muted text-sm mb--1">{{ records_blood_pressure["timestamp"][0] }}</p>
                     <h6 class="mb-0">{{ records_blood_pressure["value_systolic"][0] }}&nbsp;&nbsp;&nbsp;<span style="color: #899bbd; font-size: 14px; font-weight: 400;">/ {{ records_blood_pressure["value_diastolic"][0] }} &nbsp;&nbsp;mmHg</h6>
                         {% set systolic = records_blood_pressure["value_systolic"][0] %}
                         {% set diastolic = records_blood_pressure["value_diastolic"][0] %}
@@ -501,6 +505,12 @@
         <div class="container">
             <div class="card">
                 <h3 class="h3 pt-3 pl-4">Recent Glucose Spike</h3>
+                {% if records_glucose_monitoring["value"][0] != undefined %}
+                <p class="pl-4 text-muted text-sm">Date Range: {{ records_glucose_monitoring["timestamp"][-1] }} - {{ records_glucose_monitoring["timestamp"][0] }}</p>
+                {% else %}
+                <p class="pl-4 text-muted text-sm">Please upload glucose data.</p>
+                {% endif %}
+                
                 <div id="mynetwork"></div>
             </div>
         </div>
@@ -605,6 +615,14 @@
                             <td>Gender:</td>
                             <td>{{ user.gender }}</td>
                         </tr>
+                        <tr>
+                            <td>Height:</td>
+                            <td>{{ user.height }} cm</td>
+                        </tr>
+                        <tr>
+                            <td>Weight:</td>
+                            <td>{{ records_weight_tracking["value"][0] }} kg</td>
+                        </tr>
                     </tbody>
                   </table>
               </div>
@@ -613,30 +631,11 @@
         </div><!-- End Patient Info Card -->
 
         <!-- BMI Calculator Card -->
-        <div class="container">
+        <div class="container pb-5">
           <div class="row">
               <h5><strong>BMI Calculator</strong></h5>
-              <div class="col-md-6 mb-4">
-                  <div class="card height-card">
-                      <div class="card-body">
-                          <h5 class="card-title">Height</h5>
-                          <div class="height-container">
-                              <div class="height-value" id="heightValue">{{ user.height }} cm</div>
-                              <div class="height-scale">
-                                  <div class="height-indicator" id="heightIndicator"></div>
-                                  <div class="height-numbers">
-                                      <span>150</span>
-                                      <span>175</span>
-                                      <span>195</span>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
               
-              <div class="col-md-6 mb-4">
-                  <h5 class="general-info"><strong>General Info</strong></h5>
+              <div class="col">
                   <div class="card bmi-card">
                       <div class="card-body">
                           <h5 class="card-title">Body&nbsp;Mass&nbsp;Index</h5>
@@ -647,31 +646,11 @@
                           <div class="bmi-scale">
                               <div class="bmi-indicator" id="bmiIndicator"></div>
                               <div class="bmi-numbers">
+                                  <span>0</span>
                                   <span>15</span>
-                                  <span>18</span>
-                                  <span>22.86</span>
-                                  <span>28</span>
                                   <span>30</span>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="row">
-              <div class="col-md-6 mb-4">
-                  <div class="card weight-card">
-                      <div class="card-body">
-                          <h5 class="card-title">Weight</h5>
-                          <div class="weight-container">
-                              <div class="weight-value" id="weightValue">{{ records_weight_tracking["value"][0] }} kg</div>
-                              <div class="weight-scale">
-                                  <div class="weight-indicator" id="weightIndicator"></div>
-                                  <div class="weight-numbers">
-                                      <span>50</span>
-                                      <span>70</span>
-                                      <span>90</span>
-                                  </div>
+                                  <span>45</span>
+                                  <span>60</span>
                               </div>
                           </div>
                       </div>
@@ -707,18 +686,20 @@
 
         document.addEventListener("DOMContentLoaded", function() {
           // Get height and weight from the DOM
-          const height = parseFloat(document.getElementById('heightValue').textContent);
-          const weight = parseFloat(document.getElementById('weightValue').textContent);
+          const height = {{ user.height }};
+          const weight = {{ records_weight_tracking["value"][0] }};
 
           // Set the height and weight indicators
-          setIndicator('heightIndicator', height, 150, 195);
-          setIndicator('weightIndicator', weight, 50, 90);
+        //   setIndicator('heightIndicator', height, 150, 195);
+        //   setIndicator('weightIndicator', weight, 50, 200);
 
           // Calculate BMI and update the DOM
           const bmi = calculateBMI(height, weight);
           document.getElementById('bmiValue').textContent = bmi;
           document.getElementById('bmiStatus').textContent = getBMIStatus(bmi);
-          setIndicator('bmiIndicator', parseFloat(bmi), 15, 30);
+          console.log("pass1")
+          setIndicator('bmiIndicator', parseFloat(bmi), 0, 60);
+          console.log("pass")
         });
         </script>
         <!-- End BMI Calculator Card -->
@@ -731,6 +712,7 @@
                 {% if patient_notification_one.notification_content | length == 0 %}
                 <p class="smaller-font">No insights generated.</p>
                 {% else %}
+                <p class="text-sm text-muted mt--4">{{ patient_notification_one.created_time.strftime('%Y-%m-%d') }}</p>
                 <p class="smaller-font">{{ patient_notification_one.notification_content }}</p>
               {% endif %}
             </span>

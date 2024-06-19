@@ -278,7 +278,7 @@ def landing():
 @login_required
 # @access_log
 def home():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     if request.args.get('user_id') is None:
         user_id = current_user.user_id
     elif current_user.permission == 'admin' or current_user.permission == 'doctor' and request.args.get('user_id') is not None:
@@ -362,9 +362,9 @@ def get_overview():
     # print(avg_glucose_levels[0])
 
     # -- Record of patient who has higher or lower than critical glucose levels (Lower) -- #
-    patient_record_low = Records_Glucose_Monitoring.query.where(text("glucose_level < 3")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
+    patient_record_low = Records_Glucose_Monitoring.query.where(text("glucose_level < 4")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
     # -- Record of patient who has higher or lower than critical glucose levels (Higher) -- #
-    patient_record_high = Records_Glucose_Monitoring.query.where(text("glucose_level > 16")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
+    patient_record_high = Records_Glucose_Monitoring.query.where(text("glucose_level > 10")).join(Records_Glucose_Monitoring.data_cgm).order_by(desc(Records_Glucose_Monitoring.timestamp)).limit(10).all()
 
     # ------------------- Histogram of patient's Glucose levels ------------------ #
     data_glucose_hist = get_overview_glucose_data()
@@ -377,7 +377,7 @@ def get_overview():
 
     # Set-up current datetime in template
     current_datetime = datetime.now(timezone.utc)
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
 
     dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
     return render_template("home/overview.html", 
@@ -401,7 +401,7 @@ def get_overview():
 @login_required
 # @access_log
 def get_template_download():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template('data_integration/template_download.html', user_notifications=user_notifications, download=download)
 
 @app.route('/upload_files', methods=['GET','POST'])
@@ -467,7 +467,7 @@ def route_upload_files():
 # @access_log
 def get_records_glucose_monitoring():
     records = Records_Glucose_Monitoring.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Glucose_Monitoring.timestamp)).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template('data_integration/get_records_glucose_monitoring.html',
                            records=records,
                             user_notifications=user_notifications)
@@ -477,7 +477,7 @@ def get_records_glucose_monitoring():
 # @access_log
 def get_records_food_intake():
     records = Records_Food_Intake.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Food_Intake.timestamp)).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template('data_integration/get_records_food_intake.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -487,7 +487,7 @@ def get_records_food_intake():
 # @access_log
 def get_records_insulin_intake():
     records = Records_Insulin_Intake.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Insulin_Intake.timestamp)).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template('data_integration/get_records_insulin_intake.html',
                            records=records,
                            user_notifications=user_notifications)
@@ -496,7 +496,7 @@ def get_records_insulin_intake():
 @login_required
 # @access_log
 def get_records_physical_activity():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Physical_Activity.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Physical_Activity.timestamp)).all()
     return render_template('data_integration/get_records_physical_activity.html',
                            records=records,
@@ -506,7 +506,7 @@ def get_records_physical_activity():
 @login_required
 # @access_log
 def get_records_weight_tracking():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Weight_Tracking.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Weight_Tracking.timestamp)).all()
     return render_template('data_integration/get_records_weight_tracking.html',
                            records=records,
@@ -516,7 +516,7 @@ def get_records_weight_tracking():
 @login_required
 # @access_log
 def get_records_cholesterol():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Cholesterol.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Cholesterol.timestamp)).all()
     return render_template('data_integration/get_records_cholesterol.html',
                            records=records,
@@ -526,7 +526,7 @@ def get_records_cholesterol():
 @login_required
 # @access_log
 def get_records_hba1c():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Hba1C.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Hba1C.timestamp)).all()
     return render_template('data_integration/get_records_hba1c.html',
                            records=records,
@@ -536,7 +536,7 @@ def get_records_hba1c():
 @login_required
 # @access_log
 def get_records_blood_pressure():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Blood_Pressure.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Blood_Pressure.timestamp)).all()
     return render_template('data_integration/get_records_blood_pressure.html',
                            records=records,
@@ -550,7 +550,7 @@ def get_records_blood_pressure():
 @login_required
 # @access_log
 def get_notifications():
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     if len(user_notifications) == 0:
         error = "Error:no_record"
     else:
@@ -672,7 +672,7 @@ def get_openai():
 @doctor_admin_only
 def get_all_patients():
     patients = Users.query.where(text(f"users.permission='user' and users.active=1")).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template("users/patients.html", 
                            patients=patients, 
                            user_notifications=user_notifications)
@@ -688,7 +688,7 @@ def get_all_patients():
 @admin_only
 def get_all_doctors():
     doctors = Users.query.filter_by(permission="doctor").join(Users.user_raw).all()
-    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+    user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template("users/doctors.html", 
                            doctors=doctors,
                            user_notifications=user_notifications)
@@ -700,7 +700,7 @@ def get_all_doctors():
 # def get_one_doctor(user_id):
 #     """Update other user's setting (Admin-only)"""
 #     doctor = Users.query.filter_by(user_id=user_id).all()
-#     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
+#     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
 #     return render_template("users/user_settings.html", 
 #                            user=doctor,
 #                            user_notifications=user_notifications)
@@ -723,7 +723,7 @@ def get_all_doctors():
 def user_settings():
     if request.method== "GET":
         user_id = request.args.get('user_id')
-        if user_id == current_user.user_id or user_id not in locals():
+        if user_id == current_user.user_id or user_id is None or len(user_id) == 0:
             return render_template("users/user_settings.html", user=current_user)
         elif user_id != current_user.user_id and current_user.permission == 'admin':
             user = Users.query.get(user_id)

@@ -135,21 +135,15 @@
                               data: {
                                 labels: {{ data_glucose_hist["label"] | tojson }},
                                 datasets: [{
-                                  label: 'Glucose Level',
+                                  label: "Glucose Level",
                                   data: {{ data_glucose_hist["data"] | tojson }},
-                                  backgroundColor: '#203468' ,
-                                  borderColor: '#203468',
+                                  backgroundColor: ['#97b4eb', '#97b4eb','#0d286e', '#0d286e','#0d286e','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9'] ,
+                                  borderColor: ['#97b4eb', '#97b4eb','#0d286e', '#0d286e','#0d286e','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9','#fc9aa9'],
                                   borderWidth: 1
                                 }]
                               },
-                              options: {
-                                scales: {
-                                  y: {
-                                    // beginAtZero: true
-                                    min:0
-                                  }
-                                },
-                              }
+
+                              
                             });
                           });
           </script>
@@ -198,8 +192,8 @@
                                 datasets: [{
                                   label: 'BMI',
                                   data: {{ data_bmi_hist["data"] | tojson }},
-                                  backgroundColor: '#203468' ,
-                                  borderColor: '#203468',
+                                  backgroundColor: ['#97b4eb','#203468', '#fc9aa9', '#fc9aa9'] ,
+                                  borderColor: ['#97b4eb','#203468', '#fc9aa9', '#fc9aa9'],
                                   borderWidth: 1
                                 }]
                               },
@@ -222,8 +216,8 @@
                                 datasets: [{
                                   label: 'Hba1c',
                                   data: {{ data_hba1c_hist["data"] | tojson }},
-                                  backgroundColor: '#203468' ,
-                                  borderColor: '#203468',
+                                  backgroundColor: ['#203468', '#203468', '#203468','#fc9aa9', '#fc9aa9','#fc9aa9', '#fc9aa9','#fc9aa9', '#fc9aa9'] ,
+                                  borderColor:   ['#203468', '#203468', '#203468','#fc9aa9', '#fc9aa9','#fc9aa9', '#fc9aa9','#fc9aa9', '#fc9aa9'],
                                   borderWidth: 1
                                 }]
                               },
@@ -271,7 +265,7 @@
           <div class="card patient-card shadow-sm border-0">
             <div class="card-body pb-0">
                 <div class="pl-2 flex-fill">
-                  <h3 class="card-title"><strong>High Critical</strong> <span class="badge bg-danger text-white">High</span></h3>
+                  <h3 class="card-title"><strong>High Critical</strong> <span class="badge bg-danger text-white high-critical-bg">High</span></h3>
                   <table class="table table-sm pr-2">
                     <tbody>
                       {% for row in patient_record_high %}
@@ -283,9 +277,9 @@
                           <div class="circle">{{ row.data_cgm.name[0] }}</div>
                           {% endif %}
                         </td>
-                        <td style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.data_cgm.name }}<br>
+                        <td style="font-size: 10pt; padding-left:0px; padding-right:0px;"><a href="{{url_for('home', user_id= row.data_cgm.user_id)}}">{{ row.data_cgm.name }}</a><br>
                         <span>{{ row.timestamp.strftime('%Y-%m-%d') }}</span></td>
-                        <td class="text-danger text-right" style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.glucose_level }} mmol/L</td>
+                        <td class="high-critical text-right" style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.glucose_level }} mmol/L</td>
                       </tr>
                       {% endfor %}
                     </tbody>
@@ -299,7 +293,7 @@
           <div class="card patient-card shadow-sm border-0">
             <div class="card-body pb-0">
                 <div class="pl-2 flex-fill">
-                  <h3 class="card-title"><strong>Low Critical</strong> <span class="badge bg-danger text-white">Low</span></h3>
+                  <h3 class="card-title"><strong>Low Critical</strong> <span class="badge bg-danger text-white low-critical-bg">Low</span></h3>
                   <table class="table table-sm pr-2">
                     <tbody>
                       {% for row in patient_record_low %}
@@ -311,9 +305,9 @@
                             <div class="circle">{{ row.data_cgm.name[0] }}</div>
                           {% endif %}
                         </td>
-                        <td style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.data_cgm.name }}<br>
+                        <td style="font-size: 10pt; padding-left:0px; padding-right:0px;"><a href="{{url_for('home', user_id= row.data_cgm.user_id)}}">{{ row.data_cgm.name }}</a><br>
                         <span>{{ row.timestamp.strftime('%Y-%m-%d') }}</span></td>
-                        <td class="text-danger text-right" style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.glucose_level }} mmol/L</td>
+                        <td class="low-critical text-right" style="font-size: 10pt; padding-left:0px; padding-right:0px;">{{ row.glucose_level }} mmol/L</td>
                       </tr>
                       {% endfor %}
                     </tbody>

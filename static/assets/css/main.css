@@ -450,10 +450,28 @@ div#loading {
   .circle {
     max-width: 40px;
     max-height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     line-height: 40px;
     border-radius: 50%;
     font-size: 20px;
     color: #fff;
     text-align: center;
     background: #cbe0dc;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Low Critical                                */
+/* -------------------------------------------------------------------------- */
+.low-critical {
+  color: #97b4eb !important;
+}
+.high-critical {
+  color: #fc9aa9 !important;
+}
+.low-critical-bg {
+  background-color: #97b4eb !important;
+}
+.high-critical-bg {
+  background-color: #fc9aa9 !important;
 }

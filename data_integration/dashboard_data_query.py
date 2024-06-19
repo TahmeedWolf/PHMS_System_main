@@ -80,11 +80,11 @@ def get_overview_hba1c_data():
     data_hba1c = db.session.execute(text("select * from records_hba1c;")).all()
     data_hba1c = pd.DataFrame(data_hba1c)
     # print(data_hba1c.head(10))
-    bins = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30]
+    bins = [0, 2, 4, 6, 8, 10, 12, 14, 16]
     data_hba1c['binned'] = pd.cut(data_hba1c['hba1c'], bins)
     data_hba1c_raw = pd.cut(data_hba1c['hba1c'], bins=bins).value_counts().sort_index()
     # print(data_hba1c_raw)
     data_hba1c_data = data_hba1c_raw.to_list()
-    data_hba1c_label = bins = ["0-2", "2-4", "4-6", "6-8", "8-10","10-12", "12-14", "14-16", "16-18", "18-20", "20-22", "22-24", "24-26", "26-28"]
+    data_hba1c_label = bins = ["0-2", "2-4", "4-6", "6-8", "8-10","10-12", "12-14", "14-16", "16-18"]
     data_hba1c_hist = {"label":data_hba1c_label, "data": data_hba1c_data }
     return data_hba1c_hist

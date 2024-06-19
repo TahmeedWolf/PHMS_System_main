@@ -75,11 +75,11 @@
                     </div>
                     <div class="tab-content px-2" id="v-pills-tabContent">
                         <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                            {{ user_notifications[0].notification_content }}
+                            <p style="line-height:200%;" class="mt-4">{{ user_notifications[0].notification_content }}</p>
                         </div>
                         {% for notification in user_notifications[1:] %}
                         <div class="tab-pane fade" id="notification{{ notification.notification_id }}" role="tabpanel" aria-labelledby="notification{{ notification.notification_id }}-tab">
-                            <p>{{ notification.notification_content }}</p>
+                            <p style="line-height:200%;" class="mt-4">{{ notification.notification_content }}</p>
                         </div>
                         {% endfor %}
                       </div>

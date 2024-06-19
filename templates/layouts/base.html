@@ -74,7 +74,7 @@
             <i class="bi bi-search"></i>
           </a>
         </li><!-- End Search Icon-->
-        {% if current_user.age == 0 %}
+        {% if current_user.height != defined %}
         <li>
                 <button class="btn btn-primary btn-sm"><a href="{{url_for('get_started')}}" class="text-white">Getting Started!</a></button>
               </li>
@@ -269,11 +269,33 @@
   <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
 
   <div id="content">{% block content %}{% endblock content %}</div>
-
+  <div id="loading">
+    <div class="box-secondary text-center">
+        <div><img src="{{ url_for('static', filename='assets/images/PHMS_LOGO_white.png') }}"  style="max-width:200px;"/></div>
+        <div>
+          <div class="spinner-border m-5" role="status"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
   {% include "includes/scripts.html" %}
 
   <!-- Specific JS goes HERE --> 
   {% block javascripts %}{% endblock javascripts %}
 
 </body>
+<script language="Javascript">
+  function loading() {
+    $("#loading").show();
+    $("#content").hide();
+  }
+  $(window).on("load", function () {
+    $("#loading").hide();
+    $("#content").show();
+  });
+
+  window.addEventListener("beforeunload", function (e) {
+    loading();
+  });
+  </script>
 </html>
