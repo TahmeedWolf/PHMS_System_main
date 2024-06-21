@@ -616,6 +616,7 @@ def route_generate_insights():
 
 @app.route('/test_neo4j')
 @login_required
+@admin_only
 # @access_log
 def get_neo4j():
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
@@ -657,6 +658,7 @@ def get_neo4j():
 
 @app.route('/test_openai')
 @login_required
+@admin_only
 # @access_log
 def get_openai():
    analyzer = MessangeAnalyzer('English')
@@ -759,6 +761,7 @@ def user_settings():
 
 @app.route('/healthcare_providers')
 @login_required
+@admin_only
 # @access_log
 def get_healthcare_providers():
     healthcare_providers = Users.query.filter_by(permission="doctor").join(Users.user_raw).all() 
@@ -768,6 +771,7 @@ def get_healthcare_providers():
 
 @app.route('/healthcare_provider/<string:user_id>')
 @login_required
+@admin_only
 # @access_log
 def get_one_healthcare_provider(user_id):
     healthcare_provider = Users.query.filter_by(user_id=str(user_id)).join(Users.user_raw).first() 
@@ -777,6 +781,7 @@ def get_one_healthcare_provider(user_id):
 
 @app.route('/access_logs')
 @login_required
+@admin_only
 # @access_log
 def get_access_logs():
     access_logs = Access_Log.query.all()
