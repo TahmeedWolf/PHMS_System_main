@@ -8,10 +8,6 @@ def get_dashboard_data(record_class, user_id:str) -> dict:
     # Query
     records = record_class.query.filter_by(user_id=user_id).order_by(desc(record_class.timestamp)).limit(25).all()
     
-    # if no record returned:
-        # exit early
-    # else
-
     value = []
     timestamp = []
     for record in records:

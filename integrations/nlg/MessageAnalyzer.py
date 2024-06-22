@@ -18,7 +18,7 @@ class MessangeAnalyzer(object):
             The following sentence my meal and glucose level is in %s language. 
             Please return this in simple paragraph format not longer than 100 words and
             prevent using the word 'I' and focus on facts and recommendations.
-            Avoid using any markdown format or '*' symbols.
+            Please do not use any ordered list or unordered list. Please use easy to understand english to ensure reader with no prior knowledge about diabetes are able to understand the response.
         """ % self._language
         return prompt
 
@@ -28,7 +28,7 @@ class MessangeAnalyzer(object):
         """
         prompt = self._prompt() + data + prompt
         print(prompt)
-        # Using chatgpt-4o is much faster, but still not able to compress total runtime below 30seconds
+        # Using chatgpt-4o is much faster, but more expensive compared to 3.5turbo
         completion = client.chat.completions.create(
         model="gpt-3.5-turbo", # 4o
         messages=[
@@ -36,5 +36,4 @@ class MessangeAnalyzer(object):
             {"role": "user", "content": prompt}
         ]
         )
-        # print(completion.choices[0].message.content)
         return(completion.choices[0].message.content)

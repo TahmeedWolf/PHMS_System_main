@@ -163,7 +163,7 @@ def signup():
         # Locate user by email entered.
         user = Users.query.where(text(f"users.email='{email}'")).first()
         # Email exist and the user is active
-        if user and int(user.active) ==0:
+        if user and int(user.active) ==1:
             flash("Error: A user with this email address already exists. Please login.")
             return redirect(url_for('signup'))
         # Check if two password are the same
@@ -234,7 +234,7 @@ def create_new_hp():
         # Locate user by email entered.
         user = Users.query.where(text(f"users.email='{email}'")).first()
         # Email exist and the user is active
-        if user and int(user.active) ==0:
+        if user and int(user.active) ==1:
             flash("Error: A user with this email address already exists. Please login.")
             return redirect(url_for('create_new_hp'))
         # Check if two password are the same
