@@ -4,11 +4,11 @@
 
   <!-- Main -->
   <main id="main" class="main">
-    <div class="pagetitle" style="margin-left: 195px;">
+    <div class="pb-3 text-center">
       <h1>Healthcare Providers</h1>
   </div>
 
-    <section class="section">
+    <section class="section px-5">
         <section class="section dashboard">
             <div class="row">
       {% block content %}
@@ -31,11 +31,11 @@
                         <div class="card-body">
                           <h5 class="card-title">{{ healthcare_provider.name.title() }}</h5>
                           {% if healthcare_provider.user_raw[0] is defined %}
-                            <p class="card-text p-3">{{ healthcare_provider.user_raw[0].designation }}</p>
-                            <p class="card-text p-3">{{ healthcare_provider.user_raw[0].address }}</p>
+                            <p class="card-text px-3">{{ healthcare_provider.user_raw[0].designation }}</p>
+                            <p class="card-text px-3">{{ healthcare_provider.user_raw[0].address }}</p>
                             {% else %}
-                            <p class="card-text p-3">Designation: -</p>
-                            <p class="card-text p-3">Address: -</p>
+                            <p class="card-text px-3">Designation: -</p>
+                            <p class="card-text px-3">Address: -</p>
                           {% endif %}
                           <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='{{ url_for('get_one_healthcare_provider', user_id=healthcare_provider.user_id )}}'">
                             <i class="bi bi-person-circle me-1"></i>Profile
