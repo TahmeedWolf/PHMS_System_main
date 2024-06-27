@@ -459,6 +459,18 @@ div#loading {
     text-align: center;
     background: #cbe0dc;
 }
+  .circle-xl {
+    max-width: 120px;
+    max-height: 120px;
+    min-width: 120px;
+    min-height: 120px;
+    line-height: 120px;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #fff;
+    text-align: center;
+    background: #cbe0dc;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                Low Critical                                */

@@ -137,14 +137,14 @@ def login():
         # Email doesn't exist or password incorrect
         if not user:
             flash("That email does not exist. Please try again.")
-            return redirect(url_for('login'))
+            return render_template('home/login.html')
         # Check stored password hash against entered password hashed.
         elif not check_password_hash(user.password, password):
             flash("Password incorrect. Please try again.")
-            return redirect(url_for('login'))
+            return render_template('home/login.html')
         elif user.is_active == 0:
             flash("This account is no longer active.")
-            return redirect(url_for('login'))
+            return render_template('home/login.html')
         else:
             login_user(user)
             return redirect(url_for('index'))
@@ -186,7 +186,7 @@ def signup():
 
 @app.route('/get_started', methods=["GET","POST"])
 @login_required
-# @access_log
+@access_log
 def get_started():
     # Gathering sufficient basic user data for patient (First time login only)
     if request.method == "GET":
@@ -220,7 +220,7 @@ def get_started():
 
 @app.route('/create_new_hp', methods=["GET","POST"])
 @login_required
-# @access_log
+@access_log
 @admin_only
 def create_new_hp():
     if request.method == "GET":
@@ -258,7 +258,7 @@ def create_new_hp():
 
 @app.route('/logout')
 @login_required
-# # @access_log
+# @access_log
 def logout():
     logout_user()
     logout_message = "You have been logged out successfully."
@@ -276,7 +276,7 @@ def landing():
 
 @app.get("/home")
 @login_required
-# @access_log
+@access_log
 def home():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     if request.args.get('user_id') is None:
@@ -308,7 +308,6 @@ def home():
         kg_data = get_kg_chart_data(driver=driver, user_id=user.user_id)
 
     if 'patient_notification_one'not in locals() and len(user_notifications) != 0:
-        print(1)
         patient_notification_one = user_notifications[0]
     else:
         patient_notification_one = ""
@@ -351,7 +350,7 @@ def home():
 # ----------------------------- Doctor's Overview ---------------------------- #
 @app.route('/overview')
 @login_required
-# @access_log
+@access_log
 @doctor_admin_only
 def get_overview():
     """This endpoints delivers a top-overview of all registered patients."""
@@ -379,7 +378,7 @@ def get_overview():
     current_datetime = datetime.now(timezone.utc)
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
 
-    dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
+    # dict = [user_count, active_user_count, avg_glucose_levels[0], patient_record_low, patient_record_high]
     return render_template("home/overview.html", 
                            user_count=user_count, 
                            current_datetime=current_datetime,
@@ -399,14 +398,14 @@ def get_overview():
 
 @app.get("/data/template_download")
 @login_required
-# @access_log
+@access_log
 def get_template_download():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template('data_integration/template_download.html', user_notifications=user_notifications, download=download)
 
 @app.route('/upload_files', methods=['GET','POST'])
 @login_required
-# @access_log
+@access_log
 def route_upload_files():
    if request.method == "GET":
        user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
@@ -464,7 +463,7 @@ def route_upload_files():
 
 @app.get("/data/records_glucose_monitoring")
 @login_required
-# @access_log
+@access_log
 def get_records_glucose_monitoring():
     records = Records_Glucose_Monitoring.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Glucose_Monitoring.timestamp)).all()
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
@@ -474,7 +473,7 @@ def get_records_glucose_monitoring():
 
 @app.get("/data/records_food_intake")
 @login_required
-# @access_log
+@access_log
 def get_records_food_intake():
     records = Records_Food_Intake.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Food_Intake.timestamp)).all()
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
@@ -484,7 +483,7 @@ def get_records_food_intake():
 
 @app.get("/data/records_insulin_intake")
 @login_required
-# @access_log
+@access_log
 def get_records_insulin_intake():
     records = Records_Insulin_Intake.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Insulin_Intake.timestamp)).all()
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
@@ -494,7 +493,7 @@ def get_records_insulin_intake():
 
 @app.get("/data/records_physical_activity")
 @login_required
-# @access_log
+@access_log
 def get_records_physical_activity():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Physical_Activity.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Physical_Activity.timestamp)).all()
@@ -504,7 +503,7 @@ def get_records_physical_activity():
 
 @app.get("/data/records_weight_tracking")
 @login_required
-# @access_log
+@access_log
 def get_records_weight_tracking():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Weight_Tracking.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Weight_Tracking.timestamp)).all()
@@ -514,7 +513,7 @@ def get_records_weight_tracking():
 
 @app.get("/data/records_cholesterol")
 @login_required
-# @access_log
+@access_log
 def get_records_cholesterol():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Cholesterol.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Cholesterol.timestamp)).all()
@@ -524,7 +523,7 @@ def get_records_cholesterol():
 
 @app.get("/data/records_hba1c")
 @login_required
-# @access_log
+@access_log
 def get_records_hba1c():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Hba1C.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Hba1C.timestamp)).all()
@@ -534,7 +533,7 @@ def get_records_hba1c():
 
 @app.get("/data/records_blood_pressure")
 @login_required
-# @access_log
+@access_log
 def get_records_blood_pressure():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     records = Records_Blood_Pressure.query.filter_by(user_id=current_user.user_id).order_by(desc(Records_Blood_Pressure.timestamp)).all()
@@ -548,7 +547,7 @@ def get_records_blood_pressure():
 
 @app.get("/notifications")
 @login_required
-# @access_log
+@access_log
 def get_notifications():
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     if len(user_notifications) == 0:
@@ -564,11 +563,8 @@ def get_notifications():
 @login_required
 def route_generate_insights():
     insight_type = request.args.get('insight_type')
-    #    print("aha!")
-    #    print(insight_type)
     analyzer = MessangeAnalyzer('English')
     data_classes = insight_list[insight_type]["data"]
-    # print(data_classes)
     
     data = ""
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
@@ -617,7 +613,7 @@ def route_generate_insights():
 @app.route('/test_neo4j')
 @login_required
 @admin_only
-# @access_log
+@access_log
 def get_neo4j():
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
         driver.verify_connectivity()
@@ -659,7 +655,7 @@ def get_neo4j():
 @app.route('/test_openai')
 @login_required
 @admin_only
-# @access_log
+@access_log
 def get_openai():
    analyzer = MessangeAnalyzer('English')
    analyzer_response = analyzer.evaluate("2024-05-11T00:38:21.439536 Dinner Salt, Tofu, Spices 2024-05-09T21:29:21.439536 Dinner Herbs, Salt, Lentils 2024-05-09T10:36:21.439536 Lunch Chicken breast, Cereal, Lentils, Soy sauce 2024-05-07T18:37:21.439536 Dinner Beans, Strawberries, Tofu 2024-05-06T20:21:21.439536 Dinner Mayonnaise, Tuna, Oats 2024-05-05T21:26:21.439536 Lunch Raspberries, Herbs, Maple syrup, Beans, Oats 2024-05-05T13:54:21.439536 Dinner Cucumber, Eggs, Carrot 2024-05-11T08:32:21.219779 104 2024-05-10T07:56:21.219779 96 2024-05-08T17:46:21.219779 98 2024-05-08T05:43:21.219779 158 2024-05-07T08:09:21.219779 161 2024-05-06T03:51:21.219779 171 2024-05-05T00:20:21.219779 193")
@@ -670,7 +666,7 @@ def get_openai():
 # ---------------------------------------------------------------------------- #
 @app.route('/patients')
 @login_required
-# @access_log
+@access_log
 @doctor_admin_only
 def get_all_patients():
     patients = Users.query.where(text(f"users.permission='user' and users.active=1")).all()
@@ -686,7 +682,7 @@ def get_all_patients():
 
 @app.route('/doctors')
 @login_required
-# @access_log
+@access_log
 @admin_only
 def get_all_doctors():
     doctors = Users.query.filter_by(permission="doctor").join(Users.user_raw).all()
@@ -697,7 +693,7 @@ def get_all_doctors():
 
 # @app.route('/doctors/<string:user_id>')
 # @login_required
-# # @access_log
+# @access_log
 # @admin_only
 # def get_one_doctor(user_id):
 #     """Update other user's setting (Admin-only)"""
@@ -713,7 +709,7 @@ def get_all_doctors():
 
 # @app.route('/settings')
 # @login_required
-# # @access_log
+# @access_log
 # def get_settings():
 #     # user = current_user
 #     return render_template("settings/settings.html")
@@ -721,7 +717,7 @@ def get_all_doctors():
 
 @app.route('/user_settings', methods=['GET','POST'])
 @login_required
-# @access_log
+@access_log
 def user_settings():
     if request.method== "GET":
         user_id = request.args.get('user_id')
@@ -762,9 +758,9 @@ def user_settings():
 @app.route('/healthcare_providers')
 @login_required
 @admin_only
-# @access_log
+@access_log
 def get_healthcare_providers():
-    healthcare_providers = Users.query.filter_by(permission="doctor").join(Users.user_raw).all() 
+    healthcare_providers = Users.query.filter_by(permission="doctor").outerjoin(Users.user_raw).all() 
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
     return render_template("home/healthcare_providers.html", healthcare_providers=healthcare_providers,
                            user_notifications=user_notifications)
@@ -772,7 +768,7 @@ def get_healthcare_providers():
 @app.route('/healthcare_provider/<string:user_id>')
 @login_required
 @admin_only
-# @access_log
+@access_log
 def get_one_healthcare_provider(user_id):
     healthcare_provider = Users.query.filter_by(user_id=str(user_id)).join(Users.user_raw).first() 
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).all()
@@ -782,7 +778,7 @@ def get_one_healthcare_provider(user_id):
 @app.route('/access_logs')
 @login_required
 @admin_only
-# @access_log
+@access_log
 def get_access_logs():
     access_logs = Access_Log.query.all()
     return render_template("cybersecurity/access_logs.html", access_logs=access_logs)
@@ -794,7 +790,7 @@ def get_access_logs():
 
 @app.route("/contact_us", methods=["GET", "POST"])
 @login_required
-# @access_log
+@access_log
 def route_contact_us():
     # TODO: finish this
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).all()
