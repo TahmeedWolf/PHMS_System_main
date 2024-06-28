@@ -685,7 +685,7 @@ def get_all_patients():
 @access_log
 @admin_only
 def get_all_doctors():
-    doctors = Users.query.filter_by(permission="doctor").join(Users.user_raw).all()
+    doctors = Users.query.filter_by(permission="doctor").outerjoin(Users.user_raw).all()
     user_notifications = Notifications.query.filter_by(to_user_id=current_user.user_id).order_by(desc(Notifications.created_time)).limit(5).all()
     return render_template("users/doctors.html", 
                            doctors=doctors,
@@ -757,7 +757,7 @@ def user_settings():
 
 @app.route('/healthcare_providers')
 @login_required
-@admin_only
+# @admin_only
 @access_log
 def get_healthcare_providers():
     healthcare_providers = Users.query.filter_by(permission="doctor").outerjoin(Users.user_raw).all() 
@@ -767,7 +767,7 @@ def get_healthcare_providers():
 
 @app.route('/healthcare_provider/<string:user_id>')
 @login_required
-@admin_only
+# @admin_only
 @access_log
 def get_one_healthcare_provider(user_id):
     healthcare_provider = Users.query.filter_by(user_id=str(user_id)).join(Users.user_raw).first() 

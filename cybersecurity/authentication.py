@@ -13,7 +13,7 @@ def admin_only(f):
         # If id is not 1 then return abort with 403 error
         if current_user.permission != "admin":
             # return abort(403)
-            return render_template('home/page-unauthorized.html'), 200
+            return render_template('error_handler/page-unauthorized.html'), 200
         # Otherwise continue with the route function
         return f(*args, **kwargs)        
     return decorated_function
@@ -27,7 +27,7 @@ def doctor_admin_only(f):
             pass
         else:
             # return abort(403)
-            return render_template('home/page-unauthorized.html'), 200
+            return render_template('error_handler/page-unauthorized.html'), 200
         # Otherwise continue with the route function
         return f(*args, **kwargs)        
     return decorated_function

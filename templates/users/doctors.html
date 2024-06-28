@@ -52,7 +52,11 @@
                                 <td>{{ doctor.gender }}</td>
                                 <td>{{ doctor.email }}</td>
                                 <td>{{ doctor.created_time }}</td>
-                                <td>{{ doctor.user_raw[0].address }}</td>
+                                {% if doctor.user_raw[0] is defined %}
+                                    <td>{{ doctor.user_raw[0].address }}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
                                 <td>{{ doctor.active }}</td>
                                 <td class="text-center"><a href="{{url_for('user_settings', user_id= doctor.user_id)}}"><i class="bi bi-gear-fill"></i></a></td>
                             </tr>
