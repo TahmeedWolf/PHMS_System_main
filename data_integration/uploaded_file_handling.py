@@ -91,6 +91,7 @@ def data_insert_internal(df, record_class , attributes:list , current_user, key,
                 else: #is number
                     node_attributes = node_attributes + "," +  attribute +  ":" + str(df.iloc[row][attribute])
 
+        
         # Batch create Record nodes connected to Record Classes
         kg_driver.execute_query(
             """MATCH (p:Patient) WHERE p.id = '{0}' CREATE (p)<-[:RECORDS_FOR]-(gm:{1} {{{2}}});""".format(current_user.user_id, 
@@ -98,7 +99,9 @@ def data_insert_internal(df, record_class , attributes:list , current_user, key,
                                                                                                     node_attributes), 
                                                                                                     database_="neo4j")
         sleep(0.02) # Prevent same uuid
-    # Add in the records to mysql at one time
+        if row%10 == 0:
+            # Add in the records to mysql at one time
+            db.session.commit()
     db.session.commit()
 
     return f"{len(df)} records are added successfully!"
